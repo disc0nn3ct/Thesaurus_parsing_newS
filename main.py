@@ -312,10 +312,11 @@ def check_git_update(commit_file="log/current_commit.txt"):
         return None
 
 
-def update_and_restart(new_commit):
+def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
     try:
         subprocess.run(["git", "pull"], check=True)
-        with open("current_commit.txt", "w") as f:
+
+        with open(commit_file, "w") as f:
             f.write(new_commit)
 
         logger.info("♻️ Проект обновлён. Перезапускаем...")
@@ -325,9 +326,12 @@ def update_and_restart(new_commit):
         logger.exception("❌ Ошибка при обновлении и перезапуске:")
 
 
-new_commit = check_git_update()
+
+commit_file = "log/current_commit.txt"
+new_commit = check_git_update(commit_file)
 if new_commit:
-    update_and_restart(new_commit)
+    update_and_restart(new_commit, commit_file)
+
 
 ######
 
@@ -348,24 +352,26 @@ if not recipients:
 
 from pyrogram import Client, idle
 
-
-client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
-# Запуск клиента
-client.start()
+# #################  вернуть 
+# client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
+# # Запуск клиента
+# client.start()
 
         
 
 
-check_if_need_new_rec()
-send_info_ruonia(client, recipients)
+# check_if_need_new_rec()
+# send_info_ruonia(client, recipients)
 
 
 
+## idle()
 
-# idle()
+## Завершение сессии
+# client.stop()
 
-# Завершение сессии
-client.stop()
+# #################### вернуть 
+
 
 
 
