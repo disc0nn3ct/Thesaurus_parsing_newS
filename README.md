@@ -10,7 +10,9 @@ api_hash = ""
 bot_token = ""
 
 for_whom = "@кому"
+
 for_whom_list =@логин1,@Логин2
+
 
 api_hash = os.getenv('api_hash')
 
