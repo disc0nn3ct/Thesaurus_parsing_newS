@@ -14,12 +14,20 @@ import holidays
 from datetime import date
 
 # Настройка логгера
+log_dir = os.path.join(os.getcwd(), "log")
+os.makedirs(log_dir, exist_ok=True)
+
+# Полный путь к лог-файлу
+log_file = os.path.join(log_dir, "ruonia_log.txt")
+
+# Настройка логгера
 logging.basicConfig(
-    filename="ruonia_log.txt",
+    filename=log_file,
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     encoding="utf-8"
 )
+
 logger = logging.getLogger(__name__)
 
 
@@ -265,6 +273,64 @@ def send_info_ruonia(client, recipients):
 #################################### Вернуть ######
 
 
+###### Проверка обновления ####
+import subprocess
+import os
+import sys
+
+def check_git_update(commit_file="log/current_commit.txt"):
+    try:
+        # Убедимся, что папка log существует
+        os.makedirs(os.path.dirname(commit_file), exist_ok=True)
+
+        # Получаем текущий коммит с origin
+        subprocess.run(["git", "fetch"], check=True)
+        new_commit = subprocess.check_output(
+            ["git", "rev-parse", "origin/main"], text=True
+        ).strip()
+
+        # Если файла нет — создаём и записываем текущий коммит
+        if not os.path.exists(commit_file):
+            with open(commit_file, "w") as f:
+                f.write(new_commit)
+            logger.info(f"📄 Файл {commit_file} создан. Установлен коммит: {new_commit}")
+            return None  # Первый запуск — обновление не требуется
+
+        # Считываем сохранённый коммит
+        with open(commit_file, "r") as f:
+            last_commit = f.read().strip()
+
+        if new_commit != last_commit:
+            logger.info(f"🔄 Обнаружен новый коммит: {new_commit}")
+            return new_commit
+        else:
+            logger.info("✅ Версия актуальна. Обновление не требуется.")
+            return None
+
+    except Exception as e:
+        logger.exception("❌ Ошибка при проверке обновления Git:")
+        return None
+
+
+def update_and_restart(new_commit):
+    try:
+        subprocess.run(["git", "pull"], check=True)
+        with open("current_commit.txt", "w") as f:
+            f.write(new_commit)
+
+        logger.info("♻️ Проект обновлён. Перезапускаем...")
+        os.execv(sys.executable, ['python'] + sys.argv)
+
+    except Exception as e:
+        logger.exception("❌ Ошибка при обновлении и перезапуске:")
+
+
+new_commit = check_git_update()
+if new_commit:
+    update_and_restart(new_commit)
+
+######
+
 load_dotenv()  
 
 api_hash = os.getenv('api_hash')
@@ -280,7 +346,7 @@ if not recipients:
 
 
 
-from pyrogram import Client
+from pyrogram import Client, idle
 
 
 client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
@@ -296,7 +362,7 @@ send_info_ruonia(client, recipients)
 
 
 
-
+# idle()
 
 # Завершение сессии
 client.stop()
