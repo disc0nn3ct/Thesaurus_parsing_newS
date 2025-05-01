@@ -1,0 +1,8 @@
+pandas
+matplotlib
+requests
+python-dotenv
+holidays
+openpyxl
+pyrogram
+tgcrypto

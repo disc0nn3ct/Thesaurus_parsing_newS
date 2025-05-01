@@ -1,5 +1,9 @@
 # Thesaurus
 
+```shell
+pip install -r requirements.txt
+```
+
 
 от телеги информация
 
