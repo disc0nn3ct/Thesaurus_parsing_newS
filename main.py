@@ -250,7 +250,7 @@ def send_info_ruonia(client, recipients):
 #################################### Вернуть ######
 check_if_need_new_rec()
 
-# analitics()
+analitics()
 #################################### Вернуть ######
 
 

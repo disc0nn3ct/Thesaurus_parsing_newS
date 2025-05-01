@@ -2,6 +2,11 @@
 
 ```shell
 pip install -r requirements.txt
+
+cd ~/projects/Thesaurus_parsing_newS
+pip install -r requirements.txt
+
+
 ```
 
 ```shell
