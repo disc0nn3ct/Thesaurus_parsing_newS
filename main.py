@@ -208,40 +208,43 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
         print(f"❌ Ошибка в аналитике RUONIA: {e}")
         return None
 
-def send_info_ruonia(client, recipients):
 
+def send_info_ruonia(client, recipients):
     folder_path = os.path.join(os.getcwd(), "src")
     base_name = "ruonia_trend_"
     extension = ".png"
-    # Находим все версии файлов с нужным шаблоном
+
+    # Получаем список подходящих файлов
     matching_files = [
         f for f in os.listdir(folder_path)
         if f.startswith(base_name) and f.endswith(extension)
-    ]
+    ] if os.path.exists(folder_path) else []
 
-    # Если есть файлы, выбираем тот, у которого версия (или дата) максимальна
+    # Определяем последний файл
     if matching_files:
-        # Сортируем по убыванию, предполагая, что последние версии идут позже
         matching_files.sort(reverse=True)
         latest_file = os.path.join(folder_path, matching_files[0])
     else:
-        latest_file = None
+        print("📂 График не найден. Генерируем с помощью analitics()...")
+        latest_file = analitics()
 
+    # Если после попытки построения всё ещё нет файла — прерываем
+    if not latest_file or not os.path.exists(latest_file):
+        print("❌ Не удалось найти или создать файл графика RUONIA.")
+        return
+
+    # Рассылаем файл и анализ по всем получателям
     for chat_id in recipients:
-        print("========================= ", chat_id )
-        client.send_photo(
-            chat_id,
-            photo=latest_file,
-            caption="📈 График RUONIA за всё время" + latest_file
-        )
-        client.send_message(chat_id, make_analyze_ruonia())
-
-
-
-
-
-
-
+        try:
+            print(f"📤 Отправка в чат: {chat_id}")
+            client.send_photo(
+                chat_id,
+                photo=latest_file,
+                caption="📈 График RUONIA за всё время"
+            )
+            client.send_message(chat_id, make_analyze_ruonia())
+        except Exception as e:
+            print(f"⚠️ Ошибка отправки для {chat_id}: {e}")
 
 
 # https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?Posted=True&From=11.01.2010&To=30.04.2025&I1=true&M1=true&M3=true&M6=true&FromDate=01%2F11%2F2010&ToDate=04%2F30%2F2025
@@ -250,7 +253,7 @@ def send_info_ruonia(client, recipients):
 #################################### Вернуть ######
 check_if_need_new_rec()
 
-analitics()
+# analitics()  # Либо переделать 
 #################################### Вернуть ######
 
 
