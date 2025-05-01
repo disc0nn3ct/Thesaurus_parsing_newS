@@ -1,0 +1,54 @@
+import os
+import subprocess
+import sys
+import logging
+
+logger = logging.getLogger(__name__)  
+
+
+def check_git_update(commit_file="log/current_commit.txt"):
+    try:
+        os.makedirs(os.path.dirname(commit_file), exist_ok=True)
+        subprocess.run(["git", "fetch"], check=True)
+        new_commit = subprocess.check_output(
+            ["git", "rev-parse", "origin/main"], text=True
+        ).strip()
+
+        if not os.path.exists(commit_file):
+            with open(commit_file, "w") as f:
+                f.write(new_commit)
+            logger.info(f"📄 Создан файл {commit_file}, установлен текущий коммит: {new_commit}")
+            return None
+
+        with open(commit_file, "r") as f:
+            last_commit = f.read().strip()
+
+        if new_commit != last_commit:
+            logger.info(f"🔄 Обнаружено обновление: {new_commit}")
+            return new_commit
+        else:
+            logger.info("✅ Локальная версия актуальна.")
+            return None
+
+    except Exception as e:
+        logger.exception("❌ Ошибка при проверке обновления Git:")
+        return None
+
+
+def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
+    try:
+        subprocess.run(["git", "pull"], check=True)
+        with open(commit_file, "w") as f:
+            f.write(new_commit)
+
+        logger.info("♻️ Проект обновлён. Перезапуск...")
+        os.execv(sys.executable, [sys.executable] + sys.argv)
+
+    except Exception as e:
+        logger.exception("❌ Ошибка при обновлении и перезапуске:")
+
+
+def check_and_restart_if_updated(commit_file="log/current_commit.txt"):
+    new_commit = check_git_update(commit_file)
+    if new_commit:
+        update_and_restart(new_commit, commit_file)

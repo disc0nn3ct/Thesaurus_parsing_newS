@@ -274,64 +274,66 @@ def send_info_ruonia(client, recipients):
 
 
 ###### Проверка обновления ####
-import subprocess
-import os
-import sys
+# import subprocess
+# import os
+# import sys
 
-def check_git_update(commit_file="log/current_commit.txt"):
-    try:
-        # Убедимся, что папка log существует
-        os.makedirs(os.path.dirname(commit_file), exist_ok=True)
+# def check_git_update(commit_file="log/current_commit.txt"):
+#     try:
+#         # Убедимся, что папка log существует
+#         os.makedirs(os.path.dirname(commit_file), exist_ok=True)
 
-        # Получаем текущий коммит с origin
-        subprocess.run(["git", "fetch"], check=True)
-        new_commit = subprocess.check_output(
-            ["git", "rev-parse", "origin/main"], text=True
-        ).strip()
+#         # Получаем текущий коммит с origin
+#         subprocess.run(["git", "fetch"], check=True)
+#         new_commit = subprocess.check_output(
+#             ["git", "rev-parse", "origin/main"], text=True
+#         ).strip()
 
-        # Если файла нет — создаём и записываем текущий коммит
-        if not os.path.exists(commit_file):
-            with open(commit_file, "w") as f:
-                f.write(new_commit)
-            logger.info(f"📄 Файл {commit_file} создан. Установлен коммит: {new_commit}")
-            return None  # Первый запуск — обновление не требуется
+#         # Если файла нет — создаём и записываем текущий коммит
+#         if not os.path.exists(commit_file):
+#             with open(commit_file, "w") as f:
+#                 f.write(new_commit)
+#             logger.info(f"📄 Файл {commit_file} создан. Установлен коммит: {new_commit}")
+#             return None  # Первый запуск — обновление не требуется
 
-        # Считываем сохранённый коммит
-        with open(commit_file, "r") as f:
-            last_commit = f.read().strip()
+#         # Считываем сохранённый коммит
+#         with open(commit_file, "r") as f:
+#             last_commit = f.read().strip()
 
-        if new_commit != last_commit:
-            logger.info(f"🔄 Обнаружен новый коммит: {new_commit}")
-            return new_commit
-        else:
-            logger.info("✅ Версия актуальна. Обновление не требуется.")
-            return None
+#         if new_commit != last_commit:
+#             logger.info(f"🔄 Обнаружен новый коммит: {new_commit}")
+#             return new_commit
+#         else:
+#             logger.info("✅ Версия актуальна. Обновление не требуется.")
+#             return None
 
-    except Exception as e:
-        logger.exception("❌ Ошибка при проверке обновления Git:")
-        return None
-
-
-def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
-    try:
-        subprocess.run(["git", "pull"], check=True)
-
-        with open(commit_file, "w") as f:
-            f.write(new_commit)
-
-        logger.info("♻️ Проект обновлён. Перезапускаем...")
-        os.execv(sys.executable, ['python'] + sys.argv)
-
-    except Exception as e:
-        logger.exception("❌ Ошибка при обновлении и перезапуске:")
+#     except Exception as e:
+#         logger.exception("❌ Ошибка при проверке обновления Git:")
+#         return None
 
 
+# def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
+#     try:
+#         subprocess.run(["git", "pull"], check=True)
 
-commit_file = "log/current_commit.txt"
-new_commit = check_git_update(commit_file)
-if new_commit:
-    update_and_restart(new_commit, commit_file)
+#         with open(commit_file, "w") as f:
+#             f.write(new_commit)
 
+#         logger.info("♻️ Проект обновлён. Перезапускаем...")
+#         os.execv(sys.executable, ['python'] + sys.argv)
+
+#     except Exception as e:
+#         logger.exception("❌ Ошибка при обновлении и перезапуске:")
+
+
+
+# commit_file = "log/current_commit.txt"
+# new_commit = check_git_update(commit_file)
+# if new_commit:
+#     update_and_restart(new_commit, commit_file)
+
+from functions.auto_update import check_and_restart_if_updated
+check_and_restart_if_updated()
 
 ######
 
