@@ -4,6 +4,15 @@
 pip install -r requirements.txt
 ```
 
+```shell
+mkdir -p ~/projects/
+
+cd ~/projects/
+
+git clone https://github.com/disc0nn3ct/Thesaurus_parsing_newS.git
+
+cd Thesaurus_parsing_newS
+```
 
 от телеги информация
 
