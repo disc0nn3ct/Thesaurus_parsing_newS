@@ -353,22 +353,22 @@ if not recipients:
 from pyrogram import Client, idle
 
 # #################  вернуть 
-# client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
-# # Запуск клиента
-# client.start()
+client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
+# Запуск клиента
+client.start()
 
         
 
 
-# check_if_need_new_rec()
-# send_info_ruonia(client, recipients)
+check_if_need_new_rec()
+send_info_ruonia(client, recipients)
 
 
 
-## idle()
+# idle()
 
-## Завершение сессии
-# client.stop()
+# Завершение сессии
+client.stop()
 
 # #################### вернуть 
 
