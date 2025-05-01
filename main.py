@@ -7,10 +7,21 @@ import requests
 from requests.exceptions import RequestException
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
+import logging
 
 
 import holidays
 from datetime import date
+
+# Настройка логгера
+logging.basicConfig(
+    filename="ruonia_log.txt",
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    encoding="utf-8"
+)
+logger = logging.getLogger(__name__)
+
 
 def is_russian_workday(check_date=None):
     if check_date is None:
@@ -23,64 +34,60 @@ def is_russian_workday(check_date=None):
 # Проверяет за какой промежутек нужен запрос данных и загружает актуальную информацию на сегодня, 
 def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
     try:
-        # Сегодняшняя дата
         today = datetime.today().date()
         end_date = today.strftime("%d.%m.%Y")
         start_date = "11.01.2010"
-
         from_dt = datetime.strptime(start_date, "%d.%m.%Y").strftime("%m/%d/%Y")
         to_dt = today.strftime("%m/%d/%Y")
 
-        # Проверка существующего файла
         if os.path.exists(FILENAME):
             try:
                 local_df = pd.read_excel(FILENAME)
                 local_df["Дата"] = pd.to_datetime(local_df["Дата"], dayfirst=True)
                 last_date = local_df["Дата"].max().date()
                 from_date = local_df["Дата"].min().date()
-                print(f"Файл начинается с {from_date.strftime('%d.%m.%Y')}, а последняя дата в файле: {last_date.strftime('%d.%m.%Y')}")
-                # print("================== ", last_date.strftime('%d.%m.%Y'), " ================= ", end_date, " ======= ", today.strftime('%d.%m.%Y'))
+
+                logger.info(f"Файл найден. С {from_date} по {last_date}")
+
                 if not is_russian_workday():
-                        print("Сегодня выходной или праздник в РФ — обновление RUONIA не требуется.")
-                        return 0 # так как это выходной
-                if last_date.strftime('%d.%m.%Y') == today.strftime('%d.%m.%Y') or ( last_date.strftime('%d.%m.%Y') == ((today-timedelta(days=1)).strftime('%d.%m.%Y')) and datetime.now().time() < time(14, 0)): # И дата - 1 если часов меньше 14 
-                    print("Данные уже актуальны. Обновление не требуется.")
+                    logger.info("Сегодня выходной или праздник — обновление не требуется.")
+                    return 0
+
+                if last_date.strftime('%d.%m.%Y') == today.strftime('%d.%m.%Y') or (
+                    last_date.strftime('%d.%m.%Y') == (today - timedelta(days=1)).strftime('%d.%m.%Y') and
+                    datetime.now().time() < time(14, 0)
+                ):
+                    logger.info("Данные уже актуальны. Обновление не требуется.")
                     return 0
                 else:
-                    print("Появилась новая дата. Загружаем обновлённый файл.")
+                    logger.info("Обнаружены новые данные. Загружаем обновление.")
             except Exception as e:
-                print(f"⚠️ Ошибка при чтении существующего файла: {e}")
-                print("Будет выполнена загрузка заново.")
+                logger.warning(f"Ошибка чтения файла: {e}")
+                logger.info("Выполняем загрузку заново.")
         else:
-            print(f"Файл {FILENAME} не найден. Загружаем с {start_date} по {end_date}.")
-        
-        # Формируем URL
+            logger.info(f"Файл {FILENAME} не найден. Загружаем с {start_date} по {end_date}.")
+
         url = f"https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?Posted=True&From={start_date}&To={end_date}&I1=true&M1=true&M3=true&M6=true&FromDate={from_dt}&ToDate={to_dt}"
-
-
-
-        # Скачиваем файл
-        print(f"Скачиваем данные с ЦБ РФ по ссылке: {url}")
-        response = requests.get(url)
+        logger.info(f"Запрос по ссылке: {url}")
 
         try:
-            response = requests.get(url, timeout=10)  # таймаут на случай зависания
-            response.raise_for_status()  # выбросит ошибку, если код ответа ≠ 200
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            print(f"❌ Ошибка при запросе файла с сайта ЦБ: {e}")
+            logger.error(f"Ошибка запроса данных: {e}")
             return -1
-    
+
         with open(FILENAME, "wb") as f:
             f.write(response.content)
-            print(f"Файл сохранён как: {FILENAME}")
-            f.close()
+            logger.info(f"Файл успешно сохранён: {FILENAME}")
+
         return 1
 
     except RequestException as e:
-        print(f"❌ Ошибка при загрузке данных с сайта ЦБ: {e}")
+        logger.error(f"Ошибка загрузки с сайта ЦБ: {e}")
         return -1
     except Exception as e:
-        print(f"❌ Необработанная ошибка: {e}")
+        logger.exception(f"Необработанная ошибка: {e}")
         return -2
 
 
@@ -135,13 +142,13 @@ def analitics(FILENAME="ruonia_data.xlsx"):
         plt.savefig(output_path)
         plt.close()
 
-        print(f"✅ График сохранён: {output_path}")
+        logger.info(f"📈 График успешно сохранён: {output_path}")
         return output_path
 
     except Exception as e:
-        print(f"❌ Ошибка при построении графика: {e}")
+        logger.exception(f"❌ Ошибка при построении графика: {e}")
         return None
-
+    
 #проветси анализ РУОНИИ 
 def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
     try:
@@ -178,7 +185,6 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
             mean_15 = last_15[col].mean()
             mean_30 = last_30[col].mean()
 
-            # Определение тренда
             if delta_10 > 0 and delta_15 > 0 and delta_30 > 0:
                 trend = "📈 плавный восходящий тренд"
             elif delta_10 < 0 and delta_15 < 0 and delta_30 < 0:
@@ -186,7 +192,6 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
             else:
                 trend = "📊 неопределённое поведение"
 
-            # Формируем блок отчёта по индикатору
             full_text += (
                 f"\n📌 **{col}**\n"
                 f"• Сегодня: {latest:.4f}\n"
@@ -201,11 +206,12 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
                 f"• Тренд: {trend}\n"
             )
 
-        print(full_text)
+        logger.info("🧾 Анализ RUONIA успешно выполнен.")
+        logger.debug(f"\n{full_text}")
         return full_text
 
     except Exception as e:
-        print(f"❌ Ошибка в аналитике RUONIA: {e}")
+        logger.exception(f"❌ Ошибка в аналитике RUONIA: {e}")
         return None
 
 
@@ -220,38 +226,40 @@ def send_info_ruonia(client, recipients):
         if f.startswith(base_name) and f.endswith(extension)
     ] if os.path.exists(folder_path) else []
 
-    # Определяем последний файл
     if matching_files:
         matching_files.sort(reverse=True)
         latest_file = os.path.join(folder_path, matching_files[0])
+        logger.info(f"📂 Найден последний график: {latest_file}")
     else:
-        print("📂 График не найден. Генерируем с помощью analitics()...")
+        logger.warning("📂 График не найден. Генерируем с помощью analitics()...")
         latest_file = analitics()
 
-    # Если после попытки построения всё ещё нет файла — прерываем
     if not latest_file or not os.path.exists(latest_file):
-        print("❌ Не удалось найти или создать файл графика RUONIA.")
+        logger.error("❌ Не удалось найти или создать файл графика RUONIA.")
         return
+    analysis = make_analyze_ruonia()
 
-    # Рассылаем файл и анализ по всем получателям
     for chat_id in recipients:
         try:
-            print(f"📤 Отправка в чат: {chat_id}")
+            logger.info(f"📤 Отправка графика и анализа в чат: {chat_id}")
             client.send_photo(
                 chat_id,
                 photo=latest_file,
                 caption="📈 График RUONIA за всё время"
             )
-            client.send_message(chat_id, make_analyze_ruonia())
+            if analysis:
+                client.send_message(chat_id, analysis)
+                logger.info(f"✅ Анализ успешно отправлен в {chat_id}")
+            else:
+                logger.warning(f"⚠️ Анализ не сгенерирован — сообщение не отправлено в {chat_id}")
         except Exception as e:
-            print(f"⚠️ Ошибка отправки для {chat_id}: {e}")
-
+            logger.exception(f"⚠️ Ошибка при отправке в {chat_id}: {e}")
 
 # https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?Posted=True&From=11.01.2010&To=30.04.2025&I1=true&M1=true&M3=true&M6=true&FromDate=01%2F11%2F2010&ToDate=04%2F30%2F2025
 
 
 #################################### Вернуть ######
-check_if_need_new_rec()
+# check_if_need_new_rec()
 
 # analitics()  # Либо переделать 
 #################################### Вернуть ######
@@ -265,6 +273,9 @@ api_id = os.getenv('api_id')
 bot_token = os.getenv('bot_token')
 
 recipients_raw = os.getenv("for_whom_list", "")
+recipients = [r.strip() for r in recipients_raw.split(",") if r.strip()]
+if not recipients:
+    raise ValueError("❌ Нет получателей. Убедись, что for_whom_list задан в .env")
 
 
 
@@ -276,12 +287,10 @@ client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = 
 # Запуск клиента
 client.start()
 
-
-recipients = [r.strip() for r in recipients_raw.split(",") if r.strip()]
-
-if not recipients:
-    raise ValueError("❌ Нет получателей. Убедись, что for_whom_list задан в .env")
         
+
+
+check_if_need_new_rec()
 send_info_ruonia(client, recipients)
 
 
@@ -291,16 +300,6 @@ send_info_ruonia(client, recipients)
 
 # Завершение сессии
 client.stop()
-
-
-#### Либо так ### 
-# with Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token=bot_token) as client:
-#     client.send_message(for_whom, "📊 Привет! Это автоматическое сообщение от Pyrogram-бота.")
-
-
-####
-
-# client.send_message(for_whom, "📊 Привет! Это автоматическое сообщение от Pyrogram-бота.")
 
 
 
