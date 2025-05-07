@@ -8,6 +8,11 @@ logger = logging.getLogger(__name__)
 
 def check_git_update(commit_file="log/current_commit.txt"):
     try:
+        # Переход в директорию, где находится запускаемый скрипт
+        project_root = os.path.dirname(os.path.abspath(sys.argv[0]))
+        os.chdir(project_root)
+        logger.info(f"📁 Перешли в директорию проекта: {project_root}")
+
         os.makedirs(os.path.dirname(commit_file), exist_ok=True)
         subprocess.run(["git", "fetch"], check=True)
         new_commit = subprocess.check_output(
