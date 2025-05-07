@@ -334,10 +334,10 @@ def send_info_ruonia(client, recipients):
 
 
 
+################################################################################ВЕРНУТЬ
+from functions.auto_update import check_and_restart_if_updated
+check_and_restart_if_updated()
 #################################################################################ВЕРНУТЬ
-# from functions.auto_update import check_and_restart_if_updated
-# check_and_restart_if_updated()
-# #################################################################################ВЕРНУТЬ
 # ######
 
 load_dotenv()  
