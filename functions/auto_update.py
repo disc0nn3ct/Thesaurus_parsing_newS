@@ -37,7 +37,11 @@ def check_git_update(commit_file="log/current_commit.txt"):
 
 def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
     try:
-        subprocess.run(["git", "pull"], check=True)
+        # Убедиться, что работаем из директории скрипта
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        os.chdir(script_dir)
+        
+        subprocess.run(["git", "pull", "origin", "main"], check=True)
         with open(commit_file, "w") as f:
             f.write(new_commit)
 
