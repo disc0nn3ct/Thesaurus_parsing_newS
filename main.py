@@ -253,7 +253,7 @@ def send_info_ruonia(client, recipients):
             client.send_photo(
                 chat_id,
                 photo=latest_file,
-                caption="📈 График RUONIA за всё время"
+                caption="📈 График RUONIA за всё время до " + datetime.today().strftime("%Y-%m-%d")
             )
             if analysis:
                 client.send_message(chat_id, analysis)
