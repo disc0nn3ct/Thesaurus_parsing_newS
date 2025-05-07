@@ -139,7 +139,7 @@ def analitics(FILENAME="ruonia_data.xlsx"):
         plt.plot(df["Дата"], df["3 мес"], label="RUONIA 3 мес", linestyle="-.")
         plt.plot(df["Дата"], df["6 мес"], label="RUONIA 6 мес", linestyle=":")
 
-        plt.title("Динамика индекса RUONIA и срочных ставок", fontsize=14)
+        plt.title("Динамика индекса RUONIA и срочных ставок до "+today_str, fontsize=14)
         plt.xlabel("Дата")
         plt.ylabel("Ставка (%)")
         plt.legend()
@@ -332,10 +332,13 @@ def send_info_ruonia(client, recipients):
 # if new_commit:
 #     update_and_restart(new_commit, commit_file)
 
-from functions.auto_update import check_and_restart_if_updated
-check_and_restart_if_updated()
 
-######
+
+#################################################################################ВЕРНУТЬ
+# from functions.auto_update import check_and_restart_if_updated
+# check_and_restart_if_updated()
+# #################################################################################ВЕРНУТЬ
+# ######
 
 load_dotenv()  
 
