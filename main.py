@@ -8,6 +8,10 @@ from requests.exceptions import RequestException
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import logging
+import matplotlib.dates as mdates
+
+
+import sys
 
 
 import holidays
@@ -36,7 +40,12 @@ def is_russian_workday(check_date=None):
         check_date = date.today()
 
     ru_holidays = holidays.Russia()
-    return check_date.weekday() < 5 and check_date not in ru_holidays
+
+
+
+
+    
+    # return check_date.weekday() < 5 and check_date not in ru_holidays # выходные сб вс и
 
 
 # Проверяет за какой промежутек нужен запрос данных и загружает актуальную информацию на сегодня, 
@@ -99,19 +108,16 @@ def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
         return -2
 
 
-
-# Построение графиков, похоже на скользящие средние 
+# Построение графиков, похоже на скользящие средние
 def analitics(FILENAME="ruonia_data.xlsx"):
-    # Создаем имя файла PNG с текущей датой
     today_str = datetime.today().strftime("%Y-%m-%d")
     base_filename = f"ruonia_trend_{today_str}"
     ext = ".png"
 
-    # Папка для сохранения
     output_dir = os.path.join(os.getcwd(), "src")
-    os.makedirs(output_dir, exist_ok=True)  # создаём, если нет
+    os.makedirs(output_dir, exist_ok=True)
 
-    # Проверка существующих файлов и добавление версии
+    # Генерация имени для полного графика
     version = 1
     output_path = os.path.join(output_dir, base_filename + ext)
     while os.path.exists(output_path):
@@ -127,34 +133,65 @@ def analitics(FILENAME="ruonia_data.xlsx"):
             "3 месяца": "3 мес",
             "6 месяцев": "6 мес"
         })
-
         df["Дата"] = pd.to_datetime(df["Дата"], dayfirst=True)
         df = df.dropna(subset=["RUONIA", "1 мес", "3 мес", "6 мес"])
         df = df.sort_values("Дата")
 
-        # Строим график
+        # --- 📈 График со всеми данными ---
         plt.figure(figsize=(14, 7))
         plt.plot(df["Дата"], df["RUONIA"], label="RUONIA (overnight)", linewidth=2)
         plt.plot(df["Дата"], df["1 мес"], label="RUONIA 1 мес", linestyle="--")
         plt.plot(df["Дата"], df["3 мес"], label="RUONIA 3 мес", linestyle="-.")
         plt.plot(df["Дата"], df["6 мес"], label="RUONIA 6 мес", linestyle=":")
 
-        plt.title("Динамика индекса RUONIA и срочных ставок до "+today_str, fontsize=14)
+        plt.title(f"Динамика индекса RUONIA и срочных ставок до {today_str}", fontsize=14)
         plt.xlabel("Дата")
         plt.ylabel("Ставка (%)")
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
-
-        # Сохраняем график
         plt.savefig(output_path)
         plt.close()
 
-        logger.info(f"📈 График успешно сохранён: {output_path}")
-        return output_path
+        logger.info(f"📈 График (все данные) сохранён: {output_path}")
+
+        # --- 📉 График за последние 90 дней ---
+        short_df = df[df["Дата"] >= (datetime.today() - timedelta(days=90))]
+
+        plt.figure(figsize=(14, 7))
+        plt.plot(short_df["Дата"], short_df["1 мес"], label="RUONIA 1 мес", linestyle="--")
+        plt.plot(short_df["Дата"], short_df["3 мес"], label="RUONIA 3 мес", linestyle="-.")
+        plt.plot(short_df["Дата"], short_df["6 мес"], label="RUONIA 6 мес", linestyle=":")
+
+        plt.title(f"RUONIA (последние 90 дней) до {today_str}", fontsize=14)
+        plt.xlabel("Дата")
+        plt.ylabel("Ставка (%)")
+        plt.legend()
+        plt.grid(True)
+
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
+        plt.xticks(rotation=45)
+
+        plt.tight_layout()
+
+        # Сохраняем второй файл с _last90
+        short_filename = f"{base_filename}_last90"
+        short_output_path = os.path.join(output_dir, short_filename + ext)
+        version = 1
+        while os.path.exists(short_output_path):
+            version += 1
+            short_output_path = os.path.join(output_dir, f"{short_filename}_v{version}{ext}")
+
+        plt.savefig(short_output_path)
+        plt.close()
+
+        logger.info(f"📉 График (последние 90 дней) сохранён: {short_output_path}")
+        return output_path, short_output_path
 
     except Exception as e:
-        logger.exception(f"❌ Ошибка при построении графика: {e}")
+        logger.exception(f"❌ Ошибка при построении графиков: {e}")
         return None
     
 #проветси анализ РУОНИИ 
@@ -226,12 +263,20 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
 def send_info_ruonia(client, recipients):
     folder_path = os.path.join(os.getcwd(), "src")
     base_name = "ruonia_trend_"
+    short_base_name = "ruonia_trend_"
+    short_suffix = "_last90"
     extension = ".png"
 
     # Получаем список подходящих файлов
     matching_files = [
         f for f in os.listdir(folder_path)
-        if f.startswith(base_name) and f.endswith(extension)
+        if f.startswith(base_name) and f.endswith(extension) and short_suffix not in f
+    ] if os.path.exists(folder_path) else []
+
+    # Получаем список коротких графиков (last90)
+    matching_short_files = [
+        f for f in os.listdir(folder_path)
+        if f.startswith(short_base_name) and short_suffix in f and f.endswith(extension)
     ] if os.path.exists(folder_path) else []
 
     if matching_files:
@@ -242,9 +287,17 @@ def send_info_ruonia(client, recipients):
         logger.warning("📂 График не найден. Генерируем с помощью analitics()...")
         latest_file = analitics()
 
+    # Поиск соответствующего short-файла
+    latest_short_file = None
+    if matching_short_files:
+        matching_short_files.sort(reverse=True)
+        latest_short_file = os.path.join(folder_path, matching_short_files[0])
+        logger.info(f"📂 Найден короткий график (90 дней): {latest_short_file}")
+
     if not latest_file or not os.path.exists(latest_file):
         logger.error("❌ Не удалось найти или создать файл графика RUONIA.")
         return
+
     analysis = make_analyze_ruonia()
 
     for chat_id in recipients:
@@ -255,6 +308,15 @@ def send_info_ruonia(client, recipients):
                 photo=latest_file,
                 caption="📈 График RUONIA за всё время до " + datetime.today().strftime("%Y-%m-%d")
             )
+
+            # Отправка дополнительного графика (last90), если найден
+            if latest_short_file and os.path.exists(latest_short_file):
+                client.send_photo(
+                    chat_id,
+                    photo=latest_short_file,
+                    caption="📉 RUONIA за последние 90 дней"
+                )
+
             if analysis:
                 client.send_message(chat_id, analysis)
                 logger.info(f"✅ Анализ успешно отправлен в {chat_id}")
@@ -262,6 +324,7 @@ def send_info_ruonia(client, recipients):
                 logger.warning(f"⚠️ Анализ не сгенерирован — сообщение не отправлено в {chat_id}")
         except Exception as e:
             logger.exception(f"⚠️ Ошибка при отправке в {chat_id}: {e}")
+
 
 # https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?Posted=True&From=11.01.2010&To=30.04.2025&I1=true&M1=true&M3=true&M6=true&FromDate=01%2F11%2F2010&ToDate=04%2F30%2F2025
 
