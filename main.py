@@ -44,7 +44,7 @@ def is_russian_workday(check_date=None):
 
 
 
-    
+    return check_date not in ru_holidays # выходные сб вс и    
     # return check_date.weekday() < 5 and check_date not in ru_holidays # выходные сб вс и
 
 
@@ -67,7 +67,8 @@ def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
                 logger.info(f"Файл найден. С {from_date} по {last_date}")
 
                 if not is_russian_workday():
-                    logger.info("Сегодня выходной или праздник — обновление не требуется.")
+                    # logger.info("Сегодня выходной или праздник — обновление не требуется.")
+                    logger.info("Праздник — обновление не требуется.")
                     return 0
 
                 if last_date.strftime('%d.%m.%Y') == today.strftime('%d.%m.%Y') or (
@@ -279,13 +280,28 @@ def send_info_ruonia(client, recipients):
         if f.startswith(short_base_name) and short_suffix in f and f.endswith(extension)
     ] if os.path.exists(folder_path) else []
 
-    if matching_files:
-        matching_files.sort(reverse=True)
-        latest_file = os.path.join(folder_path, matching_files[0])
-        logger.info(f"📂 Найден последний график: {latest_file}")
-    else:
-        logger.warning("📂 График не найден. Генерируем с помощью analitics()...")
-        latest_file = analitics()
+    # if matching_files:
+    #     matching_files.sort(reverse=True)
+    #     latest_file = os.path.join(folder_path, matching_files[0])
+    #     logger.info(f"📂 Найден последний график: {latest_file}")
+    # else:
+    #     logger.warning("📂 График не найден. Генерируем с помощью analitics()...")
+    #     latest_file = analitics()
+
+    #Заменил на всегда генерацию
+    logger.warning("📂 Всегда!!!!. Генерируем с помощью analitics()...")
+    # latest_file, latest_short_file = analitics()
+
+    # latest_file = analitics()
+    result = analitics()
+    if not result:
+        logger.error("❌ Не удалось создать графики.")
+
+    latest_file, latest_short_file = result
+
+    if not os.path.exists(latest_file):
+        logger.error("❌ Файл графика не найден после генерации.")
+
 
     # Поиск соответствующего short-файла
     latest_short_file = None
@@ -293,6 +309,10 @@ def send_info_ruonia(client, recipients):
         matching_short_files.sort(reverse=True)
         latest_short_file = os.path.join(folder_path, matching_short_files[0])
         logger.info(f"📂 Найден короткий график (90 дней): {latest_short_file}")
+
+
+
+
 
     if not latest_file or not os.path.exists(latest_file):
         logger.error("❌ Не удалось найти или создать файл графика RUONIA.")
