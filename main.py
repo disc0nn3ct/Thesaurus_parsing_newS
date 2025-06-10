@@ -173,7 +173,7 @@ def analitics(FILENAME="ruonia_data.xlsx"):
         ax = plt.gca()
         ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
-        plt.xticks(rotation=45)
+        plt.xticks(rotation=90)
 
         plt.tight_layout()
 
