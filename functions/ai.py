@@ -8,13 +8,13 @@ from dotenv import load_dotenv
 
 # ===== 1) ENV =====
 load_dotenv()
-PPLX_API_KEY = os.getenv("perplexity_api_key")
+AI_API_KEY = os.getenv("ai_api_key")
 BASE_URL = os.getenv("base_url")
 
-if not PPLX_API_KEY:
-    raise RuntimeError("perplexity_api_key is missing in .env")
+if not AI_API_KEY:
+    raise RuntimeError("AI_API_KEY is missing in .env")
 
-client = OpenAI(api_key=PPLX_API_KEY, base_url=BASE_URL)
+client = OpenAI(api_key=AI_API_KEY, base_url=BASE_URL)
 
 # ===== 2) PROMPT (только Россия) =====
 SYSTEM_PROMPT = """You are a **Russian Equity Trader’s Assistant**. Your task is to generate **morning and evening actionable briefs** about the MOEX equity market.
