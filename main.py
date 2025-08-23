@@ -349,184 +349,184 @@ def send_info_ruonia(client, recipients):
 # https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?Posted=True&From=11.01.2010&To=30.04.2025&I1=true&M1=true&M3=true&M6=true&FromDate=01%2F11%2F2010&ToDate=04%2F30%2F2025
 
 ###########################################################################################################################AI
-from functions.ai import run_brief
+# from functions.ai import run_brief
 
-# ---------- основная функция с контекст-менеджером ----------
-def send_ai(client, recipients):
-    """
-    Получает ответ от модели (Markdown) через functions.ai.run_brief и рассылает его:
-      • СНАЧАЛА сообщениями (по две главы в одном сообщении, укладываясь в лимит Telegram),
-      • затем прикладывает один архивный .md файл в папку src/ai/ и отправляет в чат.
+# # ---------- основная функция с контекст-менеджером ----------
+# def send_ai(client, recipients):
+#     """
+#     Получает ответ от модели (Markdown) через functions.ai.run_brief и рассылает его:
+#       • СНАЧАЛА сообщениями (по две главы в одном сообщении, укладываясь в лимит Telegram),
+#       • затем прикладывает один архивный .md файл в папку src/ai/ и отправляет в чат.
 
-    Устойчива к разным сигнатурам run_brief():
-      - может вернуть (answer),
-      - или (answer, tokens),
-      - или (answer, tokens, *anything_else).  
-    В любом случае нормализует Markdown (закрывает ```), делит на главы `## N. ...`.
-    При ошибке разметки повторяет отправку без parse_mode.
-    """
-    import os
-    import re
-    from datetime import datetime
-    from functions.ai import run_brief
+#     Устойчива к разным сигнатурам run_brief():
+#       - может вернуть (answer),
+#       - или (answer, tokens),
+#       - или (answer, tokens, *anything_else).  
+#     В любом случае нормализует Markdown (закрывает ```), делит на главы `## N. ...`.
+#     При ошибке разметки повторяет отправку без parse_mode.
+#     """
+#     import os
+#     import re
+#     from datetime import datetime
+#     from functions.ai import run_brief
 
-    TELEGRAM_LIMIT = 4000
+#     TELEGRAM_LIMIT = 4000
 
-    # --- helpers -----------------------------------------------------------
-    def normalize_code_fences(text: str) -> str:
-        # Приводим ```md/markdown к простому ``` и закрываем незакрытые
-        text = re.sub(r"```\s*(markdown|md|Markdown)\s*\n", "```\n", text)
-        if text.count("```") % 2 == 1:
-            text = text.rstrip() + "\n\n```\n"
-        return text
+#     # --- helpers -----------------------------------------------------------
+#     def normalize_code_fences(text: str) -> str:
+#         # Приводим ```md/markdown к простому ``` и закрываем незакрытые
+#         text = re.sub(r"```\s*(markdown|md|Markdown)\s*\n", "```\n", text)
+#         if text.count("```") % 2 == 1:
+#             text = text.rstrip() + "\n\n```\n"
+#         return text
 
-    def split_into_chapters(md: str):
-        # Глава = заголовок вида: ## 1. ...
-        header_pat = re.compile(r"^##\s+\d+\.[\t ]*.*$", re.M)
-        matches = list(header_pat.finditer(md))
-        if not matches:
-            return [md]
-        parts = []
-        first_start = matches[0].start()
-        prologue = md[:first_start].strip("\n")
-        if prologue:
-            parts.append(prologue)
-        for i, m in enumerate(matches):
-            start = m.start()
-            end = matches[i+1].start() if i+1 < len(matches) else len(md)
-            parts.append(md[start:end].strip("\n"))
-        return parts
+#     def split_into_chapters(md: str):
+#         # Глава = заголовок вида: ## 1. ...
+#         header_pat = re.compile(r"^##\s+\d+\.[\t ]*.*$", re.M)
+#         matches = list(header_pat.finditer(md))
+#         if not matches:
+#             return [md]
+#         parts = []
+#         first_start = matches[0].start()
+#         prologue = md[:first_start].strip("\n")
+#         if prologue:
+#             parts.append(prologue)
+#         for i, m in enumerate(matches):
+#             start = m.start()
+#             end = matches[i+1].start() if i+1 < len(matches) else len(md)
+#             parts.append(md[start:end].strip("\n"))
+#         return parts
 
-    def split_hard(block: str, limit: int):
-        # Абзацы -> строки -> символы, нормализуя ``` в каждом фрагменте
-        parts, cur = [], ""
-        def flush():
-            nonlocal cur
-            if cur.strip():
-                parts.append(normalize_code_fences(cur).strip())
-                cur = ""
-        for p in block.split("\n\n"):
-            chunk = p + "\n\n"
-            if len(chunk) > limit:
-                for ln in chunk.splitlines(True):
-                    if len(ln) > limit:
-                        for s in range(0, len(ln), limit):
-                            part = ln[s:s+limit]
-                            if cur and len(cur)+len(part) > limit:
-                                flush()
-                            cur += part
-                    else:
-                        if cur and len(cur)+len(ln) > limit:
-                            flush()
-                        cur += ln
-            else:
-                if cur and len(cur)+len(chunk) > limit:
-                    flush()
-                cur += chunk
-        flush()
-        return parts
+#     def split_hard(block: str, limit: int):
+#         # Абзацы -> строки -> символы, нормализуя ``` в каждом фрагменте
+#         parts, cur = [], ""
+#         def flush():
+#             nonlocal cur
+#             if cur.strip():
+#                 parts.append(normalize_code_fences(cur).strip())
+#                 cur = ""
+#         for p in block.split("\n\n"):
+#             chunk = p + "\n\n"
+#             if len(chunk) > limit:
+#                 for ln in chunk.splitlines(True):
+#                     if len(ln) > limit:
+#                         for s in range(0, len(ln), limit):
+#                             part = ln[s:s+limit]
+#                             if cur and len(cur)+len(part) > limit:
+#                                 flush()
+#                             cur += part
+#                     else:
+#                         if cur and len(cur)+len(ln) > limit:
+#                             flush()
+#                         cur += ln
+#             else:
+#                 if cur and len(cur)+len(chunk) > limit:
+#                     flush()
+#                 cur += chunk
+#         flush()
+#         return parts
 
-    def bundle_messages(chapters, limit: int):
-        # Склеиваем по 2 главы, уважая лимит. Длинные главы режем.
-        msgs = []
-        i, n = 0, len(chapters)
-        while i < n:
-            a = normalize_code_fences(chapters[i])
-            if i + 1 < n:
-                b = normalize_code_fences(chapters[i+1])
-                if len(a) + len(b) <= limit:
-                    msgs.append((a + "\n\n" + b).strip())
-                    i += 2
-                    continue
-            if len(a) > limit:
-                msgs.extend(split_hard(a, limit))
-            else:
-                msgs.append(a)
-            i += 1
-        return msgs
+#     def bundle_messages(chapters, limit: int):
+#         # Склеиваем по 2 главы, уважая лимит. Длинные главы режем.
+#         msgs = []
+#         i, n = 0, len(chapters)
+#         while i < n:
+#             a = normalize_code_fences(chapters[i])
+#             if i + 1 < n:
+#                 b = normalize_code_fences(chapters[i+1])
+#                 if len(a) + len(b) <= limit:
+#                     msgs.append((a + "\n\n" + b).strip())
+#                     i += 2
+#                     continue
+#             if len(a) > limit:
+#                 msgs.extend(split_hard(a, limit))
+#             else:
+#                 msgs.append(a)
+#             i += 1
+#         return msgs
 
-    # --- get model answer --------------------------------------------------
-    try:
-        result = run_brief()
-    except Exception as e:
-        for chat_id in recipients:
-            try:
-                client.send_message(chat_id, f"❌ Ошибка генерации AI-brief: {e}")
-            except Exception:
-                pass
-        return
+#     # --- get model answer --------------------------------------------------
+#     try:
+#         result = run_brief()
+#     except Exception as e:
+#         for chat_id in recipients:
+#             try:
+#                 client.send_message(chat_id, f"❌ Ошибка генерации AI-brief: {e}")
+#             except Exception:
+#                 pass
+#         return
 
-    # Нормализуем возвращаемое значение под (answer, tokens)
-    answer, tokens = None, None
-    if isinstance(result, tuple):
-        if len(result) >= 1:
-            answer = result[0]
-        if len(result) >= 2:
-            tokens = result[1]
-    else:
-        answer = result
+#     # Нормализуем возвращаемое значение под (answer, tokens)
+#     answer, tokens = None, None
+#     if isinstance(result, tuple):
+#         if len(result) >= 1:
+#             answer = result[0]
+#         if len(result) >= 2:
+#             tokens = result[1]
+#     else:
+#         answer = result
 
-    if not isinstance(answer, str) or not answer.strip():
-        for chat_id in recipients:
-            try:
-                client.send_message(chat_id, "⚠️ Пустой ответ от модели.")
-            except Exception:
-                pass
-        return
+#     if not isinstance(answer, str) or not answer.strip():
+#         for chat_id in recipients:
+#             try:
+#                 client.send_message(chat_id, "⚠️ Пустой ответ от модели.")
+#             except Exception:
+#                 pass
+#         return
 
-    # --- prepare text & files ---------------------------------------------
-    answer = normalize_code_fences(answer)
+#     # --- prepare text & files ---------------------------------------------
+#     answer = normalize_code_fences(answer)
 
-    # Сохраняем один .md файл для архива и возможного fallback
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base_dir = os.path.join(os.getcwd(), "src", "ai")
-    os.makedirs(base_dir, exist_ok=True)
-    md_path = os.path.join(base_dir, f"ai_brief_{ts}.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(answer)
-        if tokens:
-            f.write("\n\n" + str(tokens))
+#     # Сохраняем один .md файл для архива и возможного fallback
+#     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+#     base_dir = os.path.join(os.getcwd(), "src", "ai")
+#     os.makedirs(base_dir, exist_ok=True)
+#     md_path = os.path.join(base_dir, f"ai_brief_{ts}.md")
+#     with open(md_path, "w", encoding="utf-8") as f:
+#         f.write(answer)
+#         if tokens:
+#             f.write("\n\n" + str(tokens))
 
-    # Формируем список сообщений (одним, если умещается)
-    if len(answer) <= TELEGRAM_LIMIT:
-        messages = [answer]
-    else:
-        chapters = split_into_chapters(answer) or [answer]
-        messages = bundle_messages(chapters, TELEGRAM_LIMIT)
+#     # Формируем список сообщений (одним, если умещается)
+#     if len(answer) <= TELEGRAM_LIMIT:
+#         messages = [answer]
+#     else:
+#         chapters = split_into_chapters(answer) or [answer]
+#         messages = bundle_messages(chapters, TELEGRAM_LIMIT)
 
-    # --- send: messages first, then file ----------------------------------
-    for chat_id in recipients:
-        # 1) Сначала пробуем Markdown
-        sent_msgs = True
-        try:
-            for i, msg in enumerate(messages, 1):
-                prefix = f"Часть {i}/{len(messages)}\n\n" if len(messages) > 1 else ""
-                client.send_message(chat_id, prefix + msg, parse_mode="Markdown")
-        except Exception:
-            sent_msgs = False
+#     # --- send: messages first, then file ----------------------------------
+#     for chat_id in recipients:
+#         # 1) Сначала пробуем Markdown
+#         sent_msgs = True
+#         try:
+#             for i, msg in enumerate(messages, 1):
+#                 prefix = f"Часть {i}/{len(messages)}\n\n" if len(messages) > 1 else ""
+#                 client.send_message(chat_id, prefix + msg, parse_mode="Markdown")
+#         except Exception:
+#             sent_msgs = False
 
-        # 2) Если не получилось — отправим без parse_mode
-        if not sent_msgs:
-            try:
-                for i, msg in enumerate(messages, 1):
-                    prefix = f"Часть {i}/{len(messages)}\n\n" if len(messages) > 1 else ""
-                    client.send_message(chat_id, prefix + msg)
-                sent_msgs = True
-            except Exception:
-                sent_msgs = False
+#         # 2) Если не получилось — отправим без parse_mode
+#         if not sent_msgs:
+#             try:
+#                 for i, msg in enumerate(messages, 1):
+#                     prefix = f"Часть {i}/{len(messages)}\n\n" if len(messages) > 1 else ""
+#                     client.send_message(chat_id, prefix + msg)
+#                 sent_msgs = True
+#             except Exception:
+#                 sent_msgs = False
 
-        # 3) Короткое сообщение про токены
-        if tokens and sent_msgs:
-            try:
-                client.send_message(chat_id, str(tokens))
-            except Exception:
-                pass
+#         # 3) Короткое сообщение про токены
+#         if tokens and sent_msgs:
+#             try:
+#                 client.send_message(chat_id, str(tokens))
+#             except Exception:
+#                 pass
 
-        # 4) И один архивный .md файл
-        try:
-            client.send_document(chat_id, md_path, caption="📄 AI-brief (.md)")
-        except Exception:
-            pass
+#         # 4) И один архивный .md файл
+#         try:
+#             client.send_document(chat_id, md_path, caption="📄 AI-brief (.md)")
+#         except Exception:
+#             pass
 
 
 
