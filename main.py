@@ -919,11 +919,11 @@ client.start()
 
 
 check_if_need_new_rec()
-# send_info_ruonia(client, recipients)
+send_info_ruonia(client, recipients)
 
 send_wordstat_digest(client, recipients)
 
-# send_ai(client, recipients)
+send_ai(client, recipients)
 
 
 # idle()
