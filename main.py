@@ -1,4 +1,4 @@
-# Thesaurus
+# ThesaurusV2
 
 import pandas as pd
 from datetime import datetime, timedelta, time
@@ -46,6 +46,292 @@ def is_russian_workday(check_date=None):
 
     return check_date not in ru_holidays # выходные сб вс и    
     # return check_date.weekday() < 5 and check_date not in ru_holidays # выходные сб вс и
+
+#### 
+# ======================= WORDSTAT: кризисные ключи -> графики -> рассылка =======================
+import os
+import re
+import json
+import time
+import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# из .env:
+#  - WORDSTAT_OAUTH  — OAuth-токен, который ты получил по инструкции Яндекса
+#  - WORDSTAT_CLIENT_ID — ClientId приложения (с той же страницы)
+WORDSTAT_OAUTH = os.getenv("WORDSTAT_OAUTH")
+WORDSTAT_CLIENT_ID = os.getenv("WORDSTAT_CLIENT_ID")
+
+# базовый URL API из официальной доки
+WORDSTAT_API = "https://api.wordstat.yandex.net"
+WORDSTAT_REGION_RUSSIA = 225  # Россия
+WORDSTAT_SAVE_DIR = os.path.join("src", "wordstat")
+os.makedirs(WORDSTAT_SAVE_DIR, exist_ok=True)
+
+# клиент Perplexity из твоего ai.py
+from functions.ai import client as ai_client
+
+
+def _last_sunday_on_or_before(d: date) -> date:
+    # Monday=0..Sunday=6 -> до ближайшего прошедшего воскресенья
+    return d - timedelta(days=(d.weekday() + 1) % 7)
+
+
+def _first_monday_on_or_after(d: date) -> date:
+    return d + timedelta(days=(7 - d.weekday()) % 7)
+
+
+def _prepare_week_bounds():
+    """
+    fromDate: первый понедельник >= 2018-01-01
+    toDate: последнее воскресенье не позднее сегодня-2
+    """
+    today = datetime.today().date()
+    to_date = today - timedelta(days=2)
+    to_date = _last_sunday_on_or_before(to_date)
+
+    from_date = date(2018, 1, 1)
+    from_date = _first_monday_on_or_after(from_date)
+    return from_date, to_date
+
+
+def _wordstat_post(path: str, payload: dict, retries: int = 4, backoff: float = 1.5):
+    """
+    Универсальный POST к Wordstat API.
+    Использует прямой OAuth-токен (Bearer), как в официальной доке:
+    https://yandex.ru/support2/wordstat/ru/content/api-wordstat
+    """
+    if not WORDSTAT_OAUTH or not WORDSTAT_CLIENT_ID:
+        raise RuntimeError("WORDSTAT_OAUTH или WORDSTAT_CLIENT_ID отсутствуют в .env")
+
+    url = f"{WORDSTAT_API}{path}"
+
+    headers = {
+        "Authorization": f"Bearer {WORDSTAT_OAUTH}",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Client-Id": WORDSTAT_CLIENT_ID,
+    }
+
+    for attempt in range(1, retries + 1):
+        r = requests.post(url, headers=headers, data=json.dumps(payload), timeout=30)
+
+        if r.status_code == 200:
+            return r.json()
+
+        # 429 / 503 — стандартный бэкофф
+        if r.status_code in (429, 503):
+            wait = backoff ** attempt
+            logger.warning(f"Wordstat {path} вернул {r.status_code}. Ретрай через {wait:.1f}s...")
+            time.sleep(wait)
+            continue
+
+        # остальные ошибки — пробрасываем с телом
+        try:
+            err = r.json()
+        except Exception:
+            err = r.text
+        raise RuntimeError(f"Wordstat error {r.status_code}: {err}")
+
+    raise RuntimeError(f"Wordstat {path} не ответил после {retries} попыток")
+
+
+def get_crisis_keywords_via_perplexity() -> list[str]:
+    """
+    Берём 8 русскоязычных ключевых фраз про кризисы/проблемы/стрессы населения
+    через того же клиента, что и run_brief() (ai.py).
+
+    Формат ответа — JSON-массив строк (ровно 8).
+    """
+    sys_prompt = (
+        "Сформируй 8 русскоязычных кратких ключевых фраз, по которым можно ежедневно оценивать настроения и страхи людей во время экономических/социальных кризисов, "
+        "должно отражать: финансы, занятость, банки, цены, валюту, долги, отключения, здоровье/аптеки. "
+        "Только JSON-массив из ровно 8 строк без пояснений, пример: [\"обвал рубля\", \"рост цен\" ...]"
+    )
+    resp = ai_client.chat.completions.create(
+        model="sonar-pro",
+        messages=[
+            {"role": "system", "content": sys_prompt},
+            {"role": "user", "content": "Дай массив из 8 фраз. Только JSON, без текста до/после."}
+        ],
+        temperature=0.2,
+        top_p=0.9,
+        max_tokens=400,
+        stream=False,
+    )
+    raw = resp.choices[0].message.content.strip()
+    try:
+        arr = json.loads(raw)
+        if not isinstance(arr, list) or len(arr) != 8:
+            raise ValueError("Ожидался массив из 8 элементов")
+        return [str(x).strip() for x in arr]
+    except Exception as e:
+        logger.warning(f"Ключевые слова от Perplexity не распарсились: {e}. Использую дефолтный набор.")
+        return [
+            "обвал рубля", "рост цен", "дефолт", "безработица",
+            "кредитные каникулы", "закрытие банков", "дефицит лекарств", "отключение электричества"
+        ]
+
+
+def fetch_wordstat_dynamics(phrase: str, regions=None, devices=None) -> pd.DataFrame:
+    """
+    Достаёт weekly-динамику counts/share по фразе с 2018-01-01 до сегодня-2 (последнее воскресенье).
+    Использует метод /v1/dynamics.
+    """
+    if regions is None:
+        regions = [WORDSTAT_REGION_RUSSIA]
+    if devices is None:
+        devices = ["all"]
+
+    from_date, to_date = _prepare_week_bounds()
+    payload = {
+        "phrase": phrase,  # в этом методе допустим только оператор '+', но простая фраза тоже ок
+        "period": "weekly",
+        "fromDate": from_date.strftime("%Y-%m-%d"),
+        "toDate": to_date.strftime("%Y-%m-%d"),
+        "regions": regions,
+        "devices": devices,
+    }
+    data = _wordstat_post("/v1/dynamics", payload)
+    dyn = data.get("dynamics", [])
+    df = pd.DataFrame(dyn)
+    if df.empty:
+        df = pd.DataFrame(columns=["date", "count", "share"])
+    else:
+        df["date"] = pd.to_datetime(df["date"])
+        df = df.sort_values("date").reset_index(drop=True)
+    df["phrase"] = phrase
+    return df
+
+
+def build_and_save_charts(df_all: pd.DataFrame, out_dir: str = WORDSTAT_SAVE_DIR) -> list[str]:
+    """
+    По каждой фразе рисуем отдельный PNG: count во времени (share не рисуем для простоты).
+    """
+    saved = []
+    for phrase, df in df_all.groupby("phrase"):
+        if df.empty:
+            continue
+        plt.figure(figsize=(12, 5))
+        plt.plot(df["date"], df["count"], linewidth=2)
+        plt.title(f"Wordstat weekly: {phrase}")
+        plt.xlabel("Дата (недели)")
+        plt.ylabel("Число запросов")
+        plt.grid(True)
+        plt.tight_layout()
+
+        safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
+        fname = f"wordstat_{safe_phrase}.png"
+        fpath = os.path.join(out_dir, fname)
+        base, ext = os.path.splitext(fpath)
+        k = 1
+        while os.path.exists(fpath):
+            k += 1
+            fpath = f"{base}_{k}{ext}"
+
+        plt.savefig(fpath)
+        plt.close()
+        saved.append(fpath)
+        logger.info(f"💾 Сохранён график: {fpath}")
+    return saved
+
+
+def send_wordstat_digest(tg_client, recipients):
+    """
+    Главный раннер:
+      1) берём 8 ключей у Perplexity,
+      2) тянем динамику из Wordstat,
+      3) строим графики,
+      4) рассылаем в TG.
+
+    При любой ошибке Wordstat просто шлём текстовое уведомление, не валим всю программу.
+    """
+    # 1) ключевые фразы
+    try:
+        keywords = get_crisis_keywords_via_perplexity()
+    except Exception as e:
+        logger.exception(f"Perplexity не вернул ключи: {e}")
+        keywords = [
+            "обвал рубля", "рост цен", "дефолт", "безработица",
+            "кредитные каникулы", "закрытие банков", "дефицит лекарств", "отключение электричества"
+        ]
+
+    logger.info(f"Wordstat: ключевые фразы: {keywords}")
+
+    # 2) динамика по каждому слову
+    frames = []
+    errors = []
+    for kw in keywords:
+        try:
+            df_kw = fetch_wordstat_dynamics(kw)
+            if not df_kw.empty:
+                frames.append(df_kw)
+                logger.info(f"Wordstat: по фразе '{kw}' получено {len(df_kw)} точек")
+            else:
+                logger.warning(f"Wordstat: по фразе '{kw}' пришёл пустой ответ (dynamics=[])")
+            time.sleep(0.3)  # чутка поддросим, чтобы не забанили по RPS
+        except Exception as e:
+            logger.exception(f"Ошибка Wordstat по '{kw}': {e}")
+            errors.append((kw, str(e)))
+
+    # Если НИ по одной фразе данных нет — шлём предупреждение и выходим из функции
+    if not frames:
+        msg = (
+            "⚠️ Не удалось получить данные из Яндекс.Вордстат ни по одной фразе.\n"
+            "Возможные причины:\n"
+            "• неверный WORDSTAT_OAUTH или WORDSTAT_CLIENT_ID;\n"
+            "• приложению не выдан доступ к API Вордстата;\n"
+            "• исчерпана квота запросов или превышен лимит RPS;\n"
+            "• временная ошибка сервиса.\n\n"
+            "Подробности смотри в логах (ищи сообщения с префиксом 'Wordstat')."
+        )
+        for chat_id in recipients:
+            try:
+                tg_client.send_message(chat_id, msg)
+            except Exception as e:
+                logger.exception(f"⚠️ Ошибка отправки уведомления в {chat_id}: {e}")
+        return
+
+    # 3) строим графики
+    all_df = pd.concat(frames, ignore_index=True)
+    files = build_and_save_charts(all_df)
+
+    if not files:
+        msg = (
+            "⚠️ Wordstat вернул данные, но не удалось построить ни одного графика "
+            "(возможно, все DataFrame оказались пустыми после фильтрации)."
+        )
+        for chat_id in recipients:
+            try:
+                tg_client.send_message(chat_id, msg)
+            except Exception as e:
+                logger.exception(f"⚠️ Ошибка отправки уведомления в {chat_id}: {e}")
+        return
+
+    # 4) рассылка в Telegram
+    header = (
+        "📊 Еженедельные тренды поисковых запросов (Яндекс.Вордстат)\n"
+        "Период: с 2018-01-01 по последние доступные недели.\n"
+        "Источник: API /v1/dynamics."
+    )
+    for chat_id in recipients:
+        try:
+            tg_client.send_message(chat_id, header)
+            for f in files:
+                tg_client.send_photo(chat_id, photo=f, caption=os.path.basename(f))
+            logger.info(f"✅ Wordstat-дайджест отправлен в {chat_id}")
+        except Exception as e:
+            logger.exception(f"⚠️ Ошибка отправки в {chat_id}: {e}")
+
+# ======================= /WORDSTAT =======================
+
+
+
 
 
 # Проверяет за какой промежутек нужен запрос данных и загружает актуальную информацию на сегодня, 
@@ -633,8 +919,11 @@ client.start()
 
 
 check_if_need_new_rec()
-send_info_ruonia(client, recipients)
-send_ai(client, recipients)
+# send_info_ruonia(client, recipients)
+
+send_wordstat_digest(client, recipients)
+
+# send_ai(client, recipients)
 
 
 # idle()
