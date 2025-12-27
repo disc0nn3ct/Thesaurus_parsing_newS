@@ -473,7 +473,7 @@ def plot_russia_choropleth_per_capita(
             pio.kaleido.scope.executable = CHROMIUM
         except Exception:
             pass
-        
+
     print([x for x in dir(pio.kaleido.scope) if "exec" in x.lower() or "chrome" in x.lower()])
 
     # НУЖЕН kaleido: pip install kaleido
@@ -738,7 +738,12 @@ def send_incidents_daily_regions_digest(tg_client, recipients, phrases=None, top
                 tg_client.send_photo(chat_id, photo=total_path)
 
             for ph, path in map_paths:
-                tg_client.send_photo(chat_id, photo=path, caption=f"Карта РФ: {ph}")
+                ext = os.path.splitext(path)[1].lower()
+                if ext in (".png", ".jpg", ".jpeg", ".webp"):
+                    tg_client.send_photo(chat_id, photo=path, caption=f"Карта РФ: {ph}")
+                else:
+                    # html/pdf/что угодно — документом
+                    tg_client.send_document(chat_id, document=path, caption=f"Карта РФ (HTML): {ph}")
 
             for ph, path in heat_paths:
                 tg_client.send_photo(chat_id, photo=path, caption=f"Heatmap: {ph}")
