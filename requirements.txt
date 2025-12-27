@@ -6,6 +6,9 @@ holidays
 openpyxl
 pyrogram
 tgcrypto
+geopandas
+pyarrow
+fastparquet
 
 # аналитика
 scikit-learn

@@ -462,9 +462,14 @@ def plot_russia_choropleth_per_capita(
     )
 
     # НУЖЕН kaleido: pip install kaleido
-    fig.write_image(out_png, scale=2)
-    logger.info(f"💾 Карта сохранена: {out_png}")
-    return out_png
+    try:
+        fig.write_image(out_png, scale=2)
+        return out_png
+    except Exception as e:
+        logger.exception(f"PNG export failed, fallback to HTML: {e}")
+        out_html = out_png.replace(".png", ".html")
+        fig.write_html(out_html, include_plotlyjs="embed")
+        return out_html
 
 
 # ----------------------------
