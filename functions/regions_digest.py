@@ -460,6 +460,21 @@ def plot_russia_choropleth_per_capita(
         width=1100,
         height=650,
     )
+    import plotly.io as pio
+    # для snap chromium обычно так:
+    CHROMIUM = "/snap/bin/chromium"
+    if os.path.exists(CHROMIUM):
+        try:
+            # у разных версий plotly/kaleido имя поля может отличаться
+            pio.kaleido.scope.chromium_executable = CHROMIUM
+        except Exception:
+            pass
+        try:
+            pio.kaleido.scope.executable = CHROMIUM
+        except Exception:
+            pass
+        
+    print([x for x in dir(pio.kaleido.scope) if "exec" in x.lower() or "chrome" in x.lower()])
 
     # НУЖЕН kaleido: pip install kaleido
     try:
