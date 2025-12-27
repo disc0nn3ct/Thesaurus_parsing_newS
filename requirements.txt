@@ -6,3 +6,22 @@ holidays
 openpyxl
 pyrogram
 tgcrypto
+
+# аналитика
+scikit-learn
+tqdm
+
+# карты и геоданные
+plotly
+geopandas
+shapely
+pyproj
+fiona
+pyarrow
+kaleido
+
+
+
+
+# логирование (опционально)
+loguru

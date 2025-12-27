@@ -60,6 +60,9 @@ from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
 
+import numpy as np
+from sklearn.linear_model import Ridge
+
 load_dotenv()
 
 # из .env:
@@ -73,11 +76,250 @@ WORDSTAT_API = "https://api.wordstat.yandex.net"
 WORDSTAT_REGION_RUSSIA = 225  # Россия
 WORDSTAT_SAVE_DIR = os.path.join("src", "wordstat")
 WORDSTAT_RAW_DIR = os.path.join(WORDSTAT_SAVE_DIR, "raw")  # сюда будем складывать все ответы API
+WORDSTAT_MAPS_DIR = os.path.join(WORDSTAT_SAVE_DIR, "maps")
+os.makedirs(WORDSTAT_MAPS_DIR, exist_ok=True)
+
 os.makedirs(WORDSTAT_SAVE_DIR, exist_ok=True)
 os.makedirs(WORDSTAT_RAW_DIR, exist_ok=True)
-
+111
 # клиент Perplexity из твоего ai.py
 from functions.ai import client as ai_client
+from functions.wordstat_api import _wordstat_post
+
+import hashlib
+
+def slugify_phrase(s: str, max_len: int = 60) -> str:
+    """
+    Делает безопасный slug, сохраняя кириллицу (через \w с UNICODE),
+    плюс добавляет короткий хэш для уникальности.
+    """
+    s = (s or "").strip().lower()
+    base = re.sub(r"[^\w.-]+", "_", s, flags=re.UNICODE).strip("_")
+    if not base:
+        base = "phrase"
+    if len(base) > max_len:
+        base = base[:max_len].rstrip("_")
+    h = hashlib.md5(s.encode("utf-8")).hexdigest()[:8]
+    return f"{base}_{h}"
+
+def _series_metrics(y: np.ndarray, window_short: int = 8, window_long: int = 52) -> dict:
+    """
+    Метрики по времянке:
+      - last, mean_long, std_long
+      - z_last (насколько текущий уровень аномальный)
+      - mom_short: изменение краткосрочного среднего относительно долгосрочного
+      - vol_short: волатильность на коротком окне
+    """
+    y = np.asarray(y, dtype=float)
+    y = y[~np.isnan(y)]
+    if len(y) < 10:
+        return {}
+
+    wL = min(window_long, len(y))
+    wS = min(window_short, len(y))
+
+    last = float(y[-1])
+    mean_long = float(np.mean(y[-wL:]))
+    std_long = float(np.std(y[-wL:]) + 1e-9)
+
+    mean_short = float(np.mean(y[-wS:]))
+    z_last = float((last - mean_long) / std_long)
+    mom_short = float((mean_short - mean_long) / (mean_long + 1e-9))  # относительное смещение
+    vol_short = float(np.std(y[-wS:]) / (mean_short + 1e-9))          # относительная волатильность
+
+    return {
+        "last": last,
+        "mean_long": mean_long,
+        "std_long": std_long,
+        "z_last": z_last,
+        "mom_short": mom_short,
+        "vol_short": vol_short,
+    }
+
+
+def _forecast_ridge_log1p(y: np.ndarray, horizon: int = 4, train_weeks: int = 156) -> dict:
+    """
+    Прогноз на horizon недель:
+      - ridge регрессия по времени на log1p(y)
+      - возвращаем прогнозы (yhat) и доверительный коридор (примерный) из std остатков
+    """
+    y = np.asarray(y, dtype=float)
+    y = y[~np.isnan(y)]
+    n = len(y)
+    if n < 30:
+        return {"yhat": [], "lo": [], "hi": []}
+
+    # ограничим обучение последними train_weeks (примерно 3 года)
+    start = max(0, n - train_weeks)
+    y_train = y[start:]
+    t = np.arange(len(y_train)).reshape(-1, 1)
+
+    # log1p для устойчивости к пикам
+    y_log = np.log1p(np.clip(y_train, 0, None))
+
+    model = Ridge(alpha=1.0)
+    model.fit(t, y_log)
+
+    # остатки -> оценка шума
+    y_log_pred = model.predict(t)
+    resid = y_log - y_log_pred
+    resid_std = float(np.std(resid) + 1e-9)
+
+    # прогноз
+    t_future = np.arange(len(y_train), len(y_train) + horizon).reshape(-1, 1)
+    fut_log = model.predict(t_future)
+
+    # грубый 80% коридор (можно заменить на 95%)
+    z = 1.28
+    lo_log = fut_log - z * resid_std
+    hi_log = fut_log + z * resid_std
+
+    yhat = np.expm1(fut_log)
+    lo = np.expm1(lo_log)
+    hi = np.expm1(hi_log)
+
+    # неотрицательно
+    yhat = np.clip(yhat, 0, None)
+    lo = np.clip(lo, 0, None)
+    hi = np.clip(hi, 0, None)
+
+    return {
+        "yhat": [float(v) for v in yhat],
+        "lo": [float(v) for v in lo],
+        "hi": [float(v) for v in hi],
+        "resid_std_log": resid_std,
+    }
+
+
+def interpret_signal(metrics: dict) -> str:
+    """
+    Короткая интерпретация по метрикам.
+    """
+    if not metrics:
+        return "Недостаточно данных для уверенной интерпретации."
+
+    z = metrics["z_last"]
+    mom = metrics["mom_short"]
+    vol = metrics["vol_short"]
+
+    parts = []
+
+    # уровень
+    if z >= 2.0:
+        parts.append("аномально высокий уровень интереса (возможна паника/событие)")
+    elif z <= -2.0:
+        parts.append("аномально низкий уровень интереса (затухание)")
+    elif z >= 1.0:
+        parts.append("выше обычного")
+    elif z <= -1.0:
+        parts.append("ниже обычного")
+    else:
+        parts.append("в пределах нормы")
+
+    # импульс
+    if mom >= 0.25:
+        parts.append("устойчивый рост последних недель")
+    elif mom <= -0.25:
+        parts.append("устойчивое снижение последних недель")
+
+    # волатильность
+    if vol >= 0.35:
+        parts.append("высокая волатильность (новостной шум/резкие всплески)")
+
+    return "; ".join(parts).capitalize() + "."
+
+
+def make_phrase_report(phrase: str, df: pd.DataFrame, horizon: int = 4) -> dict:
+    """
+    Возвращает словарь с метриками + прогнозом + текстовой интерпретацией.
+    """
+    y = df["count"].astype(float).to_numpy()
+    metrics = _series_metrics(y)
+    fc = _forecast_ridge_log1p(y, horizon=horizon)
+
+    # базовые числа прогноза
+    yhat = fc.get("yhat", [])
+    lo = fc.get("lo", [])
+    hi = fc.get("hi", [])
+
+    report = {
+        "phrase": phrase,
+        "metrics": metrics,
+        "forecast": fc,
+        "interpretation": interpret_signal(metrics),
+    }
+
+    # удобные поля
+    if yhat:
+        report["forecast_next"] = yhat[0]
+        report["forecast_horizon"] = yhat
+        report["forecast_ci_next"] = (lo[0], hi[0]) if lo and hi else None
+    else:
+        report["forecast_next"] = None
+        report["forecast_horizon"] = []
+
+    return report
+
+
+def build_and_save_charts(df_all: pd.DataFrame, out_dir: str = WORDSTAT_SAVE_DIR) -> tuple[list[str], list[dict]]:
+    """
+    По каждой фразе рисуем PNG: фактические значения + прогноз на 4 недели.
+    Возвращаем (files, reports).
+    """
+    saved = []
+    reports = []
+
+    for phrase, df in df_all.groupby("phrase"):
+        if df.empty:
+            continue
+
+        df = df.sort_values("date").reset_index(drop=True)
+        rep = make_phrase_report(phrase, df, horizon=4)
+        reports.append(rep)
+
+        # подготовка прогноза к рисованию
+        yhat = rep.get("forecast_horizon", [])
+        lohi = rep.get("forecast", {})
+        lo = lohi.get("lo", [])
+        hi = lohi.get("hi", [])
+
+        last_date = df["date"].iloc[-1]
+        future_dates = [last_date + pd.Timedelta(days=7*(i+1)) for i in range(len(yhat))]
+
+        plt.figure(figsize=(12, 5))
+        plt.plot(df["date"], df["count"], linewidth=2, label="Факт")
+
+        if yhat:
+            plt.plot(future_dates, yhat, linewidth=2, linestyle="--", label="Прогноз (4 нед.)")
+            # коридор
+            if lo and hi:
+                plt.fill_between(future_dates, lo, hi, alpha=0.2, label="Коридор (≈80%)")
+
+        title = f"Wordstat weekly: {phrase}"
+        plt.title(title)
+        plt.xlabel("Дата (недели)")
+        plt.ylabel("Число запросов")
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+
+        # safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
+        # fname = f"wordstat_{safe_phrase}.png"
+        safe_phrase = slugify_phrase(phrase)
+        fname = f"wordstat_{safe_phrase}.png"
+        fpath = os.path.join(out_dir, fname)
+        base, ext = os.path.splitext(fpath)
+        k = 1
+        while os.path.exists(fpath):
+            k += 1
+            fpath = f"{base}_{k}{ext}"
+
+        plt.savefig(fpath)
+        plt.close()
+        saved.append(fpath)
+        logger.info(f"💾 Сохранён график: {fpath}")
+
+    return saved, reports
 
 
 def _last_sunday_on_or_before(d: date) -> date:
@@ -103,44 +345,51 @@ def _prepare_week_bounds():
     return from_date, to_date
 
 
-def _wordstat_post(path: str, payload: dict, retries: int = 4, backoff: float = 1.5):
+from functions.regions_digest import send_incidents_daily_regions_digest
+
+
+
+
+
+
+def plot_daily_heatmap(df: pd.DataFrame, phrase: str, out_path: str, top_regions: int = 25):
     """
-    Универсальный POST к Wordstat API.
-    Использует прямой OAuth-токен (Bearer), как в официальной доке:
-    https://yandex.ru/support2/wordstat/ru/content/api-wordstat
+    Heatmap: строки=regionId, столбцы=даты, значение=count.
     """
-    if not WORDSTAT_OAUTH or not WORDSTAT_CLIENT_ID:
-        raise RuntimeError("WORDSTAT_OAUTH или WORDSTAT_CLIENT_ID отсутствуют в .env")
+    sdf = df[df["phrase"] == phrase].copy()
+    if sdf.empty:
+        logger.warning(f"plot_daily_heatmap: пусто для '{phrase}'")
+        return None
 
-    url = f"{WORDSTAT_API}{path}"
+    # упорядочим регионы по сумме интереса за период
+    order = (sdf.groupby("regionId")["count"].sum()
+               .sort_values(ascending=False)
+               .head(top_regions)
+               .index.tolist())
+    sdf = sdf[sdf["regionId"].isin(order)]
 
-    headers = {
-        "Authorization": f"Bearer {WORDSTAT_OAUTH}",
-        "Content-Type": "application/json; charset=utf-8",
-        "X-Client-Id": WORDSTAT_CLIENT_ID,
-    }
+    pivot = (sdf.pivot_table(index="regionId", columns="date", values="count", aggfunc="sum")
+               .fillna(0))
 
-    for attempt in range(1, retries + 1):
-        r = requests.post(url, headers=headers, data=json.dumps(payload), timeout=30)
+    plt.figure(figsize=(14, max(6, 0.28 * len(pivot.index))))
+    plt.imshow(pivot.values, aspect="auto")
+    plt.title(f"Wordstat daily heatmap (top {top_regions} regions): {phrase}")
+    plt.xlabel("Дата")
+    plt.ylabel("Регион (regionId)")
 
-        if r.status_code == 200:
-            return r.json()
+    cols = list(pivot.columns)
+    step = max(1, len(cols) // 10)
+    xticks = list(range(0, len(cols), step))
+    plt.xticks(xticks, [pd.to_datetime(cols[i]).strftime("%m-%d") for i in xticks], rotation=45)
 
-        # 429 / 503 — стандартный бэкофф
-        if r.status_code in (429, 503):
-            wait = backoff ** attempt
-            logger.warning(f"Wordstat {path} вернул {r.status_code}. Ретрай через {wait:.1f}s...")
-            time.sleep(wait)
-            continue
+    plt.yticks(range(len(pivot.index)), [str(x) for x in pivot.index])
+    plt.colorbar(label="count")
+    plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
+    logger.info(f"💾 heatmap сохранён: {out_path}")
+    return out_path
 
-        # остальные ошибки — пробрасываем с телом
-        try:
-            err = r.json()
-        except Exception:
-            err = r.text
-        raise RuntimeError(f"Wordstat error {r.status_code}: {err}")
-
-    raise RuntimeError(f"Wordstat {path} не ответил после {retries} попыток")
 
 
 def get_crisis_keywords_via_perplexity() -> list[str]:
@@ -151,10 +400,30 @@ def get_crisis_keywords_via_perplexity() -> list[str]:
     Формат ответа — JSON-массив строк (ровно 8).
     """
     sys_prompt = (
-        "Сформируй 8 русскоязычных кратких ключевых фраз, по которым можно ежедневно оценивать настроения и страхи людей во время экономических/социальных кризисов, "
-        "должно отражать: финансы, занятость, банки, цены, валюту, долги, отключения, здоровье/аптеки. "
-        "Только JSON-массив из ровно 8 строк без пояснений, пример: [\"обвал\", \"рост цен\" ...]"
-    )
+    "Ты — аналитический ИИ-агент, формирующий поисковые ИНДИКАТОРЫ общественной тревоги "
+    "и экономической ситуации для анализа динамики в Яндекс Вордстате. "
+    "Сформируй ровно 8 русскоязычных поисковых запросов, которые люди РЕАЛЬНО вводят "
+    "в Яндекс или Google, и по динамике которых (рост, пики, затухание) можно делать выводы "
+    "о кризисах, нестабильности, ухудшении или стабилизации ситуации в стране и мире. "
+    "Запросы должны быть короткими (1–4 слова), в формате телеграфного поискового ввода. "
+    "Допускается использование ТОЛЬКО оператора '+' для фиксации служебных слов "
+    "(например: 'работа +дома', 'деньги +на карте'). "
+    "Запрещено использовать любые другие операторы Вордстата "
+    "(-, !, кавычки, скобки, |). "
+    "Каждый запрос должен быть МАКРО-ИНДИКАТОРОМ одной из сфер: "
+    "1) цены и инфляция, "
+    "2) работа и доходы, "
+    "3) банки и сбережения, "
+    "4) валюта и курс, "
+    "5) долги и кредиты, "
+    "6) доступность базовых услуг, "
+    "7) лекарства и здоровье, "
+    "8) неопределённость и страх будущего. "
+    "Используй только устойчивые массовые запросы, существующие много лет "
+    "и реагирующие на кризисы. "
+    "Ответ — ТОЛЬКО JSON-массив из ровно 8 строк, без пояснений."
+)
+
     resp = ai_client.chat.completions.create(
         model="sonar-pro",
         messages=[
@@ -205,8 +474,11 @@ def fetch_wordstat_dynamics(phrase: str, regions=None, devices=None) -> pd.DataF
     # === Сохраняем сырой ответ в JSON ===
     try:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
+        # safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
+        # raw_fname = f"wordstat_dynamics_{safe_phrase}_{ts}.json"
+        safe_phrase = slugify_phrase(phrase)
         raw_fname = f"wordstat_dynamics_{safe_phrase}_{ts}.json"
+
         raw_fpath = os.path.join(WORDSTAT_RAW_DIR, raw_fname)
         with open(raw_fpath, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -226,45 +498,13 @@ def fetch_wordstat_dynamics(phrase: str, regions=None, devices=None) -> pd.DataF
     return df
 
 
-def build_and_save_charts(df_all: pd.DataFrame, out_dir: str = WORDSTAT_SAVE_DIR) -> list[str]:
-    """
-    По каждой фразе рисуем отдельный PNG: count во времени (share не рисуем для простоты).
-    """
-    saved = []
-    for phrase, df in df_all.groupby("phrase"):
-        if df.empty:
-            continue
-        plt.figure(figsize=(12, 5))
-        plt.plot(df["date"], df["count"], linewidth=2)
-        plt.title(f"Wordstat weekly: {phrase}")
-        plt.xlabel("Дата (недели)")
-        plt.ylabel("Число запросов")
-        plt.grid(True)
-        plt.tight_layout()
-
-        safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
-        fname = f"wordstat_{safe_phrase}.png"
-        fpath = os.path.join(out_dir, fname)
-        base, ext = os.path.splitext(fpath)
-        k = 1
-        while os.path.exists(fpath):
-            k += 1
-            fpath = f"{base}_{k}{ext}"
-
-        plt.savefig(fpath)
-        plt.close()
-        saved.append(fpath)
-        logger.info(f"💾 Сохранён график: {fpath}")
-    return saved
-
-
 def send_wordstat_digest(tg_client, recipients):
     """
     Главный раннер:
       1) берём 8 ключей у Perplexity,
       2) тянем динамику из Wordstat (и сохраняем сырые JSON-ответы),
-      3) строим графики,
-      4) рассылаем в TG.
+      3) строим графики (+прогноз/аналитика),
+      4) рассылаем в TG: график + интерпретация + прогнозные значения.
 
     При любой ошибке Wordstat просто шлём текстовое уведомление, не валим всю программу.
     """
@@ -291,7 +531,7 @@ def send_wordstat_digest(tg_client, recipients):
                 logger.info(f"Wordstat: по фразе '{kw}' получено {len(df_kw)} точек")
             else:
                 logger.warning(f"Wordstat: по фразе '{kw}' пришёл пустой ответ (dynamics=[])")
-            time.sleep(0.3)  # чутка поддросим, чтобы не забанили по RPS
+            time.sleep(0.3)  # чуть поддросим, чтобы не забанили по RPS
         except Exception as e:
             logger.exception(f"Ошибка Wordstat по '{kw}': {e}")
             errors.append((kw, str(e)))
@@ -314,9 +554,9 @@ def send_wordstat_digest(tg_client, recipients):
                 logger.exception(f"⚠️ Ошибка отправки уведомления в {chat_id}: {e}")
         return
 
-    # 3) строим графики
+    # 3) строим графики + получаем отчёты (интерпретация и прогноз)
     all_df = pd.concat(frames, ignore_index=True)
-    files = build_and_save_charts(all_df)
+    files, reports = build_and_save_charts(all_df)  # важно: функция должна возвращать (files, reports)
 
     if not files:
         msg = (
@@ -330,20 +570,92 @@ def send_wordstat_digest(tg_client, recipients):
                 logger.exception(f"⚠️ Ошибка отправки уведомления в {chat_id}: {e}")
         return
 
-    # 4) рассылка в Telegram
+    # 4) рассылка в Telegram: заголовок + по каждому индикатору картинка и аналитика
     header = (
         "📊 Еженедельные тренды поисковых запросов (Ворд)\n"
         "Период: с 2018-01-01 по последние доступные недели.\n"
-        "Источник: API /v1/dynamics."
+        "Источник: API /v1/dynamics.\n\n"
+        "🧠 Аналитика: отклонение от нормы (z-score), импульс (8н vs 52н), прогноз на 4 недели."
     )
+
     for chat_id in recipients:
         try:
             tg_client.send_message(chat_id, header)
-            for f in files:
-                tg_client.send_photo(chat_id, photo=f, caption=os.path.basename(f))
+
+            for rep in reports:
+                phrase = rep.get("phrase", "")
+                metrics = rep.get("metrics", {}) or {}
+                interp = rep.get("interpretation", "") or ""
+
+                fnext = rep.get("forecast_next", None)
+                fci = rep.get("forecast_ci_next", None)
+                fh = rep.get("forecast_horizon", []) or []
+
+                last = metrics.get("last", None)
+                z = metrics.get("z_last", None)
+                mom = metrics.get("mom_short", None)
+                vol = metrics.get("vol_short", None)
+
+                # найдём файл графика по safe_phrase (учитываем суффиксы _2 и т.п.)
+                # safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
+                # candidates = [fp for fp in files if f"wordstat_{safe_phrase}" in os.path.basename(fp)]
+                safe_phrase = slugify_phrase(phrase)
+                candidates = [fp for fp in files if f"wordstat_{safe_phrase}" in os.path.basename(fp)]
+                chart_path = candidates[-1] if candidates else None
+
+                lines = [f"🔎 {phrase}"]
+
+                if interp:
+                    lines.append(f"• Интерпретация: {interp}")
+
+                if last is not None:
+                    lines.append(f"• Текущее значение (посл. неделя): {int(round(last))}")
+
+                if z is not None:
+                    lines.append(f"• Отклонение от нормы (z-score): {z:.2f}")
+
+                if mom is not None:
+                    lines.append(f"• Импульс (8н vs 52н): {mom*100:.0f}%")
+
+                if vol is not None:
+                    lines.append(f"• Волатильность (8н): {vol*100:.0f}%")
+
+                if fnext is not None:
+                    if fci and isinstance(fci, (list, tuple)) and len(fci) == 2:
+                        lo, hi = fci
+                        lines.append(
+                            f"• Прогноз на след. неделю: {int(round(fnext))} "
+                            f"(≈{int(round(lo))}…{int(round(hi))})"
+                        )
+                    else:
+                        lines.append(f"• Прогноз на след. неделю: {int(round(fnext))}")
+
+                if fh:
+                    fh_int = [int(round(v)) for v in fh]
+                    lines.append(f"• Прогноз 4 недели: {fh_int}")
+
+                caption = "\n".join(lines)
+
+                if chart_path:
+                    tg_client.send_photo(chat_id, photo=chart_path, caption=caption)
+                else:
+                    tg_client.send_message(chat_id, caption)
+
+            # при желании — коротко сообщаем об ошибках по отдельным ключам
+            if errors:
+                err_lines = ["⚠️ Ошибки по отдельным фразам:"]
+                for kw, err in errors[:8]:
+                    err_lines.append(f"• {kw}: {err[:200]}")
+                tg_client.send_message(chat_id, "\n".join(err_lines))
+
             logger.info(f"✅ Wordstat-дайджест отправлен в {chat_id}")
+
         except Exception as e:
             logger.exception(f"⚠️ Ошибка отправки в {chat_id}: {e}")
+
+
+
+
 
 # ======================= /WORDSTAT =======================
 
@@ -944,6 +1256,12 @@ send_ai(client, recipients)
 
 time.sleep(10)
 send_wordstat_digest(client, recipients)
+
+
+
+time.sleep(10)
+send_incidents_daily_regions_digest(client, recipients, phrases=["пожар", "взрыв", "бпла"], top_n_regions=25)
+
 
 # idle()
 
