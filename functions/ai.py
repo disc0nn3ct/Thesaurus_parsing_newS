@@ -1,143 +1,394 @@
-# russia_trader_brief_timebased.py
+# ai.py
 # -*- coding: utf-8 -*-
 
 import os
+import re
+import json
+import time
+import logging
 from datetime import datetime, timezone, timedelta
-from openai import OpenAI
-from dotenv import load_dotenv
+from typing import Dict, Any, List, Tuple, Optional
 
-# ===== 1) ENV =====
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# =============================================================================
+# ENV + CLIENT
+# =============================================================================
 load_dotenv()
+
 AI_API_KEY = os.getenv("ai_api_key")
-BASE_URL = os.getenv("base_url")
+BASE_URL = os.getenv("base_url")  # Perplexity/OpenAI compatible base_url
+MODEL = os.getenv("ai_model", "sonar-pro")
 
 if not AI_API_KEY:
-    raise RuntimeError("AI_API_KEY is missing in .env")
+    raise RuntimeError("ai_api_key is missing in .env")
 
 client = OpenAI(api_key=AI_API_KEY, base_url=BASE_URL)
 
-# ===== 2) PROMPT (только Россия) =====
-SYSTEM_PROMPT = """You are a **Russian Equity Trader’s Assistant**. Your task is to generate **morning and evening actionable briefs** about the MOEX equity market.
-Be concise but **highly informative**. Prioritize **fresh Russian news (≤24h for morning, ≤12h for evening)** that can move individual stocks or sectors.
-Use reputable sources (moex.com, cbr.ru, minfin.gov.ru, e-disclosure.ru, Интерфакс, РБК, Ведомости, Коммерсант) and **always cite them inline with links**. Avoid generic headlines — focus on what actually changes positioning.
+# =============================================================================
+# LOGGING
+# =============================================================================
+log_dir = os.path.join(os.getcwd(), "log")
+os.makedirs(log_dir, exist_ok=True)
+log_path = os.path.join(log_dir, "ai_brief.log")
 
-Think like a trader:
-- Which MOEX stocks/sectors are **positively/negatively impacted**?
-- What is **non-obvious** or under-reacted by the market?
-- What are the **near-term catalysts** (today / this week)?
-- What are the **risks or stop-loss triggers**?
-- How could this fit into a **buy/sell/avoid** tactical decision?
+logging.basicConfig(
+    filename=log_path,
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    encoding="utf-8",
+)
+logger = logging.getLogger("ai_brief")
 
-Do not give financial advice; instead, present **scenarios** and **decision-relevant context**.
-If confidence is low, mark it. Keep total words ≤500.
-"""
+# =============================================================================
+# SETTINGS
+# =============================================================================
+MSK_TZ = timezone(timedelta(hours=3))
 
-USER_TEMPLATE = """Produce today’s **{edition_name} MOEX market brief** for a professional equity trader.
+# Если хочешь слухи/любые источники:
+# AI_USE_DOMAIN_FILTER=0  (в .env)
+# Если хочешь держаться “более официального”:
+# AI_USE_DOMAIN_FILTER=1
+AI_USE_DOMAIN_FILTER = os.getenv("AI_USE_DOMAIN_FILTER", "1").strip() not in ("0", "false", "False", "")
 
-**Deliverables (strict order):**
+# Домены "качественных" источников (если включен фильтр).
+RU_DOMAINS = [
+    "moex.com",
+    "cbr.ru",
+    "minfin.gov.ru",
+    "e-disclosure.ru",
+    "interfax.ru",
+    "rbc.ru",
+    "vedomosti.ru",
+    "kommersant.ru",
+    "spimex.com",
+]
 
-1. **Market Overview** (2–4 bullets)
-   - Moves in RTS/MOEX index, ruble, OFZ yields, commodities (oil, gas, metals).
-   - Key macro/CBR/MinFin news.
+# Высокая производительность:
+# - меньше токенов => быстрее
+# - низкая температура => меньше “фантазий”
+MAX_TOKENS = int(os.getenv("ai_max_tokens", "2200"))
+TEMPERATURE = float(os.getenv("ai_temperature", "0.2"))
+TOP_P = float(os.getenv("ai_top_p", "0.9"))
 
-2. **Top Stock Movers & News with Market Impact (MOEX only)**
-   - 5–8 bullets. Each = **Ticker | Company | Headline (linked) | Why it matters | Expected direction (bullish/bearish/mixed)**.
+# Поиск по свежести: можно “hour”, “day”, иногда “week” (если пустит).
+SEARCH_RECENCY_AM = os.getenv("ai_search_recency_am", "day")
+SEARCH_RECENCY_PM = os.getenv("ai_search_recency_pm", "day")
 
-3. **Non-Obvious Trading Ideas (2–4 names)**
-   `Ticker | Name | News trigger (with link) | Why market may under-react | Trade angle (long/short bias) | Key risk`
+# =============================================================================
+# PROMPTS (RU)
+# =============================================================================
 
-4. **Upcoming Catalysts (Next 24–72h)**
-    Calendar with **date/time** and likely affected tickers/sectors.
+SYSTEM_PROMPT = """
+Ты — **реактивный трейдинг-аналитик по рынку РФ (MOEX)**.
+Твоя задача — помочь трейдеру быстро реагировать на новости: кто выигрывает/проигрывает, что может быть недооценено,
+какие триггеры и риски важны в ближайшие 24–72 часа.
 
-5. **Quick Take (≤100 words)**
-   - Base case, upside/downside risks, what to monitor into next session.
+Ключевое:
+- Давай **торговые гипотезы** (LONG/SHORT/AVOID) на основе новостей. Это не “гарантия” и не инвестиционный совет — это сценарии для реакции.
+- Каждая идея: что произошло → почему важно → кто затронут → направление → инвалидатор/стоп-условие → уверенность.
+- Разрешены **непроверенные источники/слухи**, потому что они полезны для реактивной торговли.
+  Но обязательно:
+  1) помечай такие штуки как SRC=C,
+  2) прямо пиши “не подтверждено”,
+  3) понижай CONF (обычно low/medium).
 
-**Constraints & Style:**
-- Output in **Markdown**.
-- Every news/idea must include at least one **source link**.
-- If confidence is low, mark `(confidence: low)`.
-- End with compact JSON for machine parsing:
+Грейды источников (SRC):
+- A = официально (биржа/регулятор/раскрытие/компания)
+- B = крупные СМИ/прайм-лента (Интерфакс/РБК/Ведомости/Коммерсант и т.п.)
+- C = слухи/неподтверждено/соцсети/телеграм/“market chatter”
+
+Формат:
+- Telegram НЕ поддерживает markdown-таблицы. Все многоколонковые блоки — только в ```text``` (моноширинно).
+- Ссылки указывай как URL в скобках: (https://...)
+- Не выдумывай цифры. Если не нашёл — напиши “нет свежих цифр / не подтверждено”.
+- Язык: Русский.
+- Объём: до ~650 слов (без JSON).
+""".strip()
+
+USER_TEMPLATE = """
+Собери **{edition_name} бриф по рынку MOEX** (для трейдера). Время отчёта: {as_of_msk} (MSK).
+
+Дай 5 разделов строго в этом порядке:
+
+1) **Снимок рынка (2–5 пунктов)**
+   - RTS/MOEX, рубль (USD/RUB), ОФЗ (10Y если есть), нефть Brent/Urals, ключевые макро-события (ЦБ/Минфин), ликвидность.
+   - Если по нескольким пунктам нет свежих данных — ОБЪЕДИНЯЙ в одну строку (праздники / тонкий рынок).
+   - Не выдумывай цифры.
+
+2) **Новости, которые двигают бумаги (MOEX) — 6–12 строк**
+   - ВЫВОД ТОЛЬКО В ВИДЕ МОНОТАБЛИЦЫ (Telegram-friendly):
+```text
+TICKER | НОВОСТЬ | ПОЧЕМУ ВАЖНО | IMPACT | SRC | CONF
+```
+   - IMPACT = Bullish/Bearish/Mixed
+   - SRC = A (официально) / B (крупные СМИ) / C (слухи, не подтверждено)
+   - CONF = low / medium / high
+   - «ПОЧЕМУ ВАЖНО» — не более 6–8 слов.
+
+3) **Торговые гипотезы (2–6 идей) — реакция на новости**
+   - Моносводка:
+```text
+TICKER | SIDE | ТРИГГЕР / УРОВЕНЬ | ТЕЗИС | ИНВАЛИДАТОР | SRC | CONF
+```
+   - SIDE = LONG / SHORT / AVOID
+   - Всегда указывай уровень (цена / индекс / условие).
+   - Инвалидатор = событие или уровень, отменяющий идею.
+   - Если SRC=C — явно пиши «не подтверждено» и CONF ≤ medium.
+   - Если рынок тонкий — помечай идею как «thin market trade».
+
+4) **Катализаторы 24–72ч**
+```text
+КОГДА (MSK) | СОБЫТИЕ | КОГО ЗАДЕНЕТ
+```
+
+5) **Очень короткий план действий (≤140 слов)**
+   - Что мониторить сегодня/завтра.
+   - 2–4 тикера в фокусе и почему.
+   - Главные риски (рубль / нефть / ставка / санкции / ликвидность).
+   - Что отменит базовый сценарий.
+
+   В КОНЦЕ ОБЯЗАТЕЛЬНО добавь:
+
+🔥 ТОП-ИДЕЯ СЕЙЧАС:
+```text
+TICKER | SIDE | УРОВЕНЬ / УСЛОВИЕ | ПОЧЕМУ
+```
+
+Ограничения:
+- НЕ используй markdown-таблицы (|---|---|).
+- Используй ТОЛЬКО монотаблицы внутри ```text```.
+- Каждая новость/идея должна иметь URL.
+- Слухи допустимы, но всегда SRC=C и «не подтверждено».
+
+В самом конце выведи **ТОЛЬКО JSON** (без текста после):
+
 ```json
 {{
-  "as_of": "{as_of}",
+  "as_of": "{as_of_utc}",
   "edition": "{edition_json}",
-  "ideas": [
-    {{"ticker":"", "bias":"long/short", "why":"", "catalyst":"", "risk":"", "sources":[""]}}
+  "market": {{
+    "moex_index": "",
+    "rts_index": "",
+    "usdrub": "",
+    "ofz10y": "",
+    "brent": "",
+    "notes": ""
+  }},
+  "movers": [
+    {{
+      "ticker": "",
+      "headline": "",
+      "url": "",
+      "impact": "bullish/bearish/mixed",
+      "src": "A/B/C",
+      "confidence": "low/medium/high"
+    }}
   ],
-  "catalysts_next":[
-    {{"when":"", "event":"", "affected":[""]}}
+  "ideas": [
+    {{
+      "ticker": "",
+      "side": "long/short/avoid",
+      "trigger": "",
+      "thesis": "",
+      "invalidator": "",
+      "src": "A/B/C",
+      "confidence": "low/medium/high"
+    }}
   ]
 }}
 ```
-"""
-
-RU_DOMAINS = [
-    "moex.com","cbr.ru","minfin.gov.ru","e-disclosure.ru","interfax.ru","rbc.ru",
-    "vedomosti.ru","kommersant.ru","spimex.com"
-]
+""".strip()
 
 
-def detect_edition() -> str:
-    now = datetime.now()  # локальное время сервера/машины
-    hour = now.hour
-    if hour < 12:
-        return "am"
-    else:
-        return "pm"
+# =============================================================================
+# CORE HELPERS
+# =============================================================================
+
+def detect_edition_msk() -> str:
+    """
+    am: до 12:00 MSK
+    pm: после 12:00 MSK
+    """
+    now = datetime.now(MSK_TZ)
+    return "am" if now.hour < 12 else "pm"
 
 
-def build_messages(edition: str):
-    as_of = datetime.now(timezone.utc).isoformat()
-    edition_name = "Morning" if edition == "am" else "Evening"
+def build_messages(edition: str) -> List[Dict[str, str]]:
+    as_of_utc = datetime.now(timezone.utc).isoformat()
+    as_of_msk = datetime.now(MSK_TZ).strftime("%Y-%m-%d %H:%M")
+
+    edition_name = "Утренний" if edition == "am" else "Вечерний"
     edition_json = "morning" if edition == "am" else "evening"
-    user = USER_TEMPLATE.format(as_of=as_of, edition_name=edition_name, edition_json=edition_json)
+
+    user = USER_TEMPLATE.format(
+        edition_name=edition_name,
+        as_of_msk=as_of_msk,
+        as_of_utc=as_of_utc,
+        edition_json=edition_json,
+    )
+
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user}
+        {"role": "user", "content": user},
     ]
 
-################################
-def run_brief() -> str:
-    edition = detect_edition()
-    recency = "day"
-    resp = client.chat.completions.create(
-        model="sonar-pro",
-        messages=build_messages(edition),
-        temperature=0.2,
-        top_p=0.9,
-        max_tokens=2500,
-        presence_penalty=0,
-        frequency_penalty=0,
-        stream=False,
-        extra_body={
-            "search_mode": "web",
-            "search_domain_filter": RU_DOMAINS,
-            "search_recency_filter": recency
-        }
-    )
-    text = resp.choices[0].message.content
 
-    # токены
+def extract_trailing_json(text: str) -> Tuple[str, Optional[dict]]:
+    """
+    Вытаскиваем JSON, который модель печатает в конце.
+    Возвращаем (текст_без_json, json_obj_or_none).
+    """
+    if not isinstance(text, str):
+        return str(text), None
+
+    t = text.strip()
+
+    # последний ```json ... ```
+    m = re.search(r"```json\s*([\s\S]*?)\s*```\s*$", t, flags=re.I)
+    if m:
+        raw = m.group(1).strip()
+        try:
+            obj = json.loads(raw)
+            clean = t[:m.start()].rstrip()
+            return clean, obj
+        except Exception:
+            pass
+
+    # “голый” объект { ... } в конце
+    m = re.search(r"(\{[\s\S]*\})\s*$", t, flags=re.S)
+    if m:
+        raw = m.group(1).strip()
+        try:
+            obj = json.loads(raw)
+            clean = t[:m.start()].rstrip()
+            return clean, obj
+        except Exception:
+            pass
+
+    return t, None
+
+
+def remove_markdown_tables(md: str) -> str:
+    """
+    Если модель всё равно вставит markdown-таблицу:
+    превращаем её в code block, чтобы Telegram нормально показал.
+    """
+    lines = md.splitlines()
+    out = []
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        if "|" in ln and i + 1 < len(lines) and re.search(r"\|\s*:?-{2,}", lines[i + 1]):
+            out.append("```text")
+            out.append(ln)
+            i += 1
+            while i < len(lines) and "|" in lines[i]:
+                out.append(lines[i])
+                i += 1
+            out.append("```")
+            continue
+        out.append(ln)
+        i += 1
+    return "\n".join(out)
+
+
+def retry_call(fn, tries: int = 3, base_sleep: float = 1.0):
+    last = None
+    for n in range(1, tries + 1):
+        try:
+            return fn()
+        except Exception as e:
+            last = e
+            logger.warning(f"API call failed (try {n}/{tries}): {e}")
+            time.sleep(base_sleep * n)
+    raise last
+
+
+# =============================================================================
+# MAIN API
+# =============================================================================
+
+def run_brief() -> Tuple[str, str, Optional[dict]]:
+    """
+    Возвращает:
+      - clean_markdown_text (без JSON хвоста)
+      - usage_str
+      - parsed_json (если получилось распарсить)
+    """
+    edition = detect_edition_msk()
+    recency = SEARCH_RECENCY_AM if edition == "am" else SEARCH_RECENCY_PM
+
+    def _call():
+        extra_body = {
+            "search_mode": "web",
+            "search_recency_filter": recency,
+        }
+        # Если включен фильтр — ограничиваем домены, если нет — не ограничиваем.
+        if AI_USE_DOMAIN_FILTER:
+            extra_body["search_domain_filter"] = RU_DOMAINS
+
+        return client.chat.completions.create(
+            model=MODEL,
+            messages=build_messages(edition),
+            temperature=TEMPERATURE,
+            top_p=TOP_P,
+            max_tokens=MAX_TOKENS,
+            presence_penalty=0,
+            frequency_penalty=0,
+            stream=False,
+            extra_body=extra_body,
+        )
+
+    resp = retry_call(_call, tries=3, base_sleep=1.0)
+    raw_text = (resp.choices[0].message.content or "").strip()
+
     usage = getattr(resp, "usage", None)
     if usage:
-        print(f"Tokens used: prompt={usage.prompt_tokens}, completion={usage.completion_tokens}, total={usage.total_tokens}")
-    
-    print("\n\n\n", text)
+        usage_str = f"Tokens used: prompt={usage.prompt_tokens}, completion={usage.completion_tokens}, total={usage.total_tokens}"
+    else:
+        usage_str = "Tokens used: n/a"
 
-    # === Сохраняем text в файл ===
+    clean_text, parsed_json = extract_trailing_json(raw_text)
+    clean_text = remove_markdown_tables(clean_text)
+
+    # Сохраняем артефакты (для дебага / архива)
     try:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        save_dir = os.path.join("src")
+        save_dir = os.path.join(os.getcwd(), "src", "ai")
         os.makedirs(save_dir, exist_ok=True)
-        file_path = os.path.join(save_dir, f"brief_{ts}.txt")
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(text)
-        print(f"✅ Бриф сохранён в {file_path}")
+
+        raw_path = os.path.join(save_dir, f"brief_raw_{ts}.md")
+        with open(raw_path, "w", encoding="utf-8") as f:
+            f.write(raw_text)
+
+        clean_path = os.path.join(save_dir, f"brief_clean_{ts}.md")
+        with open(clean_path, "w", encoding="utf-8") as f:
+            f.write(clean_text + "\n\n" + usage_str)
+
+        if parsed_json is not None:
+            json_path = os.path.join(save_dir, f"brief_{ts}.json")
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(parsed_json, f, ensure_ascii=False, indent=2)
+
+        logger.info(f"AI brief saved: raw={raw_path}, clean={clean_path}, json={'yes' if parsed_json else 'no'}")
+
     except Exception as e:
-        print(f"⚠️ Ошибка сохранения брифа: {e}")
+        logger.warning(f"Failed to save brief artifacts: {e}")
 
-    return text, str(f"Tokens used: prompt={usage.prompt_tokens}, completion={usage.completion_tokens}, total={usage.total_tokens}")
+    return clean_text, usage_str, parsed_json
 
+
+# =============================================================================
+# OPTIONAL: simple local test
+# =============================================================================
+if __name__ == "__main__":
+    text, tok, j = run_brief()
+    print(text)
+    print(tok)
+    if j:
+        print("JSON keys:", list(j.keys()))
 
 #######################TEST
 
