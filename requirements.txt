@@ -1,30 +1,26 @@
+# Runtime tested with Python 3.12. Optional native/rendering extras are separate.
 pandas
+numpy
 matplotlib
 requests
 python-dotenv
 holidays
 openpyxl
 pyrogram
-tgcrypto
+python-dateutil
+scikit-learn
+scipy
+threadpoolctl
+openai
+loguru
+pypdf>=6.10
+
+# Local maps and browser charts
 geopandas
 pyarrow
-fastparquet
-
-# аналитика
-scikit-learn
-tqdm
-
-# карты и геоданные
 plotly
-geopandas
 shapely
 pyproj
-fiona
-pyarrow
-kaleido
 
-
-
-
-# логирование (опционально)
-loguru
+# Time zones also work on minimal server images and Windows.
+tzdata

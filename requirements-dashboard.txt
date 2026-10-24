@@ -1,0 +1,5 @@
+# Optional local web dashboard. The Telegram service needs only requirements.txt.
+-r requirements.txt
+fastapi
+uvicorn
+jinja2

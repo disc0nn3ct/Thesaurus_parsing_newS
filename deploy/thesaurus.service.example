@@ -1,0 +1,25 @@
+[Unit]
+Description=Thesaurus Telegram service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=thesaurus
+Group=thesaurus
+WorkingDirectory=/opt/thesaurus
+ExecStart=/opt/thesaurus/.venv/bin/python /opt/thesaurus/main.py serve
+Environment=PYTHONUNBUFFERED=1
+Environment=MPLBACKEND=Agg
+Environment=DASHBOARD_ENABLED=0
+Environment=AUTO_UPDATE=0
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=300
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -122,6 +122,29 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.env
+*.session
+*.session-*
+*.session.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+.review-venv/
+.test-tmp/
+/tests/market_test_*/
+.ruff_cache/
+data/
+/backups/
+*.sqlite3
+*.sqlite3-*
+current_commit.txt
 .venv
 env/
 venv/
@@ -168,3 +191,8 @@ me_client.session
 ruonia_log.txt
 log
 !functions/src
+
+# User media in the geodata directory are not application source.
+/.codex-remote-attachments/
+/functions/src/wordstat/geo/*.gif
+/functions/src/wordstat/geo/*.mp4

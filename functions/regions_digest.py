@@ -12,6 +12,7 @@
 
 import os, re, json, time, hashlib
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -34,15 +35,12 @@ except Exception:
 # --- PATHS ---
 
 # КУДА СОХРАНЯЕМ РЕЗУЛЬТАТЫ (картинки, raw и т.п.) — КАК РАНЬШЕ
-WORDSTAT_SAVE_DIR = os.path.join("src", "wordstat")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+WORDSTAT_SAVE_DIR = str(PROJECT_ROOT / "src" / "wordstat")
 WORDSTAT_MAPS_DIR = os.path.join(WORDSTAT_SAVE_DIR, "maps")
 
 # ОТКУДА БЕРЁМ ГЕО-ДАННЫЕ (только чтение)
-WORDSTAT_GEO_DIR = os.path.join("functions", "src", "wordstat", "geo")
-
-# создаём директории при необходимости
-os.makedirs(WORDSTAT_MAPS_DIR, exist_ok=True)
-os.makedirs(WORDSTAT_GEO_DIR, exist_ok=True)
+WORDSTAT_GEO_DIR = str(PROJECT_ROOT / "functions" / "src" / "wordstat" / "geo")
 
 # --- GEO FILES ---
 
@@ -190,11 +188,9 @@ def fetch_wordstat_regions_tree(force_refresh: bool = False) -> dict:
         try:
             with open(WORDSTAT_TREE_PATH, "r", encoding="utf-8") as f:
                 cached = json.load(f)
-            # если в кэше вдруг лежит ошибка — игнорим кэш
-            if isinstance(cached, dict) and ("error" in cached or "errors" in cached):
-                logger.warning("Wordstat regions tree cache contains error; refetching with force_refresh=True")
-            else:
+            if not flatten_wordstat_regions(cached).empty:
                 return cached
+            logger.warning("Кэш дерева регионов пуст или некорректен; перезапрошу.")
         except Exception as e:
             logger.warning(f"Не смог прочитать кэш дерева регионов: {e}. Перезапрошу.")
 
@@ -205,11 +201,12 @@ def fetch_wordstat_regions_tree(force_refresh: bool = False) -> dict:
     except Exception:
         pass
 
-    # если сервис вернул ошибку — логируем и всё равно сохраняем (чтобы видеть что пришло)
-    if isinstance(data, dict) and ("error" in data or "errors" in data):
-        logger.error(f"Wordstat getRegionsTree returned error: {data}")
+    if flatten_wordstat_regions(data).empty:
+        # Некорректный ответ не должен затирать рабочий кэш.
+        raise RuntimeError("Wordstat getRegionsTree: пустое или некорректное дерево регионов")
 
     try:
+        os.makedirs(os.path.dirname(WORDSTAT_TREE_PATH) or ".", exist_ok=True)
         with open(WORDSTAT_TREE_PATH, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         logger.info(f"💾 Сохранено дерево регионов Wordstat: {WORDSTAT_TREE_PATH}")
@@ -265,12 +262,13 @@ def flatten_wordstat_regions(tree_json) -> pd.DataFrame:
 
     walk(tree_json)
 
-    df = pd.DataFrame(rows).drop_duplicates(subset=["regionId"]).reset_index(drop=True)
+    df = pd.DataFrame(rows, columns=["regionId", "name", "parentId", "level"])
 
     if df.empty:
         logger.error("flatten_wordstat_regions: дерево распарсилось в пустоту")
         return pd.DataFrame(columns=["regionId", "name", "parentId", "level", "name_norm"])
 
+    df = df.drop_duplicates(subset=["regionId"]).reset_index(drop=True)
     df["name_norm"] = df["name"].map(_normalize_region_name)
     return df
 
@@ -345,21 +343,20 @@ def plot_russia_choropleth_per_capita(
     value = (сумма запросов за window_days) / население * 100000
     df_daily: date, count, regionId, phrase
     """
-    shapes = load_regions_shapes()
-    rid2region = build_regionid_to_mapregion(force_refresh_tree=True)
-
-
     sdf = df_daily[df_daily["phrase"] == phrase].copy()
     if sdf.empty:
         logger.warning(f"plot_russia_choropleth_per_capita: пусто для '{phrase}'")
         return None
+
+    shapes = load_regions_shapes()
+    rid2region = build_regionid_to_mapregion(force_refresh_tree=False)
 
     sdf["date"] = pd.to_datetime(sdf["date"])
     last_day = sdf["date"].max()
     start = last_day - pd.Timedelta(days=window_days - 1)
 
     sdf = sdf[(sdf["date"] >= start) & (sdf["date"] <= last_day)]
-    agg = sdf.groupby("regionId", as_index=False)["count"].sum().rename(columns={"count": "count_sum"})
+    agg = sdf.groupby("regionId", as_index=False)["count"].sum(min_count=1).rename(columns={"count": "count_sum"})
 
     if top_n_regions is not None:
         top_ids = agg.sort_values("count_sum", ascending=False)["regionId"].head(top_n_regions).tolist()
@@ -369,12 +366,10 @@ def plot_russia_choropleth_per_capita(
     agg = agg.dropna(subset=["region"])
 
     m = shapes.merge(agg, on="region", how="left")
-    m["count_sum"] = m["count_sum"].fillna(0)
-
-    m["value"] = m.apply(
-        lambda r: (float(r["count_sum"]) / float(r["population"]) * 100000.0) if r["population"] else 0.0,
-        axis=1
-    )
+    population = pd.to_numeric(m["population"], errors="coerce")
+    valid_population = population.where((population > 0) & np.isfinite(population))
+    # Отсутствие наблюдений (например, вне топ-N) не означает нулевой спрос.
+    m["value"] = m["count_sum"] / valid_population * 100000.0
 
     vmin, vmax = float(m["value"].min()), float(m["value"].max())
     denom = (vmax - vmin) if (vmax - vmin) > 1e-9 else 1.0
@@ -398,14 +393,17 @@ def plot_russia_choropleth_per_capita(
     for _, r in m.iterrows():
         val = float(r["value"])
         x01 = (val - vmin) / denom
-        fill = pick_color(x01)
+        fill = pick_color(x01) if np.isfinite(val) else "rgb(220,220,220)"
 
-        hover = (
-            f"<b>{r['region']}</b><br>"
-            f"Сумма {window_days}д: {int(round(r['count_sum']))}<br>"
-            f"Население: {int(r['population']):,}".replace(",", " ") + "<br>"
-            f"На 100k: {val:.2f}"
-        )
+        hover = f"<b>{r['region']}</b><br>"
+        if np.isfinite(val):
+            hover += (
+                f"Сумма {window_days}д: {int(round(r['count_sum']))}<br>"
+                f"Население: {int(float(r['population'])):,}".replace(",", " ") + "<br>"
+                f"На 100k: {val:.2f}"
+            )
+        else:
+            hover += "Нет данных для расчёта на 100k жителей"
 
         fig.add_trace(go.Scatter(
             x=r["x"], y=r["y"],
@@ -422,7 +420,7 @@ def plot_russia_choropleth_per_capita(
 
         # --- подписи регионов ---
     # чтобы не было каши: подписи только для регионов с ненулевым значением (или топ-N)
-    labels_df = m.copy()
+    labels_df = m[m["value"].notna()].copy()
 
     if top_n_regions is not None:
         labels_df = labels_df.sort_values("value", ascending=False).head(top_n_regions)
@@ -454,9 +452,15 @@ def plot_russia_choropleth_per_capita(
 
     fig.update_xaxes(visible=False)
     fig.update_yaxes(visible=False, scaleanchor="x", scaleratio=1)
+    if m["value"].isna().any():
+        fig.add_annotation(
+            text="Серый цвет: нет данных для расчёта",
+            xref="paper", yref="paper", x=0, y=-0.04,
+            showarrow=False,
+        )
     fig.update_layout(
         title=f"Wordstat: '{phrase}' — на 100k жителей (сумма {window_days} дней)",
-        margin=dict(l=10, r=10, t=40, b=10),
+        margin=dict(l=10, r=10, t=40, b=40),
         width=1100,
         height=650,
     )
@@ -474,15 +478,13 @@ def plot_russia_choropleth_per_capita(
         except Exception:
             pass
 
-    print([x for x in dir(pio.kaleido.scope) if "exec" in x.lower() or "chrome" in x.lower()])
-
     # НУЖЕН kaleido: pip install kaleido
     try:
         fig.write_image(out_png, scale=2)
         return out_png
     except Exception as e:
         logger.exception(f"PNG export failed, fallback to HTML: {e}")
-        out_html = out_png.replace(".png", ".html")
+        out_html = os.path.splitext(out_png)[0] + ".html"
         fig.write_html(out_html, include_plotlyjs="embed")
         return out_html
 
@@ -678,6 +680,8 @@ def send_incidents_daily_regions_digest(tg_client, recipients, phrases=None, top
     """
     if phrases is None:
         phrases = ["пожар", "взрыв"]
+
+    os.makedirs(WORDSTAT_MAPS_DIR, exist_ok=True)
 
     df = build_daily_region_dataset(
         phrases=phrases,

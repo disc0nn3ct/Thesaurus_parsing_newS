@@ -1,0 +1,6 @@
+# Optional Telegram acceleration; may require a native compiler on Python 3.12.
+tgcrypto
+# Rendering scanned receipts for local OCR (text PDFs only need pypdf).
+pypdfium2
+# Legacy static map renderer; current reports use Matplotlib and standalone HTML.
+kaleido

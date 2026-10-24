@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>Мой винный атлас</title>
+<style>
+:root{--ink:#35242c;--wine:#7b213e;--muted:#776970;--line:#e4dcd7;--paper:#fffdf9}
+*{box-sizing:border-box}body{margin:0;background:#f4efe9;color:var(--ink);font:16px system-ui,sans-serif}
+main{max-width:1500px;margin:auto;padding:28px}h1{font:600 clamp(28px,4vw,42px) Georgia,serif;margin:8px 0}
+h2{font-size:21px;margin-top:0}h3{font-size:17px}p{line-height:1.55}header p{max-width:1050px;color:var(--muted)}
+.eyebrow{color:var(--wine);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}.metric{background:var(--paper);padding:18px;border:1px solid var(--line);border-radius:12px}
+.metric strong{display:block;font-size:30px;color:var(--wine)}.metric span{color:var(--muted);font-size:14px}
+.filters,.tabs,.zoom{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}label{display:flex;flex-direction:column;gap:5px;font-size:14px;color:var(--muted)}
+input,select,button{font:inherit;padding:10px 13px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=checkbox]{accent-color:var(--wine)}button{cursor:pointer}button.active{background:var(--wine);color:white;border-color:var(--wine)}button:disabled{opacity:.4;cursor:default}
+button:hover:not(:disabled){border-color:var(--wine)}button:focus-visible,input:focus-visible,select:focus-visible,[role=button]:focus-visible{outline:3px solid #b75e7d;outline-offset:3px}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:18px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px}
+.note{color:var(--muted);font-size:14px}.legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:15px 0}
+.scale{width:190px;height:12px;background:linear-gradient(to right,#fce2b9,#7b213e);border-radius:6px}.neutral{background:#e8e1d9;width:16px;height:16px;border-radius:4px;display:inline-block}
+svg{display:block;width:100%;min-height:270px;background:#f1f5f5;touch-action:none;border-radius:9px}
+path{stroke:#fffdf9;stroke-width:.8;vector-effect:non-scaling-stroke}g[role=button]{cursor:pointer}circle{cursor:pointer;vector-effect:non-scaling-stroke}
+#list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:15px;max-height:380px;overflow:auto}
+#list button{text-align:left;overflow-wrap:anywhere}.selected{box-shadow:inset 0 0 0 2px var(--wine)}#card p{white-space:pre-wrap;overflow-wrap:anywhere}
+#card button{display:block;margin:6px 0;width:100%;text-align:left}a{color:var(--wine)}.badge{padding:6px 10px;border-radius:8px;background:#f4e7eb;display:inline-block;font-size:14px}
+.analytics{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.bar-row{margin:12px 0}.bar-row button{border:none;padding:0;background:none;text-align:left;color:var(--wine)}
+.bar-track{height:8px;background:#ede6e1;border-radius:4px;margin-top:7px;overflow:hidden}.bar-fill{height:100%;background:var(--wine);border-radius:4px}
+.suggestion{border-top:1px solid var(--line);padding:14px 0}.suggestion p{font-size:14px;color:var(--muted);margin:7px 0}.related{display:flex;flex-wrap:wrap;gap:8px}
+details{margin-top:22px}summary{cursor:pointer;font-weight:600}.inline{flex-direction:row;align-items:center;color:var(--ink)}
+@media(max-width:850px){main{padding:14px}.layout,.analytics{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.filters label{flex:1;min-width:140px}.filters .inline{min-width:100%}}
+@media(prefers-reduced-motion:no-preference){button{transition:background .15s,border-color .15s}}
+</style></head><body><main>
+<header><span class="eyebrow">Моя коллекция · Vivino</span><h1>Мой винный атлас</h1>
+<p>Страны, регионы и сорта, которые я пробовал. Чем больше разных вин из страны, тем насыщеннее её цвет. Нажмите на страну, чтобы открыть свои вина и сорта.</p></header>
+<div class="metrics" id="progress" role="status">
+<div class="metric"><strong id="stat-wines">0</strong><span>разных вин попробовано</span></div>
+<div class="metric"><strong id="stat-countries">0</strong><span>стран в дегустациях</span></div>
+<div class="metric"><strong id="stat-grapes">0</strong><span>сортов подтверждено в винах</span></div>
+<div class="metric"><strong id="stat-unknown">0</strong><span>вин с неизвестным / неполным составом</span></div></div>
+<nav class="tabs" aria-label="Раздел атласа"><button data-mode="countries" class="active">Страны</button><button data-mode="regions">Регионы</button><button data-mode="grapes">Сорта</button><button data-mode="wines">Мои вина</button><button id="to-analysis">Аналитика и что попробовать ↓</button></nav>
+<div class="filters"><label>Поиск<input id="search" type="search" placeholder="Страна, регион, сорт или вино"></label>
+<label>Страна<select id="country"><option value="">Весь мир</option></select></label>
+<label>Сорт в составе<select id="grape"><option value="">Все / состав не указан</option></select></label>
+<label>Показывать<select id="status"><option value="all">Все</option><option value="tried">Пробовал</option><option value="new">Дегустация не отмечена</option><option value="plan">Мой план</option></select></label>
+<button id="reset">Сбросить фильтры</button><label class="inline"><input id="region-points" type="checkbox">Показать точные точки регионов</label></div>
+<div class="legend"><span class="neutral"></span><span>0 — нет подтверждённых вин</span><span id="scale-min">1</span><span class="scale"></span><strong id="scale-max">0</strong><span>разных вин · шкала относительно всей коллекции</span></div>
+<div class="layout"><section class="panel"><div class="zoom"><button id="plus">＋ Масштаб</button><button id="minus">− Масштаб</button><button id="world">Весь мир</button></div>
+<svg id="map" viewBox="0 0 1080 540" role="group" aria-label="Географическая карта: тепловая заливка стран по числу попробованных вин"></svg>
+<p class="note" id="heat-note"></p><p id="count" role="status"></p><div id="list"></div><div class="zoom"><button id="prev">← Страница</button><button id="next">Страница →</button></div></section>
+<aside class="panel" id="card" aria-live="polite"><h2>Начните со страны</h2><p>Нажмите на её заливку: здесь появятся ваши вина, сорта и охват регионов. Или выберите сорт, чтобы увидеть географию содержащих его вин.</p></aside></div>
+<div class="analytics" id="analysis"><section class="panel"><h2>Сорта в моих винах</h2><p class="note" id="grape-quality"></p><div id="grape-bars"></div><h3>По личным оценкам</h3><div id="preferences"></div></section>
+<section class="panel"><h2>Что попробовать дальше</h2><p class="note">Ваш план, не отмеченные сорта в винах из экспорта, стартовые сортовые цели и новые регионы. Каждое предложение объясняет причину; наличие вина в продаже и его вкус не прогнозируются.</p><div id="recommendations"></div></section></div>
+<details><summary>Как считаются данные и что важно знать</summary><p class="note" id="method"></p><p class="note" id="limits"></p>
+<p class="note">Заливка считает разные вина одной винодельни, года, страны и региона, подтверждённые оценкой, отзывом или вашей отметкой. Повторные сканирования не увеличивают счёт. Светлая заливка при нуле не доказывает, что вы никогда не пробовали вина страны. Ручная отметка региона или сорта без конкретного вина не увеличивает заливку страны.</p>
+<p class="note">Точные точки регионов включаются отдельно. Если координаты региона неизвестны, он остаётся в списке; заливка страны учитывается при известной стране вина. Происхождение сорта не определяет место выращивания винограда в конкретном вине.</p>
+<p class="note">План и отметки изменяются в Telegram → Vivino → Регионы / Сорта / Мои вина. HTML — снимок данных: фильтры работают внутри файла. После изменения плана или сортов запросите новую карту. Файл содержит личные отзывы.</p>
+<p class="note">Карта: Natural Earth (public domain). Регионы и сорта: Wikidata (CC0), идентификаторы VIVC. Справочник неполный; границы на карте не подтверждают принадлежность винодельческого региона.</p></details>
+</main><script>
+const data=__DATA__,byId=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
+const countries=new Map(data.countries.map(r=>[r.id,r])),regions=new Map(data.regions.map(r=>[r.id,r])),grapes=new Map(data.grapes.map(r=>[r.id,r]));
+const countryStats=new Map(data.analytics.countries.map(r=>[r.id,r])),grapeStats=new Map(data.analytics.grapes.map(r=>[r.id,r]));
+const countryRows=data.countries.map(r=>({...r,...countryStats.get(r.id),tried:countryStats.get(r.id).wine_count>0,planned:data.regions.some(p=>p.country===r.id&&p.planned)}));
+let mode='countries',page=0,zoom=[0,0,1080,540],selected=null,heat=new Map(),drag=null,dragMoved=false;
+function add(root,tag,text){const n=document.createElement(tag);n.textContent=text;root.appendChild(n);return n;}
+function link(root,url,label){if(!/^https:\/\/(www\.)?(wikidata\.org|vivc\.de|vivino\.com)\//.test(url||''))return;const n=add(root,'a',label);n.href=url;n.target='_blank';n.rel='noopener noreferrer';}
+function countryName(id){const c=countries.get(id);return c?.ru||c?.name||'Страна не указана';}
+function label(row){return row.ru||row.name;}
+function options(id,rows){for(const row of rows){const n=add(byId(id),'option',label(row));n.value=row.id;}}
+options('country',[...countries.values()].sort((a,b)=>label(a).localeCompare(label(b),'ru')));
+options('grape',data.grapes.filter(r=>r.tried||r.planned||r.wines.length).sort((a,b)=>label(a).localeCompare(label(b),'ru')));
+function hasGrape(row,g){return !g||row.grapes.includes(g);}
+function plannedWine(row){return regions.get(row.region_id||row.region)?.planned||row.grapes.some(id=>grapes.get(id)?.planned);}
+function filtered(){const rows=mode==='countries'?countryRows:mode==='regions'?data.regions:mode==='grapes'?data.grapes:data.wines;
+const query=byId('search').value.toLocaleLowerCase(),country=byId('country').value,status=byId('status').value,grape=byId('grape').value;
+return rows.filter(r=>{const tried=mode==='wines'?r.tasted:r.tried,planned=mode==='wines'?plannedWine(r):r.planned;
+let countryOk=!country||(mode==='countries'?r.id:mode==='wines'?r.country_id:r.country)===country;
+if(mode==='grapes'&&country)countryOk=r.wines.some(i=>data.wines[i].country_id===country);
+let grapeOk=!grape;
+if(grape){if(mode==='wines')grapeOk=hasGrape(r,grape);else if(mode==='grapes')grapeOk=r.id===grape;else if(mode==='regions')grapeOk=r.wines.some(i=>hasGrape(data.wines[i],grape));else grapeOk=(grapeStats.get(grape)?.country_counts[r.id]||0)>0;}
+return countryOk&&grapeOk&&(status==='all'||status==='tried'&&tried||status==='new'&&!tried||status==='plan'&&planned)&&
+(!query||[r.name,r.ru,r.description,r.review,r.winery,r.region,r.origin,...(r.aliases||[]),...(r.unknown_grapes||[]),...(r.grapes||[]).map(id=>label(grapes.get(id))||id)].join(' ').toLocaleLowerCase().includes(query));
+}).sort((a,b)=>(b.wine_count||Number(b.tried||b.tasted)||0)-(a.wine_count||Number(a.tried||a.tasted)||0)||label(a).localeCompare(label(b),'ru'));}
+function heatColor(value,max){if(!value||!max)return '#e8e1d9';const t=Math.sqrt(Math.min(1,value/max)),start=[252,226,185],end=[123,33,62];return 'rgb('+start.map((v,i)=>Math.round(v+(end[i]-v)*t)).join(',')+')';}
+function heatValues(rows){const country=byId('country').value,grape=byId('grape').value,ids=new Set(rows.map(r=>r.id)),counts=new Map();
+for(const r of data.analytics.unique_wines){if(!r.tasted||!r.country||country&&r.country!==country||!hasGrape(r,grape))continue;
+if(mode==='countries'&&!ids.has(r.country)||mode==='regions'&&!ids.has(r.region)||mode==='grapes'&&!r.grapes.some(g=>ids.has(g))||mode==='wines'&&!ids.has(r.id))continue;
+counts.set(r.country,(counts.get(r.country)||0)+1);}return counts;}
+function details(row,kind){selected={id:row.id,kind};const root=byId('card');root.replaceChildren();add(root,'h2',label(row));
+if(kind==='countries'){const stats=countryStats.get(row.id);add(root,'p','Разных вин попробовано: '+stats.wine_count+'. Регионов в этих винах: '+stats.region_count+'.');
+add(root,'p','Текущий срез на карте: '+(heat.get(row.id)||0)+' вин.');add(root,'h3','Подтверждённые сорта');
+const linked=data.analytics.grapes.filter(g=>g.country_counts[row.id]).sort((a,b)=>b.country_counts[row.id]-a.country_counts[row.id]);
+for(const g of linked){const b=add(root,'button',label(grapes.get(g.id))+' · '+g.country_counts[row.id]+' вин');b.addEventListener('click',()=>chooseGrape(g.id));}
+if(!linked.length)add(root,'p','Подтверждённых сортов нет. Уточните состав в карточках вин в боте.');
+const indices=data.wines.map((r,i)=>r.country_id===row.id?i:-1).filter(i=>i>=0);wineLinks(root,indices);}
+else if(kind==='wines'){add(root,'p',row.winery+' · '+(row.vintage||'год не указан'));add(root,'p',[row.country,row.region,row.style,row.type].filter(Boolean).join(' · '));
+add(root,'p',row.tasted?'Дегустация подтверждена':'Дегустация не подтверждена');add(root,'p','Моя оценка: '+(row.rating??'нет')+' / 5');add(root,'h3','Мой отзыв');add(root,'p',row.review||'Отзыва нет.');
+add(root,'p','Сорта: '+(row.grapes.map(id=>label(grapes.get(id))).concat(row.unknown_grapes).join(', ')||'не указаны'));
+for(const id of row.grapes){const b=add(root,'button','Показать географию: '+label(grapes.get(id)));b.addEventListener('click',()=>chooseGrape(id));}link(root,row.link,'Карточка Vivino');}
+else{add(root,'p',row.description||'Подробное описание отсутствует в справочнике.');add(root,'p',row.tried?'Пробовал'+(row.manual?' · моя отметка':''):'Дегустация не отмечена');add(root,'p',row.planned?'В моём плане':'Не добавлено в план');
+if(kind==='regions'){add(root,'p','Страна: '+countryName(row.country));add(root,'p',row.coordinate_quality==='user'?'Координаты указаны пользователем':row.lon!==null?'Точная справочная точка региона':'Точные координаты региона неизвестны; доступна заливка страны.');}
+if(kind==='grapes'){const stats=grapeStats.get(row.id);add(root,'p','Разных вин: '+stats.wine_count+'. Оценено: '+stats.rated_count+'. Средняя оценка содержащих сорт вин: '+(stats.mean_rating??'нет')+'.');
+add(root,'p','Вин с двумя и более подтверждёнными сортами: '+stats.blend_count+'. Оценка вина не является оценкой отдельного сорта.');add(root,'p','Происхождение сорта: '+(row.origin||'не указано')+'. Оно не определяет регион вашего вина.');
+const b=add(root,'button','География этого сорта в моих винах');b.addEventListener('click',()=>chooseGrape(row.id));if(row.vivc)link(root,'https://www.vivc.de/?r=passport%2Fview&id='+row.vivc,'Паспорт VIVC');}
+link(root,row.source,'Справочная запись');wineLinks(root,row.wines);}}
+function wineLinks(root,indices){add(root,'h3','Мои вина');for(const index of indices){const wine=data.wines[index],b=add(root,'button',wine.name+' · '+(wine.rating??'без оценки'));b.addEventListener('click',()=>details(wine,'wines'));}if(!indices.length)add(root,'p','Связанных вин в экспорте пока нет.');}
+function chooseGrape(id){if(![...byId('grape').options].some(o=>o.value===id))options('grape',[grapes.get(id)]);byId('grape').value=id;byId('country').value='';byId('search').value='';byId('status').value='all';page=0;setMode('countries');draw();details(grapes.get(id),'grapes');}
+function setMode(value){mode=value;for(const b of document.querySelectorAll('[data-mode]'))b.classList.toggle('active',b.dataset.mode===mode);}
+function fitCountry(code){const c=countries.get(code),points=data.regions.filter(r=>r.country===code&&r.lon!==null).map(r=>[r.lon,r.lat]);if(c&&Number.isFinite(c.lon)&&Number.isFinite(c.lat))points.push([c.lon,c.lat]);
+if(!code||!points.length){zoom=[0,0,1080,540];return;}const xs=points.map(p=>(p[0]+180)*3),ys=points.map(p=>(90-p[1])*3),minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys),w=Math.min(1080,Math.max(100,maxx-minx+45,(maxy-miny+45)*2));zoom=[Math.max(0,Math.min(1080-w,(minx+maxx-w)/2)),Math.max(0,Math.min(540-w/2,(miny+maxy-w/2)/2)),w,w/2];}
+function chooseCountry(id){byId('country').value=id;byId('search').value='';page=0;fitCountry(id);draw();details(countryRows.find(r=>r.id===id),'countries');}
+function draw(){const rows=filtered();heat=heatValues(rows);const map=byId('map');map.replaceChildren();map.setAttribute('viewBox',zoom.join(' '));const groups=new Map();
+for(const feature of data.world){let group=groups.get(feature.country);if(!group){group=document.createElementNS(ns,'g');groups.set(feature.country,group);map.appendChild(group);const value=heat.get(feature.country)||0;
+group.setAttribute('fill',heatColor(value,data.analytics.heat_max));group.setAttribute('tabindex','0');group.setAttribute('role','button');group.setAttribute('aria-label',countryName(feature.country)+': '+value+' вин');
+if(byId('country').value===feature.country){group.setAttribute('stroke', '#7b213e');group.setAttribute('stroke-width','2');}
+const title=document.createElementNS(ns,'title');title.textContent=countryName(feature.country)+' · '+value+' разных вин';group.appendChild(title);
+group.addEventListener('click',()=>{if(!dragMoved)chooseCountry(feature.country);});group.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();chooseCountry(feature.country);}});}
+const path=document.createElementNS(ns,'path');path.setAttribute('d',feature.path);if(byId('country').value===feature.country){path.style.stroke='#7b213e';path.style.strokeWidth='1.4';}group.appendChild(path);}
+if(byId('region-points').checked){const country=byId('country').value;for(const region of data.regions){if(region.lon===null||country&&region.country!==country)continue;
+const n=document.createElementNS(ns,'circle');n.setAttribute('cx',(region.lon+180)*3);n.setAttribute('cy',(90-region.lat)*3);n.setAttribute('r',Math.max(1.5,zoom[2]/200));n.setAttribute('fill',region.tried?'#28834a':region.planned?'#d98719':'#8793a3');n.setAttribute('stroke','#fff');n.setAttribute('stroke-width','1');n.setAttribute('tabindex','0');n.setAttribute('role','button');n.setAttribute('aria-label',region.name);
+const t=document.createElementNS(ns,'title');t.textContent=region.name;n.appendChild(t);n.addEventListener('click',()=>details(region,'regions'));n.addEventListener('keydown',e=>{if(e.key==='Enter')details(region,'regions');});map.appendChild(n);}}
+page=Math.max(0,Math.min(page,Math.ceil(rows.length/40)-1));const list=byId('list');list.replaceChildren();for(const row of rows.slice(page*40,(page+1)*40)){const count=mode==='countries'?row.wine_count:mode==='grapes'?grapeStats.get(row.id).wine_count:null;
+const b=add(list,'button',(row.tried||row.tasted?'✓ ':row.planned?'＋ ':'')+label(row)+(count!==null?' · '+count+' вин':''));if(selected?.kind===mode&&selected.id===row.id)b.classList.add('selected');b.addEventListener('click',()=>{details(row,mode);for(const button of list.children)button.classList.toggle('selected',button===b);});}
+byId('prev').disabled=page===0;byId('next').disabled=(page+1)*40>=rows.length;byId('count').textContent='Найдено: '+rows.length+' · страница '+(page+1)+(rows.length?'':' · Измените фильтры.');
+byId('heat-note').textContent='Заливка по текущим фильтрам: '+[...heat.values()].reduce((a,b)=>a+b,0)+' разных подтверждённых вин. '+(byId('grape').value||mode==='grapes'?'Вина без подтверждённого состава не включены в срез по сортам. ':'')+'Точность региональных координат не влияет на счёт страны.';}
+function analytics(){const s=data.analytics.summary;for(const [id,key] of [['stat-wines','tasted_wines'],['stat-countries','countries'],['stat-grapes','grapes'],['stat-unknown','unknown_composition']])byId(id).textContent=s[key];
+byId('scale-max').textContent=data.analytics.heat_max;byId('scale-min').textContent=data.analytics.heat_max?'1':'0';
+byId('grape-quality').textContent='Полный известный состав: '+s.known_composition+' из '+s.tasted_wines+' попробованных вин. '+s.unknown_composition+' — состав неизвестен или неполон. Ручные отметки без вина видны в разделе сортов, но не добавляют оценок.';
+const top=data.analytics.grapes.filter(g=>g.wine_count).sort((a,b)=>b.wine_count-a.wine_count||a.name.localeCompare(b.name)).slice(0,10),maximum=top[0]?.wine_count||1;
+for(const g of top){const r=add(byId('grape-bars'),'div','');r.className='bar-row';const b=add(r,'button',label(grapes.get(g.id))+' · '+g.wine_count+' вин');b.addEventListener('click',()=>chooseGrape(g.id));const track=add(r,'div','');track.className='bar-track';const fill=add(track,'div','');fill.className='bar-fill';fill.style.width=(g.wine_count/maximum*100)+'%';}
+if(!top.length)add(byId('grape-bars'),'p','Сорта пока не подтверждены. Откройте в боте «Мои вина и сорта» → «Уточнить сорта». Названия вин не используются для догадок.');
+for(const g of data.analytics.preferences){const b=add(byId('preferences'),'button',label(grapes.get(g.id))+' · '+g.mean_rating.toFixed(2)+' / 5 · '+g.rated_count+' оценённых вин');b.addEventListener('click',()=>chooseGrape(g.id));}
+if(!data.analytics.preferences.length)add(byId('preferences'),'p','Для сравнения предпочтений нужны хотя бы три оценённых вина на сорт. Пока данных недостаточно.');
+for(const rec of data.analytics.recommendations){const r=add(byId('recommendations'),'div','');r.className='suggestion';const b=add(r,'button',rec.name);b.addEventListener('click',()=>{const kind=rec.kind==='grape'?'grapes':rec.kind==='region'?'regions':'wines',row=kind==='grapes'?grapes.get(rec.id):kind==='regions'?regions.get(rec.id):data.wines.find(w=>w.id===rec.id);details(row,kind);byId('card').scrollIntoView({block:'nearest'});});add(r,'p',rec.reason);}
+if(!data.analytics.recommendations.length)add(byId('recommendations'),'p','Выберите новые цели в боте → «Сорта и план» или «Регионы и план».');
+byId('method').textContent=data.analytics.method;byId('limits').textContent='Справочник '+data.version+' неполный. Страна не определена у '+s.unknown_country+' попробованных вин: они не окрашивают карту. Страна для сортов относится к вашим винам, а не к предполагаемому месту выращивания сорта.';}
+for(const id of ['search','country','status','grape','region-points'])byId(id).addEventListener('input',()=>{page=0;if(id==='country')fitCountry(byId(id).value);draw();});
+for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{setMode(b.dataset.mode);page=0;draw();});
+byId('reset').addEventListener('click',()=>{for(const id of ['search','country','grape'])byId(id).value='';byId('status').value='all';byId('region-points').checked=false;page=0;selected=null;zoom=[0,0,1080,540];draw();});
+byId('to-analysis').addEventListener('click',()=>byId('analysis').scrollIntoView({block:'start'}));
+byId('prev').addEventListener('click',()=>{page--;draw();});byId('next').addEventListener('click',()=>{page++;draw();});
+function scale(factor,x=.5,y=.5){const width=Math.max(20,Math.min(1080,zoom[2]*factor)),height=width/2;zoom=[Math.max(0,Math.min(1080-width,zoom[0]+zoom[2]*x-width*x)),Math.max(0,Math.min(540-height,zoom[1]+zoom[3]*y-height*y)),width,height];draw();}
+byId('plus').addEventListener('click',()=>scale(.6));byId('minus').addEventListener('click',()=>scale(1.6));byId('world').addEventListener('click',()=>{zoom=[0,0,1080,540];draw();});
+byId('map').addEventListener('wheel',e=>{e.preventDefault();const r=byId('map').getBoundingClientRect();scale(e.deltaY<0?.8:1.25,(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height);},{passive:false});
+byId('map').addEventListener('pointerdown',e=>{dragMoved=false;if(e.target.tagName!=='circle'){drag={x:e.clientX,y:e.clientY,start:[...zoom]};}});
+byId('map').addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5){dragMoved=true;byId('map').setPointerCapture(e.pointerId);}const r=byId('map').getBoundingClientRect();zoom=[Math.max(0,Math.min(1080-zoom[2],drag.start[0]-dx/r.width*zoom[2])),Math.max(0,Math.min(540-zoom[3],drag.start[1]-dy/r.height*zoom[3])),zoom[2],zoom[3]];byId('map').setAttribute('viewBox',zoom.join(' '));});
+for(const event of ['pointerup','pointercancel'])byId('map').addEventListener(event,()=>drag=null);
+analytics();draw();
+</script></body></html>

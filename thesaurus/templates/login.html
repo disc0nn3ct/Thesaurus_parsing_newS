@@ -1,0 +1,5 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Вход · Thesaurus</title><link rel="stylesheet" href="/static/dashboard.css"></head>
+<body><main class="login-wrap"><section class="login-card"><a class="brand" href="/login">Thesaurus.</a><div class="eyebrow">Локальная панель</div><h1>Вход администратора</h1><p class="muted">История наблюдений, выпуски и управление подписками.</p>
+{% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
+<form action="/login" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><label>Пароль<input type="password" name="password" autocomplete="current-password" required autofocus maxlength="4096"></label><button type="submit">Войти</button></form>
+<p class="help">Панель работает на этом компьютере. Пароль задаётся в локальной конфигурации.</p></section></main></body></html>

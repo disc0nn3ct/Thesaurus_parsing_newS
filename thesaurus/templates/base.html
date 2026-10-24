@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} · Thesaurus</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+  {% if chart_url %}<script src="/static/plotly.min.js" defer></script><script src="/static/dashboard.js" defer></script>{% endif %}
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">Thesaurus<span aria-hidden="true">.</span></a>
+      <p class="brand-sub">Наблюдения и отчёты</p>
+      <nav class="nav" aria-label="Разделы">
+        {% for item in navigation %}<a href="{{ item.url }}" {% if page == item.key %}aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}
+      </nav>
+      <div class="sidebar-bottom"><div>Локальная панель<br>Доступ администратора</div>
+        <form method="post" action="/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button type="submit">Выйти</button></form>
+      </div>
+    </aside>
+    <main class="workspace">
+      <header class="page-header"><div><div class="eyebrow">{{ eyebrow|default('Рабочая панель') }}</div><h1>{{ title }}</h1><p>{{ description }}</p></div><span class="local-badge">● На этом компьютере</span></header>
+      {% if message %}<div class="notice" role="status">{{ message }}</div>{% endif %}
+      {% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

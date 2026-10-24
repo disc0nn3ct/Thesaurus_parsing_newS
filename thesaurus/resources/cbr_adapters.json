@@ -1,0 +1,2634 @@
+{
+  "verified_at": "2026-10-07",
+  "datasets": {
+    "cbr.hd_base.infl": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.zcyc_params": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.micex_doc": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2022-10-31",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.rreserves": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб",
+      "frequency": "irregular",
+      "calendar": "events"
+    },
+    "cbr.pr": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "unit": "коэффициент",
+      "full_snapshot": true
+    },
+    "cbr.hd_base.ostat_base": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.bliquidity": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.bsliquidityma": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб"
+    },
+    "cbr.statistics.flikvid": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб"
+    },
+    "cbr.hd_base.svs_db": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.flow": "2"
+      },
+      "date_format": "%Y",
+      "available_end": "2021-01-01",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.impliedratecny": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.ruonia.dynamics": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата ставки",
+            "Ставка RUONIA, % годовых",
+            "Объем сделок RUONIA, млрд руб.",
+            "Количество сделок, ед.",
+            "Количество участников RUONIA, совершавших сделки в данный день, ед.",
+            "Минимальная процентная ставка, % годовых",
+            "25-й процентиль по процентным ставкам, % годовых",
+            "75-й процентиль по процентным ставкам, % годовых",
+            "Максимальная процентная ставка, % годовых",
+            "Статус расчета",
+            "Дата публикации"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "dimensions": [],
+          "published_column": 10
+        }
+      ]
+    },
+    "cbr.hd_base.ruonia.dynamic": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "%",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата",
+            "Индекс",
+            "1 месяц",
+            "3 месяца",
+            "6 месяцев"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "dimensions": [],
+          "units": {
+            "Индекс": "индекс"
+          }
+        }
+      ]
+    },
+    "cbr.hd_base.mkr.mkr_base": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.st": [
+          "SF",
+          "HR",
+          "MB"
+        ],
+        "UniDbQuery.ob": [
+          "OB_MIACR_0",
+          "OB_MIACR_IG",
+          "OB_MIACR_B"
+        ],
+        "UniDbQuery.Currency": "-1",
+        "UniDbQuery.sk": [
+          "Dd1_",
+          "Dd7",
+          "Dd30",
+          "Dd90",
+          "Dd180",
+          "Dd360"
+        ]
+      },
+      "date_format": "%d.%m.%Y",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 1,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 2,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 3,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 4,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн руб",
+          "aggregation": "sum",
+          "field": "volume"
+        },
+        {
+          "table": 5,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн долларов США",
+          "aggregation": "sum",
+          "field": "volume"
+        },
+        {
+          "table": 6,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн руб",
+          "aggregation": "sum",
+          "field": "volume"
+        },
+        {
+          "table": 7,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн руб",
+          "aggregation": "sum",
+          "field": "volume"
+        }
+      ],
+      "table_display_labels": [
+        "MIACR RUB · ставка",
+        "MIACR USD · ставка",
+        "MIACR-IG RUB · ставка",
+        "MIACR-B RUB · ставка",
+        "MIACR RUB · объём",
+        "MIACR USD · объём",
+        "MIACR-IG RUB · объём",
+        "MIACR-B RUB · объём"
+      ]
+    },
+    "cbr.hd_base.mkr.mkr_monthes": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.st": [
+          "SF",
+          "HR",
+          "MB"
+        ],
+        "UniDbQuery.Currency": "-1",
+        "UniDbQuery.sk": [
+          "Dd1_",
+          "Dd7",
+          "Dd30",
+          "Dd90",
+          "Dd180",
+          "Dd360"
+        ]
+      },
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.seldomc.sc_dynamic": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.ValID": "8"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2022-03-04",
+      "data_type": "archive",
+      "parameter_choices": {
+        "UniDbQuery.ValID": [
+          {
+            "value": "8",
+            "label": "Албанский лек"
+          },
+          {
+            "value": "12",
+            "label": "Алжирский динар"
+          },
+          {
+            "value": "973",
+            "label": "Ангольская кванза"
+          },
+          {
+            "value": "32",
+            "label": "Аргентинское песо"
+          },
+          {
+            "value": "533",
+            "label": "Арубанский флорин"
+          },
+          {
+            "value": "971",
+            "label": "Афганский афгани"
+          },
+          {
+            "value": "44",
+            "label": "Багамский доллар"
+          },
+          {
+            "value": "50",
+            "label": "Бангладешская така"
+          },
+          {
+            "value": "52",
+            "label": "Барбадосский доллар"
+          },
+          {
+            "value": "48",
+            "label": "Бахрейнский динар"
+          },
+          {
+            "value": "84",
+            "label": "Белизский доллар"
+          },
+          {
+            "value": "60",
+            "label": "Бермудский доллар"
+          },
+          {
+            "value": "68",
+            "label": "Боливийский боливиано"
+          },
+          {
+            "value": "72",
+            "label": "Ботсванская пула"
+          },
+          {
+            "value": "96",
+            "label": "Брунейский доллар"
+          },
+          {
+            "value": "108",
+            "label": "Бурундийский франк"
+          },
+          {
+            "value": "64",
+            "label": "Бутанский нгултрум"
+          },
+          {
+            "value": "548",
+            "label": "Вануатский вату"
+          },
+          {
+            "value": "937",
+            "label": "Венесуэльский боливар"
+          },
+          {
+            "value": "928",
+            "label": "Венесуэльский боливар cоберано"
+          },
+          {
+            "value": "951",
+            "label": "Восточно - карибский доллар"
+          },
+          {
+            "value": "704",
+            "label": "Вьетнамский донг"
+          },
+          {
+            "value": "332",
+            "label": "Гаитский гурд"
+          },
+          {
+            "value": "328",
+            "label": "Гайанский доллар"
+          },
+          {
+            "value": "270",
+            "label": "Гамбийский даласи"
+          },
+          {
+            "value": "936",
+            "label": "Ганский седи"
+          },
+          {
+            "value": "320",
+            "label": "Гватемальский кетсаль"
+          },
+          {
+            "value": "324",
+            "label": "Гвинейский франк"
+          },
+          {
+            "value": "292",
+            "label": "Гибралтарский фунт"
+          },
+          {
+            "value": "340",
+            "label": "Гондурасская лемпира"
+          },
+          {
+            "value": "344",
+            "label": "Гонконгский доллар"
+          },
+          {
+            "value": "981",
+            "label": "Грузинский лари"
+          },
+          {
+            "value": "807",
+            "label": "Денар Республики Македония"
+          },
+          {
+            "value": "784",
+            "label": "Дирхам ОАЭ"
+          },
+          {
+            "value": "678",
+            "label": "Добра Сан-Томе и Принсипи"
+          },
+          {
+            "value": "930",
+            "label": "Добра Сан-Томе и Принсипи"
+          },
+          {
+            "value": "516",
+            "label": "Доллар Намибии"
+          },
+          {
+            "value": "90",
+            "label": "Доллар Соломоновых Островов"
+          },
+          {
+            "value": "780",
+            "label": "Доллар Тринидада и Тобаго"
+          },
+          {
+            "value": "242",
+            "label": "Доллар Фиджи"
+          },
+          {
+            "value": "214",
+            "label": "Доминиканское песо"
+          },
+          {
+            "value": "818",
+            "label": "Египетский фунт"
+          },
+          {
+            "value": "967",
+            "label": "Замбийская квача"
+          },
+          {
+            "value": "360",
+            "label": "Индонезийская рупия"
+          },
+          {
+            "value": "400",
+            "label": "Иорданский динар"
+          },
+          {
+            "value": "368",
+            "label": "Иракский динар"
+          },
+          {
+            "value": "364",
+            "label": "Иранский риал"
+          },
+          {
+            "value": "352",
+            "label": "Исландская крона"
+          },
+          {
+            "value": "886",
+            "label": "Йеменский риал"
+          },
+          {
+            "value": "116",
+            "label": "Камбоджийский риель"
+          },
+          {
+            "value": "634",
+            "label": "Катарский риал"
+          },
+          {
+            "value": "404",
+            "label": "Кенийский шиллинг"
+          },
+          {
+            "value": "598",
+            "label": "Кина Папуа-Новой Гвинеи"
+          },
+          {
+            "value": "170",
+            "label": "Колумбийское песо"
+          },
+          {
+            "value": "174",
+            "label": "Коморский франк"
+          },
+          {
+            "value": "977",
+            "label": "Конвертируемая марка"
+          },
+          {
+            "value": "976",
+            "label": "Конголезский франк"
+          },
+          {
+            "value": "188",
+            "label": "Костариканский колон"
+          },
+          {
+            "value": "192",
+            "label": "Кубинское песо"
+          },
+          {
+            "value": "414",
+            "label": "Кувейтский динар"
+          },
+          {
+            "value": "418",
+            "label": "Лаосский кип"
+          },
+          {
+            "value": "430",
+            "label": "Либерийский доллар"
+          },
+          {
+            "value": "422",
+            "label": "Ливанский фунт"
+          },
+          {
+            "value": "434",
+            "label": "Ливийский динар"
+          },
+          {
+            "value": "480",
+            "label": "Маврикийская рупия"
+          },
+          {
+            "value": "478",
+            "label": "Мавританская угия"
+          },
+          {
+            "value": "929",
+            "label": "Мавританская угия"
+          },
+          {
+            "value": "454",
+            "label": "Малавийская квача"
+          },
+          {
+            "value": "969",
+            "label": "Малагасийский ариари"
+          },
+          {
+            "value": "458",
+            "label": "Малайзийский ринггит"
+          },
+          {
+            "value": "462",
+            "label": "Мальдивская руфия"
+          },
+          {
+            "value": "504",
+            "label": "Марокканский дирхам"
+          },
+          {
+            "value": "484",
+            "label": "Мексиканское песо"
+          },
+          {
+            "value": "943",
+            "label": "Мозамбикский метикал"
+          },
+          {
+            "value": "496",
+            "label": "Монгольский тугрик"
+          },
+          {
+            "value": "524",
+            "label": "Непальская рупия"
+          },
+          {
+            "value": "566",
+            "label": "Нигерийская найра"
+          },
+          {
+            "value": "558",
+            "label": "Никарагуанская золотая кордоба"
+          },
+          {
+            "value": "554",
+            "label": "Новозеландский доллар"
+          },
+          {
+            "value": "376",
+            "label": "Новый израильский шекель"
+          },
+          {
+            "value": "901",
+            "label": "Новый тайваньский доллар"
+          },
+          {
+            "value": "512",
+            "label": "Оманский риал"
+          },
+          {
+            "value": "776",
+            "label": "Паанга Королевства Тонга"
+          },
+          {
+            "value": "586",
+            "label": "Пакистанская рупия"
+          },
+          {
+            "value": "590",
+            "label": "Панамский бальбоа"
+          },
+          {
+            "value": "600",
+            "label": "Парагвайский гуарани"
+          },
+          {
+            "value": "446",
+            "label": "Патака Макао"
+          },
+          {
+            "value": "604",
+            "label": "Перуанский соль"
+          },
+          {
+            "value": "222",
+            "label": "Сальвадорский колон"
+          },
+          {
+            "value": "682",
+            "label": "Саудовский риял"
+          },
+          {
+            "value": "748",
+            "label": "Свазилендский лилангени"
+          },
+          {
+            "value": "408",
+            "label": "Северокорейская вона"
+          },
+          {
+            "value": "690",
+            "label": "Сейшельская рупия"
+          },
+          {
+            "value": "941",
+            "label": "Сербский динар"
+          },
+          {
+            "value": "760",
+            "label": "Сирийский фунт"
+          },
+          {
+            "value": "706",
+            "label": "Сомалийский шиллинг"
+          },
+          {
+            "value": "938",
+            "label": "Суданский фунт"
+          },
+          {
+            "value": "968",
+            "label": "Суринамский доллар"
+          },
+          {
+            "value": "694",
+            "label": "Сьерра-Леонский леоне"
+          },
+          {
+            "value": "764",
+            "label": "Таиландский бат"
+          },
+          {
+            "value": "834",
+            "label": "Танзанийский шиллинг"
+          },
+          {
+            "value": "788",
+            "label": "Тунисский динар"
+          },
+          {
+            "value": "800",
+            "label": "Угандийский шиллинг"
+          },
+          {
+            "value": "858",
+            "label": "Уругвайское песо"
+          },
+          {
+            "value": "608",
+            "label": "Филиппинское писо"
+          },
+          {
+            "value": "262",
+            "label": "Франк Джибути"
+          },
+          {
+            "value": "950",
+            "label": "Франк КФА ВЕАС"
+          },
+          {
+            "value": "952",
+            "label": "Франк КФА ВСЕАО"
+          },
+          {
+            "value": "646",
+            "label": "Франк Руанды"
+          },
+          {
+            "value": "654",
+            "label": "Фунт Св. Елены"
+          },
+          {
+            "value": "238",
+            "label": "Фунт Фолклендских островов"
+          },
+          {
+            "value": "191",
+            "label": "Хорватская куна"
+          },
+          {
+            "value": "152",
+            "label": "Чилийское песо"
+          },
+          {
+            "value": "144",
+            "label": "Шри-Ланкийская рупия"
+          },
+          {
+            "value": "232",
+            "label": "Эритрейская накфа"
+          },
+          {
+            "value": "132",
+            "label": "Эскудо Кабо-Верде"
+          },
+          {
+            "value": "230",
+            "label": "Эфиопский быр"
+          },
+          {
+            "value": "388",
+            "label": "Ямайский доллар"
+          }
+        ]
+      },
+      "unit": "единиц валюты за доллар США"
+    },
+    "cbr.hd_base.metall.metall_base_new": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Gold": "true",
+        "UniDbQuery.Silver": "true",
+        "UniDbQuery.Platinum": "true",
+        "UniDbQuery.Palladium": "true",
+        "UniDbQuery.so": "1"
+      },
+      "date_format": "%d.%m.%Y",
+      "calendar": "cbr_fx"
+    },
+    "cbr.hd_base.metall.metall_base_upto": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Gold": "true",
+        "UniDbQuery.Silver": "true",
+        "UniDbQuery.Platinum": "true",
+        "UniDbQuery.Palladium": "true",
+        "UniDbQuery.so": "1"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2008-06-30",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.metall.metall_base_old": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.P1": "1",
+        "UniDbQuery.so": "1"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2003-07-04",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.procstav.ir_chg_mpo": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.icl": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.keyrate": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.procstav.ir_mpo": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.procstav.ir_srm": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.procstav.irb_ommir": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.mb_nd.mb_nd_month": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.mb_nd.mb_nd_weekly": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.bsliquidityma.full": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб"
+    },
+    "cbr.hd_base.cntr.ko_politiki": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "единиц",
+      "frequency": "monthly",
+      "calendar": "periodic"
+    },
+    "cbr.hd_base.cntr.upd": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "единиц"
+    },
+    "cbr.hd_base.cntr.struct": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "%",
+      "frequency": "daily",
+      "calendar": "russia_working"
+    },
+    "cbr.hd_base.ostat_depo_new": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млн руб"
+    },
+    "cbr.hd_base.deposit_base": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.depomaxproc": {
+      "verified_at": "2026-10-07",
+      "default_params": {}
+    },
+    "cbr.hd_base.itogidepauct": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Atype": "-1"
+      },
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.obr.obrcictotal": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб"
+    },
+    "cbr.hd_base.obr.obrcic": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2021-12-08",
+      "data_type": "archive",
+      "unit": "млн руб"
+    },
+    "cbr.hd_base.obr.odrpi": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2021-10-12",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.obr.odrri": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2021-10-12",
+      "data_type": "archive",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата проведения аукциона",
+            "Регистрационный номер выпуска",
+            "Дата расчетов по аукциону",
+            "Дата погашения облигаций",
+            "Средневзвешенная цена (% от номинала)",
+            "Размещенный объем по номиналу (млн руб.)",
+            "Размещенный объем по ценам заявок (млн руб.)"
+          ],
+          "numeric": [
+            4,
+            5,
+            6
+          ],
+          "dimensions": [
+            1,
+            3
+          ]
+        }
+      ],
+      "calendar": "events",
+      "frequency": "irregular"
+    },
+    "cbr.hd_base.obr.obrexecution": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2021-12-09",
+      "data_type": "archive",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата исполнения обязательств",
+            "Регистрационный номер выпуска",
+            "Вид обязательств",
+            "Дата начала размещения облигаций",
+            "Дата погашения облигаций",
+            "Объем ОБР в обращении по номинальной стоимости (млн руб.)",
+            "Дата, на которую определялись лица, имевшие право на получение доходов",
+            "Дата выплаты купонного дохода",
+            "Номер купона",
+            "Купонный период",
+            "Объем купонных выплат (млн руб.)",
+            "Размер купонной выплаты на одну облигацию (руб.)",
+            "Объем погашения ОБР (млн руб.)"
+          ],
+          "numeric": [
+            5,
+            10,
+            11,
+            12
+          ],
+          "dimensions": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            7,
+            9,
+            8
+          ]
+        }
+      ]
+    },
+    "cbr.hd_base.dv": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.P1": "1"
+      },
+      "date_format": "%d.%m.%Y",
+      "unit": "млрд руб"
+    },
+    "cbr.hd_base.overnight": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.fixedstav1day": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.nmk": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.minrates_ca": {
+      "verified_at": "2026-10-07",
+      "default_params": {}
+    },
+    "cbr.hd_base.rates_ca": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "available_end": "2016-03-03",
+      "data_type": "archive",
+      "calendar": "events",
+      "frequency": "irregular"
+    },
+    "cbr.hd_base.nmcauction": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.LoanMaturity": "0"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2016-12-05",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.nonmarketres": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.LoanMaturity": "0"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2016-03-03",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.specref": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млн руб",
+      "frequency": "monthly",
+      "calendar": "periodic"
+    },
+    "cbr.hd_base.repo_debt": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "unit": "млн руб"
+    },
+    "cbr.hd_base.repo_shedule": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "kind": "reference",
+      "data_type": "reference",
+      "full_snapshot": true
+    },
+    "cbr.hd_base.repo_session": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.repo_proc": {
+      "verified_at": "2026-10-07",
+      "default_params": {}
+    },
+    "cbr.hd_base.dirrepoauctionparam": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.swapdaytotal": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2022-02-28",
+      "data_type": "archive",
+      "unit": "млн руб"
+    },
+    "cbr.hd_base.claim-fx-swap": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата",
+            "Требования / млн долл. США",
+            "Требования / млн юаней",
+            "Требования / млн евро",
+            "Справочно: рублевые денежные средства, млн руб. / полученные Банком России по первым частям сделок*",
+            "Справочно: рублевые денежные средства, млн руб. / к перечислению Банком России по вторым частям сделок"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "dimensions": []
+        }
+      ]
+    },
+    "cbr.hd_base.swap_info.swapinfo_sub": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.P1": "0"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2022-02-25",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.swap_info.sell": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Cur": "2",
+        "UniDbQuery.P1": "0"
+      },
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.swap_info.swapmonthtotal": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2022-02-24",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.swap_info.swapinfosellvol": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Cur": "2",
+        "UniDbQuery.P1": "0"
+      },
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.valintbr.valvol_day": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.valintbr.valvol_mnth": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.mrrf.mrrf_m": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.mrrf.mrrf_7d": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%m.%Y"
+    },
+    "cbr.hd_base.mkr.retro.mkr_retro": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.st": [
+          "HR",
+          "MB"
+        ],
+        "UniDbQuery.ob": [
+          "OB_MIACR_IG",
+          "OB_MIACR_B"
+        ],
+        "UniDbQuery.sk": [
+          "Dd1_",
+          "Dd7",
+          "Dd30",
+          "Dd90",
+          "Dd180",
+          "Dd360"
+        ],
+        "UniDbQuery.Currency": "2"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2015-12-31",
+      "data_type": "archive",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 1,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 2,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн долларов США",
+          "aggregation": "sum",
+          "field": "volume"
+        },
+        {
+          "table": 3,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "млн долларов США",
+          "aggregation": "sum",
+          "field": "volume"
+        }
+      ],
+      "table_display_labels": [
+        "MIACR-IG USD · ставка (архив)",
+        "MIACR-B USD · ставка (архив)",
+        "MIACR-IG USD · объём (архив)",
+        "MIACR-B USD · объём (архив)"
+      ]
+    },
+    "cbr.hd_base.mkr.retro.mkr_retro_mibid": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.st": [
+          "SOP",
+          "SOR"
+        ],
+        "UniDbQuery.Currency": "-1",
+        "UniDbQuery.sk": [
+          "Dd1_",
+          "Dd7",
+          "Dd30",
+          "Dd90",
+          "Dd180",
+          "Dd360"
+        ]
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2016-12-30",
+      "data_type": "archive",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 1,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 2,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        },
+        {
+          "table": 3,
+          "headers": [
+            "Дата",
+            "1 день",
+            "от 2 до 7 дн.",
+            "от 8 до 30 дн.",
+            "от 31 до 90 дн.",
+            "от 91 до 180 дн.",
+            "от 181 дн. до 1 года"
+          ],
+          "numeric": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "dimensions": [],
+          "unit": "%",
+          "aggregation": "mean"
+        }
+      ],
+      "table_display_labels": [
+        "MIBID RUB (архив)",
+        "MIBID USD (архив)",
+        "MIBOR RUB (архив)",
+        "MIBOR USD (архив)"
+      ]
+    },
+    "cbr.hd_base.mkr.retro.mkr_base_old": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.st": [
+          "SOP",
+          "SOR",
+          "SF"
+        ],
+        "UniDbQuery.sk": [
+          "Dd1_",
+          "Dd3_",
+          "Dd7",
+          "Dd14",
+          "Dd21",
+          "Dd30",
+          "Dd60",
+          "Dd90"
+        ]
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2000-07-31",
+      "data_type": "archive"
+    },
+    "cbr.hd_base.procstav.ir_chg_mpo.full": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.itogidepauct.full": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.Atype": "-1"
+      },
+      "date_format": "%d.%m.%Y"
+    },
+    "cbr.hd_base.obr.odrri.ext": {
+      "verified_at": "2026-10-07",
+      "default_params": {},
+      "date_format": "%d.%m.%Y",
+      "available_end": "2021-10-12",
+      "data_type": "archive",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Дата проведения аукциона",
+            "Регистрационный номер выпуска",
+            "Дата расчетов по аукциону",
+            "Дата погашения облигаций",
+            "Объем предложения по номинальной стоимости (млн руб.)",
+            "Объем спроса по номинальной стоимости (млн руб.)",
+            "Объем спроса по ценам заявок (млн руб.)",
+            "Количество кредитных организаций, подавших заявки",
+            "Минимальная возможная цена в заявке (% от номинала)",
+            "Минимальная заявленная цена (% от номинала)",
+            "Максимальная заявленная цена (% от номинала)",
+            "Цена отсечения (% от номинала)",
+            "Средневзвешенная цена (% от номинала)",
+            "Размещенный объем по номиналу (млн руб.)",
+            "Размещенный объем по ценам заявок (млн руб.)"
+          ],
+          "numeric": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "dimensions": [
+            1,
+            3
+          ]
+        }
+      ],
+      "calendar": "events",
+      "frequency": "irregular"
+    },
+    "cbr.hd_base.nonmarketres.extended": {
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.LoanMaturity": "0"
+      },
+      "date_format": "%d.%m.%Y",
+      "available_end": "2016-03-03",
+      "data_type": "archive"
+    }
+  },
+  "series": [
+    {
+      "id": "cbr.fx.aud",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс AUD · Австралийский доллар",
+      "unit": "руб за 1 AUD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01010",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.azn",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс AZN · Азербайджанский манат",
+      "unit": "руб за 1 AZN",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01020A",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.dzd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс DZD · Алжирских динаров",
+      "unit": "руб за 1 DZD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01030",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.gbp",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс GBP · Фунт стерлингов",
+      "unit": "руб за 1 GBP",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01035",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.amd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс AMD · Армянских драмов",
+      "unit": "руб за 1 AMD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01060",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.bhd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс BHD · Бахрейнский динар",
+      "unit": "руб за 1 BHD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01080",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.byn",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс BYN · Белорусский рубль",
+      "unit": "руб за 1 BYN",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01090B",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.bob",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс BOB · Боливиано",
+      "unit": "руб за 1 BOB",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01105",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.brl",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс BRL · Бразильский реал",
+      "unit": "руб за 1 BRL",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01115",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.huf",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс HUF · Форинтов",
+      "unit": "руб за 1 HUF",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01135",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.vnd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс VND · Донгов",
+      "unit": "руб за 1 VND",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01150",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.hkd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс HKD · Гонконгский доллар",
+      "unit": "руб за 1 HKD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01200",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.gel",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс GEL · Лари",
+      "unit": "руб за 1 GEL",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01210",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.dkk",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс DKK · Датская крона",
+      "unit": "руб за 1 DKK",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01215",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.aed",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс AED · Дирхам ОАЭ",
+      "unit": "руб за 1 AED",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01230",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.usd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс USD · Доллар США",
+      "unit": "руб за 1 USD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01235",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.eur",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс EUR · Евро",
+      "unit": "руб за 1 EUR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01239",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.egp",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс EGP · Египетских фунтов",
+      "unit": "руб за 1 EGP",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01240",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.inr",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс INR · Индийских рупий",
+      "unit": "руб за 1 INR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01270",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.idr",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс IDR · Рупий",
+      "unit": "руб за 1 IDR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01280",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.irr",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс IRR · Иранских риалов",
+      "unit": "руб за 1 IRR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01300",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.kzt",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс KZT · Тенге",
+      "unit": "руб за 1 KZT",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01335",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.cad",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс CAD · Канадский доллар",
+      "unit": "руб за 1 CAD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01350",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.qar",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс QAR · Катарский риал",
+      "unit": "руб за 1 QAR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01355",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.kgs",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс KGS · Сомов",
+      "unit": "руб за 1 KGS",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01370",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.cny",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс CNY · Юань",
+      "unit": "руб за 1 CNY",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01375",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.cup",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс CUP · Кубинских песо",
+      "unit": "руб за 1 CUP",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01395",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.mdl",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс MDL · Молдавских леев",
+      "unit": "руб за 1 MDL",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01500",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.mnt",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс MNT · Тугриков",
+      "unit": "руб за 1 MNT",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01503",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.ngn",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс NGN · Найр",
+      "unit": "руб за 1 NGN",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01520",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.nzd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс NZD · Новозеландский доллар",
+      "unit": "руб за 1 NZD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01530",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.nok",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс NOK · Норвежских крон",
+      "unit": "руб за 1 NOK",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01535",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.omr",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс OMR · Оманский риал",
+      "unit": "руб за 1 OMR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01540",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.pln",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс PLN · Злотый",
+      "unit": "руб за 1 PLN",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01565",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.sar",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс SAR · Саудовский риял",
+      "unit": "руб за 1 SAR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01580",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.ron",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс RON · Румынский лей",
+      "unit": "руб за 1 RON",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01585F",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.xdr",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс XDR · СДР (специальные права заимствования)",
+      "unit": "руб за 1 XDR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01589",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.sgd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс SGD · Сингапурский доллар",
+      "unit": "руб за 1 SGD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01625",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.tjs",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс TJS · Сомони",
+      "unit": "руб за 1 TJS",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01670",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.thb",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс THB · Батов",
+      "unit": "руб за 1 THB",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01675",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.bdt",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс BDT · Так",
+      "unit": "руб за 1 BDT",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01685",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.try",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс TRY · Турецких лир",
+      "unit": "руб за 1 TRY",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01700J",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.tmt",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс TMT · Новый туркменский манат",
+      "unit": "руб за 1 TMT",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01710A",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.uzs",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс UZS · Узбекских сумов",
+      "unit": "руб за 1 UZS",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01717",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.uah",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс UAH · Гривен",
+      "unit": "руб за 1 UAH",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01720",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.czk",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс CZK · Чешских крон",
+      "unit": "руб за 1 CZK",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01760",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.sek",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс SEK · Шведских крон",
+      "unit": "руб за 1 SEK",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01770",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.chf",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс CHF · Швейцарский франк",
+      "unit": "руб за 1 CHF",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01775",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.etb",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс ETB · Эфиопских быров",
+      "unit": "руб за 1 ETB",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01800",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.rsd",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс RSD · Сербских динаров",
+      "unit": "руб за 1 RSD",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01805F",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.zar",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс ZAR · Рэндов",
+      "unit": "руб за 1 ZAR",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01810",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.krw",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс KRW · Вон",
+      "unit": "руб за 1 KRW",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01815",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.jpy",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс JPY · Иен",
+      "unit": "руб за 1 JPY",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R01820",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.fx.mmk",
+      "source": "cbr",
+      "dataset": "cbr.currency_base",
+      "parent": "cbr.currency_base",
+      "title": "Курс MMK · Кьятов",
+      "unit": "руб за 1 MMK",
+      "frequency": "daily",
+      "calendar": "russia_working",
+      "transform": "returns",
+      "aggregation": "last",
+      "kind": "series",
+      "adapter": "currency",
+      "code": "R02005",
+      "url": "https://cbr.ru/currency_base/",
+      "methodology": "https://cbr.ru/currency_base/",
+      "definition": "1"
+    },
+    {
+      "id": "cbr.hd_base.svs_db.imports",
+      "source": "cbr",
+      "dataset": "cbr.hd_base.svs_db.imports",
+      "title": "Внешняя торговля услугами · импорт",
+      "url": "https://cbr.ru/hd_base/svs_db/",
+      "parent": "cbr.hd_base.svs_db",
+      "kind": "dataset",
+      "frequency": "annual",
+      "calendar": "periodic",
+      "aggregation": "last",
+      "unit": "source_units",
+      "transform": "difference",
+      "contracts": [
+        {
+          "table": 0,
+          "headers": [
+            "Код страны",
+            "Наименование",
+            "Вид услуги",
+            "Направление",
+            "Единица измерения",
+            "2015",
+            "2019",
+            "2020",
+            "2021"
+          ],
+          "layout": "wide",
+          "numeric": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "dimensions": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "downloads": [
+        "https://cbr.ru/Queries/UniDbQuery/DownloadExcel/144042?FromDate=01%2F01%2F2015&ToDate=01%2F01%2F2021&posted=False&backUrl=%2Fhd_base%2Fsvs_db%2F"
+      ],
+      "methodology": "https://cbr.ru/hd_base/svs_db/",
+      "available_period": "source_available",
+      "definition": "1",
+      "administrative": false,
+      "verified_at": "2026-10-07",
+      "default_params": {
+        "UniDbQuery.flow": "1"
+      },
+      "date_format": "%Y",
+      "available_end": "2021-01-01",
+      "data_type": "archive"
+    }
+  ]
+}

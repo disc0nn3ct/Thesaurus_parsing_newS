@@ -1,0 +1,4656 @@
+[
+  {
+    "id": "cbr.hd_base.infl",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.infl",
+    "title": "Инфляция и ключевая ставка Банка России",
+    "url": "https://cbr.ru/hd_base/infl/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Ключевая ставка, % годовых",
+          "Инфляция, % г/г",
+          "Цель по инфляции, %"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Queries/UniDbQuery/DownloadExcel/132934?FromDate=04%2F05%2F2026&ToDate=10%2F02%2F2026&posted=False&backUrl=%2Fhd_base%2Finfl%2F"
+    ],
+    "methodology": "https://cbr.ru/hd_base/infl/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true,
+    "period_semantics": "flow"
+  },
+  {
+    "id": "cbr.hd_base.ruonia",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia",
+    "title": "RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ruonia/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr",
+    "title": "MIACR",
+    "url": "https://cbr.ru/hd_base/mkr/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.zcyc_params",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.zcyc_params",
+    "title": "Кривая бескупонной доходности государственных облигаций",
+    "url": "https://cbr.ru/hd_base/zcyc_params/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Срок до погашения, лет / 0,25",
+          "Срок до погашения, лет / 0,5",
+          "Срок до погашения, лет / 0,75",
+          "Срок до погашения, лет / 1",
+          "Срок до погашения, лет / 2",
+          "Срок до погашения, лет / 3",
+          "Срок до погашения, лет / 5",
+          "Срок до погашения, лет / 7",
+          "Срок до погашения, лет / 10",
+          "Срок до погашения, лет / 15",
+          "Срок до погашения, лет / 20",
+          "Срок до погашения, лет / 30"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/zcyc_params/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base",
+    "source": "cbr",
+    "dataset": "cbr.currency_base",
+    "title": "База данных по курсам валют",
+    "url": "https://cbr.ru/currency_base/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/193487/Annex_OD-1012.pdf",
+      "https://cbr.ru/Content/Document/File/98945/6t_kurs.pdf"
+    ],
+    "methodology": "https://cbr.ru/currency_base/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.micex_doc",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.micex_doc",
+    "title": "Курсы доллара США и евро к рублю и показатели биржевых торгов",
+    "url": "https://cbr.ru/hd_base/micex_doc/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Единая торговая сессия / доллар США / с расчетами «сегодня» / средневзвешенный курс (руб./долл.)",
+          "Единая торговая сессия / доллар США / с расчетами «сегодня» / объем (млн долл.)",
+          "Единая торговая сессия / доллар США / с расчетами «завтра» / средневзвешенный курс (руб./долл.)",
+          "Единая торговая сессия / доллар США / с расчетами «завтра» / объем (млн долл.)",
+          "Единая торговая сессия / евро / с расчетами «сегодня» / средневзвешенный курс (руб./евро)",
+          "Единая торговая сессия / евро / с расчетами «сегодня» / объем (млн евро)",
+          "Единая торговая сессия / евро / с расчетами «завтра» / средневзвешенный курс (руб./евро)",
+          "Единая торговая сессия / евро / с расчетами «завтра» / объем (млн евро)"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/micex_doc/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.seldomc",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.seldomc",
+    "title": "Котировки редких валют",
+    "url": "https://cbr.ru/hd_base/seldomc/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/seldomc/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.metall",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.metall",
+    "title": "Драгоценные металлы",
+    "url": "https://cbr.ru/hd_base/metall/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "руб за грамм",
+    "transform": "returns",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/101485/1283-u.pdf",
+      "https://cbr.ru/Content/Document/File/101486/1993-u.pdf",
+      "https://cbr.ru/Content/Document/File/101487/2765-u.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/metall/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.procstav",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav",
+    "title": "Процентные ставки Банка России",
+    "url": "https://cbr.ru/hd_base/ProcStav/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.mb_nd",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mb_nd",
+    "title": "Денежная база (в узком определении)",
+    "url": "https://cbr.ru/hd_base/mb_nd/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "weekly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млрд руб",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mb_nd/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.rreserves",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.rreserves",
+    "title": "Обязательные резервы кредитных организаций",
+    "url": "https://cbr.ru/hd_base/RReserves/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Период усреднения обязательных резервов (указан первый день)",
+          "Фактические среднедневные остатки средств на корсчетах1",
+          "Обязательные резервы, подлежащие усреднению на корсчетах2",
+          "Обязательные резервы на счетах для их учета2"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/vfs/hd_base/RReserves/required_reserves_table.xlsx"
+    ],
+    "methodology": "https://cbr.ru/hd_base/RReserves/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.pr",
+    "source": "cbr",
+    "dataset": "cbr.pr",
+    "title": "Коэффициенты усреднения обязательных резервов",
+    "url": "https://cbr.ru/pr/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Банки¹",
+          "НКО",
+          "Филиалы иностранных банков",
+          "РНКО и РЦ ОРЦБ",
+          "НКО, имеющие право на осуществление переводов денежных средств без открытия банковских счетов и связанных с ними иных банковских операций",
+          "НКО, осуществляющие депозитно-кредитные операции"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/pr/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.oper_br.o_dkp.reserve_requirements.reserv_pr4",
+    "source": "cbr",
+    "dataset": "cbr.oper_br.o_dkp.reserve_requirements.reserv_pr4",
+    "title": "Коэффициенты для корректировки резервируемых обязательств и обязательных резервов",
+    "url": "https://cbr.ru/oper_br/o_dkp/reserve_requirements/reserv_pr4/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/oper_br/o_dkp/reserve_requirements/reserv_pr4/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ostat_base",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ostat_base",
+    "title": "Средства кредитных организаций на корсчетах в Банке России",
+    "url": "https://cbr.ru/hd_base/ostat_base/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "млрд руб",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "По России",
+          "По Московскому региону"
+        ],
+        "numeric": [
+          1,
+          2
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ostat_base/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.bliquidity",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bliquidity",
+    "title": "Дефицит/профицит ликвидности банковского сектора",
+    "url": "https://cbr.ru/hd_base/bliquidity/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "млрд руб",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата / 1",
+          "Дефицит (+)/ профицит (-) ликвидности / 2 = 4 - 9 + 13 - 14 + 15",
+          "Дефицит (+)/ профицит (-) ликвидности без учета корсчетов / 3 = 4 - 9 + 13",
+          "в том числе / стандартные инструменты денежно-кредитной политики / требования Банка России к кредитным организациям / 4 = 5 + 6 + 7 + 8",
+          "в том числе / стандартные инструменты денежно-кредитной политики / аукционы / репо и «валютный своп»** / 5",
+          "в том числе / стандартные инструменты денежно-кредитной политики / аукционы / обеспеченные кредиты / 6",
+          "в том числе / стандартные инструменты денежно-кредитной политики / операции постоянного действия / репо и «валютный своп»** / 7",
+          "в том числе / стандартные инструменты денежно-кредитной политики / операции постоянного действия / обеспеченные кредиты / 8",
+          "в том числе / стандартные инструменты денежно-кредитной политики / обязательства Банка России перед кредитными организациями / 9 = 10 + 11 + 12",
+          "в том числе / стандартные инструменты денежно-кредитной политики / депозиты / аукционы / 10",
+          "в том числе / стандартные инструменты денежно-кредитной политики / депозиты / операции постоянного действия / 11",
+          "в том числе / стандартные инструменты денежно-кредитной политики / КОБР / 12",
+          "в том числе / операции на возвратной основе, не относящиеся к стандартным инструментам денежно-кредитной политики (в том числе ДМ)* / 13",
+          "Справочно: / Средства банков на корсчетах в Банке России / 14",
+          "Справочно: / Обязательные резервы, подлежащие усреднению на корсчетах*** / 15"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/bliquidity/",
+    "available_period": "source_available",
+    "definition": "liquidity_nov2023_break",
+    "administrative": false,
+    "break_date": "2023-11-01"
+  },
+  {
+    "id": "cbr.hd_base.bsliquidityma",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bsliquidityma",
+    "title": "Показатели состояния ликвидности по периодам усреднения обязательных резервов",
+    "url": "https://cbr.ru/hd_base/BSliquidityMA/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Первый день периода усреднения",
+          "Средства на корсчетах",
+          "Обязательные резервы на спецсчетах",
+          "Структурный дефицит (+) / профицит (-) ликвидности",
+          "Потребность в ликвидности на рыночных условиях**",
+          "Абсорбированная ликвидность по итогам аукционов",
+          "Предоставленная ликвидность по итогам аукционов",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия, нетто",
+          "Обращение к спецмеханизмам и прочим операциям Банка России, нетто",
+          "Изменение ключевой ставки (б.п.)",
+          "Спред между RUONIA и ключевой ставкой (б.п.)",
+          "Задолженность по сделкам RUONIA"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/BSliquidityMA/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.statistics.flikvid",
+    "source": "cbr",
+    "dataset": "cbr.statistics.flikvid",
+    "title": "Факторы формирования ликвидности банковского сектора",
+    "url": "https://cbr.ru/statistics/flikvid/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Изменение наличных денег в обращении (вне Банка России)",
+          "Изменение остатков средств на счетах расширенного правительства в Банке России и прочие операции",
+          "из них: / движение средств по государственному внутреннему долгу",
+          "из них: / изменение задолженности банков по депозитам Федерального казначейства",
+          "из них: / изменение задолженности банков по операциям репо Федерального казначейства",
+          "из них: / операции Минфина России по покупке (продаже) иностранной валюты на внутреннем валютном рынке*",
+          "Операции Банка России на внутреннем валютном рынке",
+          "Операции Банка России по предоставлению и абсорбированию ликвидности"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/s/Content/Document/File/17135/DKP_limit.pdf"
+    ],
+    "methodology": "https://cbr.ru/statistics/flikvid/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.statistics.pffl",
+    "source": "cbr",
+    "dataset": "cbr.statistics.pffl",
+    "title": "Прогноз факторов формирования ликвидности банковского сектора",
+    "url": "https://cbr.ru/statistics/pffl/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/17135/DKP_limit.pdf"
+    ],
+    "methodology": "https://cbr.ru/statistics/pffl/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.cntr",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.cntr",
+    "title": "Контрагенты и обеспечение",
+    "url": "https://cbr.ru/hd_base/cntr/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/cntr/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.depo",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.depo",
+    "title": "Депозиты в Банке России",
+    "url": "https://cbr.ru/hd_base/depo/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/depo/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr",
+    "title": "Облигации Банка России",
+    "url": "https://cbr.ru/hd_base/obr/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.securedloans",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.securedloans",
+    "title": "Обеспеченные кредиты",
+    "url": "https://cbr.ru/hd_base/Securedloans/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/Securedloans/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repodb",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repodb",
+    "title": "Репо",
+    "url": "https://cbr.ru/hd_base/repodb/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repodb/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swap_info",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swap_info",
+    "title": "Валютные свопы",
+    "url": "https://cbr.ru/hd_base/swap_info/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swap_info/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.valintbr",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.valintbr",
+    "title": "Покупка и продажа иностранной валюты на внутреннем рынке",
+    "url": "https://cbr.ru/hd_base/valintbr/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/valintbr/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mrrf",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mrrf",
+    "title": "Международные резервы Российской Федерации",
+    "url": "https://cbr.ru/hd_base/mrrf/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "weekly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mrrf/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.tg",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.tg",
+    "title": "Трансграничные переводы физических лиц (резидентов и нерезидентов)",
+    "url": "https://cbr.ru/hd_base/tg/",
+    "parent": null,
+    "kind": "reference",
+    "frequency": "quarterly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/tg/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.svs_db",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.svs_db",
+    "title": "База данных по внешней торговле Российской Федерации услугами",
+    "url": "https://cbr.ru/hd_base/svs_db/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "annual",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Код страны",
+          "Наименование",
+          "Вид услуги",
+          "Направление",
+          "Единица измерения",
+          "2015",
+          "2019",
+          "2020",
+          "2021"
+        ],
+        "layout": "wide",
+        "numeric": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Queries/UniDbQuery/DownloadExcel/144042?FromDate=01%2F01%2F2015&ToDate=01%2F01%2F2021&posted=False&backUrl=%2Fhd_base%2Fsvs_db%2F"
+    ],
+    "methodology": "https://cbr.ru/hd_base/svs_db/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.impliedratecny",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.impliedratecny",
+    "title": "Вмененная ставка валютного свопа овернайт в юанях",
+    "url": "https://cbr.ru/hd_base/ImpliedRateCNY/",
+    "parent": null,
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Ставка",
+          "Статус расчета"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": [
+          2
+        ]
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/187694/IMPLIED_RATE_CNY.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ImpliedRateCNY/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.ruonia",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.ruonia",
+    "title": "Эталонная процентная ставка RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/ruonia/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ruonia/ruonia/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.dynamics",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.dynamics",
+    "title": "Динамика ставки RUONIA и параметров расчета",
+    "url": "https://cbr.ru/hd_base/ruonia/dynamics/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата ставки",
+          "Ставка RUONIA, % годовых",
+          "Объем сделок RUONIA, млрд руб.",
+          "Количество сделок, ед.",
+          "Количество участников RUONIA, совершавших сделки в данный день, ед.",
+          "Минимальная процентная ставка, % годовых",
+          "25-й процентиль по процентным ставкам, % годовых",
+          "75-й процентиль по процентным ставкам, % годовых",
+          "Максимальная процентная ставка, % годовых",
+          "Статус расчета",
+          "Дата публикации"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": [
+          9,
+          10
+        ]
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Queries/UniDbQuery/DownloadExcel/14315?FromDate=09%2F24%2F2026&ToDate=10%2F01%2F2026&posted=False&backUrl=%2Fhd_base%2Fruonia%2Fdynamics%2F"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/dynamics/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.ruonia_administration",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.ruonia_administration",
+    "title": "Администрирование RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/ruonia_administration/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/StaticHtml/File/117525/ROUNIA.pdf",
+      "https://cbr.ru/Content/Document/File/115988/card_ruonia.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/ruonia_administration/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.committee",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.committee",
+    "title": "Комитет по наблюдению за RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/committee/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/111802/regulations_ruonia.pdf",
+      "https://cbr.ru/Content/Document/File/111803/composition_ruonia.pdf",
+      "https://cbr.ru/Collection/Collection/File/59776/report_RUONIA_2025-2.pdf",
+      "https://cbr.ru/Collection/Collection/File/59486/report_RUONIA_2025-1.pdf",
+      "https://cbr.ru/Collection/Collection/File/57009/report_RUONIA_2024-2.pdf",
+      "https://cbr.ru/Collection/Collection/File/50708/report_RUONIA_2024-1.pdf",
+      "https://cbr.ru/Collection/Collection/File/49099/report_RUONIA_2023-2.pdf",
+      "https://cbr.ru/Collection/Collection/File/46314/report_RUONIA_2023-1.pdf",
+      "https://cbr.ru/Collection/Collection/File/43866/report_RUONIA_2022-2.pdf",
+      "https://cbr.ru/Collection/Collection/File/42281/report_RUONIA_2022-1.pdf",
+      "https://cbr.ru/Collection/Collection/File/39836/report_RUONIA_2021-2.pdf",
+      "https://cbr.ru/Collection/Collection/File/35527/report_RUONIA_2021-1.pdf",
+      "https://cbr.ru/Collection/Collection/File/35526/report_RUONIA_2020-2.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/committee/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.method",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.method",
+    "title": "Методические материалы",
+    "url": "https://cbr.ru/hd_base/ruonia/method/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/131094/Meth_ruonia_20211129.pdf",
+      "https://cbr.ru/Content/Document/File/135651/Meth_ruonia_20220429.pdf",
+      "https://cbr.ru/Content/Document/File/128244/RUONIA_AVG_UserGuide.pdf",
+      "https://cbr.ru/Content/Document/File/125036/metod_ruonia_24082021.pdf",
+      "https://cbr.ru/Content/Document/File/111806/current_list_banks.pdf",
+      "https://cbr.ru/Content/Document/File/111807/list_bank_old.xlsx",
+      "https://cbr.ru/Content/Document/File/115652/Meth_ruonia_20201210.pdf",
+      "https://cbr.ru/Content/Document/File/111943/method_ruonia_02102017.pdf",
+      "https://cbr.ru/Content/Document/File/111944/procedure_selecting_26020218.pdf",
+      "https://cbr.ru/Content/Document/File/111945/principles_ensuring.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/method/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.sv_ruonia",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.sv_ruonia",
+    "title": "Индекс и срочная версия RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/sv_ruonia/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/131094/Meth_ruonia_20211129.pdf",
+      "https://cbr.ru/Content/Document/File/135651/Meth_ruonia_20220429.pdf",
+      "https://cbr.ru/Content/Document/File/128244/RUONIA_AVG_UserGuide.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/sv_ruonia/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.dynamic",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.dynamic",
+    "title": "Динамика индекса и срочной версии RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/dynamic/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Индекс",
+          "1 месяц",
+          "3 месяца",
+          "6 месяцев"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Queries/UniDbQuery/DownloadExcel/125022?FromDate=09%2F26%2F2026&ToDate=10%2F02%2F2026&posted=False&backUrl=%2Fhd_base%2Fruonia%2Fdynamic%2F"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ruonia/dynamic/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.ruonia_inquiries",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.ruonia_inquiries",
+    "title": "Обращения по вопросам RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/ruonia_inquiries/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ruonia/ruonia_inquiries/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.calc",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.calc",
+    "title": "Калькулятор расчета срочной версии ставки RUONIA из значений индекса RUONIA",
+    "url": "https://cbr.ru/hd_base/ruonia/calc/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ruonia/calc/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ruonia.news",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ruonia.news",
+    "title": "Новости",
+    "url": "https://cbr.ru/hd_base/ruonia/news/",
+    "parent": "cbr.hd_base.ruonia",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ruonia/news/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.mkr_base",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.mkr_base",
+    "title": "Показатели ставок межбанковского кредитного рынка группы MIACR с 01.08.2000",
+    "url": "https://cbr.ru/hd_base/mkr/mkr_base/",
+    "parent": "cbr.hd_base.mkr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 1,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 2,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 3,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 4,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 5,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 6,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 7,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/mkr_base/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.mkr_monthes",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.mkr_monthes",
+    "title": "Среднемесячные фактические ставки по кредитам, предоставленным московскими банками (MIACR, MIACR-IG, MIACR-B)",
+    "url": "https://cbr.ru/hd_base/mkr/mkr_monthes/",
+    "parent": "cbr.hd_base.mkr",
+    "kind": "reference",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/mkr_monthes/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.retro",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.retro",
+    "title": "Ретроспективный блок MIACR, MIBID, MIBOR",
+    "url": "https://cbr.ru/hd_base/mkr/retro/",
+    "parent": "cbr.hd_base.mkr",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/retro/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.daily",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.daily",
+    "title": "Официальные курсы валют на заданную дату, устанавливаемые ежедневно",
+    "url": "https://cbr.ru/currency_base/daily/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/daily/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.dynamics",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.dynamics",
+    "title": "Динамика официального курса заданной валюты",
+    "url": "https://cbr.ru/currency_base/dynamics/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/dynamics/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.monthly",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.monthly",
+    "title": "Официальные курсы валют на заданную дату, устанавливаемые ежемесячно (до 11.01.2010)",
+    "url": "https://cbr.ru/currency_base/monthly/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/monthly/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.oldval",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.oldval",
+    "title": "Курсы валют за период до 01.07.1992",
+    "url": "https://cbr.ru/currency_base/OldVal/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/98966/GERM.xls",
+      "https://cbr.ru/Content/Document/File/98967/USD.xls",
+      "https://cbr.ru/Content/Document/File/98968/AD.XLS",
+      "https://cbr.ru/Content/Document/File/98969/BL.xls",
+      "https://cbr.ru/Content/Document/File/98970/VF.xls",
+      "https://cbr.ru/Content/Document/File/98971/DK.xls",
+      "https://cbr.ru/Content/Document/File/98972/IR.xls",
+      "https://cbr.ru/Content/Document/File/98973/KD.xls",
+      "https://cbr.ru/Content/Document/File/98974/KJ.XLS",
+      "https://cbr.ru/Content/Document/File/98975/LL.XLS",
+      "https://cbr.ru/Content/Document/File/98976/LI.xls",
+      "https://cbr.ru/Content/Document/File/98977/MT.xls",
+      "https://cbr.ru/Content/Document/File/98978/NF.xls",
+      "https://cbr.ru/Content/Document/File/98979/NK.xls",
+      "https://cbr.ru/Content/Document/File/98980/PZ.xls",
+      "https://cbr.ru/Content/Document/File/98981/SDR.xls",
+      "https://cbr.ru/Content/Document/File/98982/SD.xls",
+      "https://cbr.ru/Content/Document/File/98983/TL.xls",
+      "https://cbr.ru/Content/Document/File/98984/FF.xls",
+      "https://cbr.ru/Content/Document/File/98985/FS.xls",
+      "https://cbr.ru/Content/Document/File/98986/CK.xls",
+      "https://cbr.ru/Content/Document/File/98987/SK.xls",
+      "https://cbr.ru/Content/Document/File/98988/SF.xls",
+      "https://cbr.ru/Content/Document/File/98989/EK.xls",
+      "https://cbr.ru/Content/Document/File/98990/JD.xls",
+      "https://cbr.ru/Content/Document/File/98991/JJ.xls"
+    ],
+    "methodology": "https://cbr.ru/currency_base/OldVal/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.gosbankcurs",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.gosbankcurs",
+    "title": "Официальные курсы Госбанка СССР",
+    "url": "https://cbr.ru/currency_base/GosBankCurs/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/GosBankCurs/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.press",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.press",
+    "title": "Архив информационных сообщений",
+    "url": "https://cbr.ru/currency_base/Press/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/Press/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.npa",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.npa",
+    "title": "Архив нормативно-правовых актов",
+    "url": "https://cbr.ru/currency_base/npa/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/186002/Annex_OD-3036.pdf",
+      "https://cbr.ru/Content/Document/File/178618/Annex_OD-1396.pdf",
+      "https://cbr.ru/Content/Document/File/170750/Annex_OD-2315.pdf",
+      "https://cbr.ru/Content/Document/File/144178/pr_OD-54.pdf",
+      "https://cbr.ru/Content/Document/File/162004/metod_6290-u.pdf"
+    ],
+    "methodology": "https://cbr.ru/currency_base/npa/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.currency_base.p",
+    "source": "cbr",
+    "dataset": "cbr.currency_base.p",
+    "title": "Перечень иностранных валют, официальные курсы которых по отношению к рублю устанавливаются Банком России ежедневно (за исключением нерабочих дней, являющихся выходными и (или) нерабочими праздничными днями)",
+    "url": "https://cbr.ru/currency_base/P/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/currency_base/P/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.seldomc.sc_daily",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.seldomc.sc_daily",
+    "title": "Справочные данные о курсах иностранных валют к доллару США, официальные курсы которых не устанавливаются Банком России (до 04.03.2022)",
+    "url": "https://cbr.ru/hd_base/seldomc/sc_daily/",
+    "parent": "cbr.currency_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/seldomc/sc_daily/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.seldomc.sc_dynamic",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.seldomc.sc_dynamic",
+    "title": "Динамика курса заданной валюты к доллару США",
+    "url": "https://cbr.ru/hd_base/seldomc/sc_dynamic/",
+    "parent": "cbr.hd_base.seldomc",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Тип котировки*",
+          "Курс"
+        ],
+        "numeric": [
+          2
+        ],
+        "dimensions": [
+          1
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/seldomc/sc_dynamic/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.metall.metall_base_new",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.metall.metall_base_new",
+    "title": "Учетные цены на аффинированные драгоценные металлы",
+    "url": "https://cbr.ru/hd_base/metall/metall_base_new/",
+    "parent": "cbr.hd_base.metall",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "руб за грамм",
+    "transform": "returns",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата* ▼",
+          "Золото",
+          "Серебро",
+          "Платина",
+          "Палладий"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/metall/metall_base_new/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.metall.metall_base_upto",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.metall.metall_base_upto",
+    "title": "Учетные цены на аффинированные драгоценные металлы, определявшиеся с применением дисконтов c 07.07.2003 по 01.07.2008",
+    "url": "https://cbr.ru/hd_base/metall/metall_base_upto/",
+    "parent": "cbr.hd_base.metall",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "руб за грамм",
+    "transform": "returns",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата* ▼",
+          "Золото",
+          "Серебро",
+          "Платина",
+          "Палладий"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/metall/metall_base_upto/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.metall.metall_base_old",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.metall.metall_base_old",
+    "title": "Котировки драгоценных металлов с 25.08.1997 по 04.07.2003",
+    "url": "https://cbr.ru/hd_base/metall/metall_base_old/",
+    "parent": "cbr.hd_base.metall",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "руб за грамм",
+    "transform": "returns",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата ▼",
+          "Курс покупки",
+          "Курс продажи"
+        ],
+        "numeric": [
+          1,
+          2
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/metall/metall_base_old/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.procstav.ir_chg_mpo",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav.ir_chg_mpo",
+    "title": "Процентные ставки денежно-кредитной политики (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/ProcStav/IR_CHG_MPO/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Ключевая ставка",
+          "Изменение ключевой ставки (п.п.)",
+          "Абсорбирование ликвидности / Ставка по депозитам постоянного действия1",
+          "Абсорбирование ликвидности / Ставки по операциям на открытом рынке (аукционы)2 / Максимальная возможная ставка в заявке на депозитных аукционах3",
+          "Предоставление ликвидности / Ставки по операциям на открытом рынке (аукционы)2 / Минимальная возможная ставка в заявке на аукционах репо4 / Основные и \"тонкой настройки\"",
+          "Предоставление ликвидности / Ставки по операциям на открытом рынке (аукционы)2 / Минимальная возможная ставка в заявке на аукционах репо4 / на срок 1 месяц",
+          "Предоставление ликвидности / Ставки по операциям на открытом рынке (аукционы)2 / Минимальная возможная ставка в заявке на аукционах репо4 / на срок 1 год",
+          "Предоставление ликвидности / Ставки по операциям на открытом рынке (аукционы)2 / Минимальная возможная ставка в заявке на кредитных аукционах5",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Основной механизм6",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Дополнительный механизм7",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, репо, валютные свопы8 на срок 1 день",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Ломбардные кредиты9 и кредиты, обеспеченные нерыночными активами10, на сроки от 2 до 90 дней",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, обеспеченные нерыночными активами10, на сроки свыше 90 дней",
+          "Предоставление ликвидности / Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, обеспеченные золотом11, на сроки свыше 1 дня",
+          "Ставка рефинансирования"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/vfs/hd_base/procstav/ir_chg_mpo/IR_CHG_MPO.xlsx"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/IR_CHG_MPO/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.icl",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.icl",
+    "title": "Процентные ставки по кредитам в рамках БКЛ (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/icl/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "По кредитам на срок до 90 дней"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/icl/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.keyrate",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.keyrate",
+    "title": "Ключевая ставка Банка России",
+    "url": "https://cbr.ru/hd_base/KeyRate/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Ставка"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/KeyRate/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.procstav.ir_mpo",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav.ir_mpo",
+    "title": "Процентные ставки по операциям денежно-кредитной политики",
+    "url": "https://cbr.ru/hd_base/ProcStav/IR_MPO/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Ставка по депозитам постоянного действия",
+          "Максимальная возможная ставка в заявке на депозитных аукционах",
+          "Минимальная возможная ставка в заявке на аукционах репо / основных и «тонкой настройки»",
+          "Минимальная возможная ставка в заявке на аукционах репо / на срок 1 месяц",
+          "Минимальная возможная ставка в заявке на аукционах репо / на срок 1 год",
+          "Минимальная возможная ставка в заявке на кредитных аукционах (нерыночные активы)",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Основной механизм1",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Дополнительный механизм2",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, репо, валютные свопы на срок 1 день",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Ломбардные кредиты3 и кредиты, обеспеченные нерыночными активами4, на сроки от 2 до 90 дней",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, обеспеченные нерыночными активами4, на сроки свыше 90 дней",
+          "Ставки по операциям предоставления ликвидности постоянного действия / Кредиты, обеспеченные золотом5, на сроки свыше 1 дня"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/IR_MPO/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.procstav.ir_srm",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav.ir_srm",
+    "title": "Процентные ставки по специальным механизмам, механизму экстренного предоставления ликвидности и безотзывным кредитным линиям",
+    "url": "https://cbr.ru/hd_base/ProcStav/IR_SRM/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Специальные механизмы / Поддержка несырьевого экспорта (ЭКСАР)1",
+          "Специальные механизмы / Поддержка крупных инвестиционных проектов2",
+          "Специальные механизмы / Поддержка инвестиционных проектов в отдельных субъектах РФ3",
+          "Специальные механизмы / Поддержка МСП4",
+          "Специальные механизмы / Поддержка МСП в отдельных субъектах РФ5",
+          "Специальные механизмы / Поддержка МСП (КБО)6",
+          "Специальные механизмы / Поддержка экономики на период пандемии COVID-197",
+          "Специальные механизмы / Поддержка лизинга8",
+          "Специальные механизмы / Поддержка военной ипотеки9",
+          "МЭПЛ",
+          "БКЛ"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/IR_SRM/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.procstav.irb_ommir",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav.irb_ommir",
+    "title": "Процентный коридор Банка России и ставки сегмента овернайт денежного рынка",
+    "url": "https://cbr.ru/hd_base/ProcStav/IRB_OMMIR/",
+    "parent": "cbr.hd_base.procstav",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Ключевая ставка",
+          "Нижняя граница (ставка по депозитам постоянного действия)",
+          "Верхняя граница (ставка инструментов постоянного действия по предоставлению ликвидности на срок 1 день)* / Верхняя граница \"Репо и кредиты (кр. кредитов овернайт)\"",
+          "Верхняя граница (ставка инструментов постоянного действия по предоставлению ликвидности на срок 1 день)* / Верхняя граница \"Кредиты овернайт\"",
+          "MIACR**",
+          "RUONIA"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/IRB_OMMIR/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.mb_nd.mb_nd_month",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mb_nd.mb_nd_month",
+    "title": "Ежемесячные значения",
+    "url": "https://cbr.ru/hd_base/mb_nd/mb_nd_month/",
+    "parent": "cbr.hd_base.mb_nd",
+    "kind": "dataset",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млрд руб",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Денежная база",
+          "в том числе: / наличные деньги в обращении (вне Банка России)",
+          "в том числе: / обязательные резервы кредитных организаций в Банке России"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mb_nd/mb_nd_month/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.mb_nd.mb_nd_weekly",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mb_nd.mb_nd_weekly",
+    "title": "Еженедельные значения",
+    "url": "https://cbr.ru/hd_base/mb_nd/mb_nd_weekly/",
+    "parent": "cbr.hd_base.mb_nd",
+    "kind": "dataset",
+    "frequency": "weekly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млрд руб",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Денежная база"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mb_nd/mb_nd_weekly/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.bsliquidityma.full",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bsliquidityma.full",
+    "title": "Состояние ликвидности банковского сектора: основные показатели по периодам усреднения обязательных резервов (расширенная версия)",
+    "url": "https://cbr.ru/hd_base/BSliquidityMA/Full/",
+    "parent": "cbr.hd_base.bsliquidityma",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Периоды усреднения обязательных резервов / Первый день периода усреднения",
+          "Периоды усреднения обязательных резервов / Последний день периода усреднения",
+          "Периоды усреднения обязательных резервов / Число календарных дней в периоде усреднения",
+          "Средства на корсчетах",
+          "Обязательные резервы, подлежащие усреднению на корсчетах",
+          "Обязательные резервы на спецсчетах",
+          "Структурный дефицит (+) / профицит (-) ликвидности",
+          "Потребность в ликвидности на рыночных условиях3",
+          "Абсорбированная ликвидность по итогам аукционов / Всего",
+          "Абсорбированная ликвидность по итогам аукционов / Аукционы по размещению ОБР",
+          "Абсорбированная ликвидность по итогам аукционов / Основные депозитные аукционы",
+          "Абсорбированная ликвидность по итогам аукционов / Депозитные аукционы \"тонкой настройки\"",
+          "Предоставленная ликвидность по итогам аукционов / Всего",
+          "Предоставленная ликвидность по итогам аукционов / Аукционы репо и кредитные аукционы на длительные сроки",
+          "Предоставленная ликвидность по итогам аукционов / Основные аукционы репо",
+          "Предоставленная ликвидность по итогам аукционов / Аукционы репо \"тонкой настройки\"",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Всего, нетто",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Депозиты",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Репо ОМ и валютный своп4",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Кредиты ОМ5",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Репо ДМ",
+          "Обращение к инструментам денежно-кредитной политики постоянного действия / Кредиты ДМ6",
+          "Обращение к спецмеханизмам и прочим операциям Банка России, нетто",
+          "Изменение ключевой ставки (б.п.)",
+          "Параметры ставки RUONIA / Спред между RUONIA и ключевой ставкой (б.п.)",
+          "Параметры ставки RUONIA / Волатильность спреда между RUONIA и ключевой ставкой (б.п.)",
+          "Параметры ставки RUONIA / Нижнее значение диапазона колебаний спреда (б.п.)",
+          "Параметры ставки RUONIA / Верхнее значение диапазона колебаний спреда (б.п.)",
+          "Параметры ставки RUONIA / Задолженность по сделкам RUONIA",
+          "Параметры ставки MIACR овернайт / Спред между MIACR овернайт и ключевой ставкой (б.п.)",
+          "Параметры ставки MIACR овернайт / Задолженность по сделкам MIACR овернайт",
+          "Справочные показатели / Автономные факторы формирования ликвидности, нетто",
+          "Справочные показатели / \"Навес\" над корсчетами",
+          "Справочные показатели / Средства кредитных организаций в облигациях и на депозитах",
+          "Справочные показатели / Средства, предоставленные кредитным организациям по кредитам, операциям репо и \"валютный своп\"",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / Изменение обязательных резервов",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / операций Банка России с кредитными организациями",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / автономных факторов формирования ликвидности",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / валютные интервенции Банка России на внутреннем рынке",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / изменение наличных денег в обращении",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / изменение остатков средств на счетах расширенного правительства в Банке России и прочие операции",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / из них: / изменение задолженности банков по операциям Федерального казначейства",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / из них: / движение средств по государственному внутреннему долгу",
+          "Изменение ликвидности банковского сектора в результате операций и под влиянием факторов ее формирования2 / в результате: / в том числе: / из них: / операции Минфина России по покупке / продаже иностранной валюты на внутреннем рынке"
+        ],
+        "numeric": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43
+        ],
+        "dimensions": [
+          1
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/BSliquidityMA/Full/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.bsliquidityma.description",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bsliquidityma.description",
+    "title": "Описание показателей",
+    "url": "https://cbr.ru/hd_base/BSliquidityMA/description/",
+    "parent": "cbr.hd_base.bsliquidityma",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/BSliquidityMA/description/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.statistics.flikvid.definitions",
+    "source": "cbr",
+    "dataset": "cbr.statistics.flikvid.definitions",
+    "title": "Описание показателей",
+    "url": "https://cbr.ru/statistics/flikvid/definitions/",
+    "parent": "cbr.statistics.flikvid",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/statistics/flikvid/definitions/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.cntr.ko_politiki",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.cntr.ko_politiki",
+    "title": "Контрагенты по операциям",
+    "url": "https://cbr.ru/hd_base/cntr/ko_politiki/",
+    "parent": "cbr.hd_base.cntr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Депозитные операции",
+          "Операции репо",
+          "Кредитные операции"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2026.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2025.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2024.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2023.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2022.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2021.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2020.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2019.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopoldepo_2018.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2026.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2025.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2024.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2023.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2022.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2021.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2020.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2019.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolcred_2018.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2025.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2024.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2023.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2022.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2021.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2020.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2019.xlsx",
+      "https://cbr.ru/vfs/hd_base/cntr/ko_politiki/kopolsub_2018.xlsx"
+    ],
+    "methodology": "https://cbr.ru/hd_base/cntr/ko_politiki/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.cntr.upd",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.cntr.upd",
+    "title": "Участники операций постоянного действия",
+    "url": "https://cbr.ru/hd_base/cntr/upd/",
+    "parent": "cbr.hd_base.cntr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Депозитные операции / Овернайт",
+          "Депозитные операции / Другие**",
+          "Операции репо",
+          "Операции по предоставлению / ВДК",
+          "Операции по предоставлению / Кредитов овернайт",
+          "Операции по предоставлению / Кредитов, обеспеченных ценными бумагами",
+          "Операции по предоставлению / Кредитов, обеспеченных нерыночными активами"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/cntr/upd/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.cntr.struct",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.cntr.struct",
+    "title": "Структура ценных бумаг, переданных в обеспечение по кредитам",
+    "url": "https://cbr.ru/hd_base/cntr/struct/",
+    "parent": "cbr.hd_base.cntr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Облигации, выпущенные от имени Российской Федерации",
+          "Облигации субъектов Российской Федерации и муниципальных образований",
+          "Облигации Банка России",
+          "Облигации, юридических лиц - резидентов Российской Федерации",
+          "Облигации ипотечных агентств, агентств по реструктуризации ипотечных жилищных кредитов и облигации с ипотечнм покрытием",
+          "Облигации международных финансовых организаций",
+          "Долговые эмиссионные ценные бумаги, выпущенные юридическими лицами - нерезидентами Российской Федерации за ее пределами"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/cntr/struct/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.bankpapers",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bankpapers",
+    "title": "Ценные бумаги, принимаемые в обеспечение по кредитам",
+    "url": "https://cbr.ru/hd_base/bankpapers/",
+    "parent": "cbr.hd_base.cntr",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/bankpapers/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.infodirectreporub",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.infodirectreporub",
+    "title": "Ценные бумаги, принимаемые по репо",
+    "url": "https://cbr.ru/hd_base/infodirectreporub/",
+    "parent": "cbr.hd_base.cntr",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/infodirectreporub/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.ostat_depo_new",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.ostat_depo_new",
+    "title": "Депозиты кредитных организаций в Банке России",
+    "url": "https://cbr.ru/hd_base/ostat_depo_new/",
+    "parent": "cbr.hd_base.depo",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Всего",
+          "По итогам депозитных аукционов: / на срок 1 неделя",
+          "По итогам депозитных аукционов: / \"тонкой настройки\"",
+          "Депозиты овернайт постоянного действия"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/ostat_depo_new/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.deposit_base",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.deposit_base",
+    "title": "Ставки по депозитам постоянного действия",
+    "url": "https://cbr.ru/hd_base/deposit_base/",
+    "parent": "cbr.hd_base.depo",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Овернайт",
+          "Том-некст",
+          "Спот-некст",
+          "1 неделя",
+          "Спот-неделя",
+          "2 недели",
+          "Спот-2 недели",
+          "1 месяц",
+          "Том-1 месяц",
+          "3 месяца",
+          "До востребования"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/deposit_base/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.depomaxproc",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.depomaxproc",
+    "title": "Максимальные ставки на депозитных аукционах (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/depomaxproc/",
+    "parent": "cbr.hd_base.depo",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "По депозитам на сроки / от 1 до 6 дней (аукционы \"тонкой настройки\")",
+          "По депозитам на сроки / 1 неделя",
+          "По депозитам на сроки / 1 месяц1",
+          "По депозитам на сроки / 3 месяца2"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/depomaxproc/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.itogidepauct",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.itogidepauct",
+    "title": "Итоги депозитных аукционов",
+    "url": "https://cbr.ru/hd_base/itogidepauct/",
+    "parent": "cbr.hd_base.depo",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Тип инструмента",
+          "Срок депозита",
+          "Дата привлечения денежных средств в депозит",
+          "Средневзвешенная ставка (% годовых)",
+          "Объем привлеченных денежных средств (млрд руб.)"
+        ],
+        "numeric": [
+          4,
+          5
+        ],
+        "dimensions": [
+          1,
+          2,
+          3
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/itogidepauct/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.obrcictotal",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.obrcictotal",
+    "title": "Объем ОБР в обращении (совокупный)",
+    "url": "https://cbr.ru/hd_base/obr/obrcictotal/",
+    "parent": "cbr.hd_base.obr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Объем ОБР в обращении по номинальной стоимости",
+          "Объем ОБР в обращении по номинальной стоимости с учетом накопленного купонного дохода",
+          "Объем ОБР в обращении по ценам заявок на дату размещения*"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/obrcictotal/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.obrcic",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.obrcic",
+    "title": "Объем ОБР в обращении (по выпускам)",
+    "url": "https://cbr.ru/hd_base/obr/obrcic/",
+    "parent": "cbr.hd_base.obr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Регистрационный номер выпуска",
+          "Объем ОБР в обращении по номинальной стоимости",
+          "Объем ОБР в обращении по номинальной стоимости с учетом накопленного купонного дохода",
+          "Объем ОБР в обращении по ценам заявок на дату размещения*"
+        ],
+        "numeric": [
+          2,
+          3,
+          4
+        ],
+        "dimensions": [
+          1
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/obrcic/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.odrpi",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.odrpi",
+    "title": "Параметры аукционов по размещению ОБР",
+    "url": "https://cbr.ru/hd_base/obr/odrpi/",
+    "parent": "cbr.hd_base.obr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Регистрационный номер выпуска",
+          "Дата расчетов по аукциону",
+          "Дата начала размещения облигаций",
+          "Дата погашения облигаций",
+          "Тип купона",
+          "Ставка купона",
+          "Объем предложения по номинальной стоимости (млн руб.)",
+          "Минимальная возможная цена в заявке (% от номинала)",
+          "Временной регламент проведения аукциона*"
+        ],
+        "numeric": [
+          7,
+          8
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/odrpi/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.odrri",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.odrri",
+    "title": "Итоги аукционов по размещению ОБР",
+    "url": "https://cbr.ru/hd_base/obr/odrri/",
+    "parent": "cbr.hd_base.obr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Регистрационный номер выпуска",
+          "Дата расчетов по аукциону",
+          "Дата погашения облигаций",
+          "Средневзвешенная цена (% от номинала)",
+          "Размещенный объем по номиналу (млн руб.)",
+          "Размещенный объем по ценам заявок (млн руб.)"
+        ],
+        "numeric": [],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/odrri/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.obrexecution",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.obrexecution",
+    "title": "Исполнение Банком России обязательств по ОБР",
+    "url": "https://cbr.ru/hd_base/obr/obrexecution/",
+    "parent": "cbr.hd_base.obr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата исполнения обязательств",
+          "Регистрационный номер выпуска",
+          "Вид обязательств",
+          "Дата начала размещения облигаций",
+          "Дата погашения облигаций",
+          "Объем ОБР в обращении по номинальной стоимости (млн руб.)",
+          "Дата, на которую определялись лица, имевшие право на получение доходов",
+          "Дата выплаты купонного дохода",
+          "Номер купона",
+          "Купонный период",
+          "Объем купонных выплат (млн руб.)",
+          "Размер купонной выплаты на одну облигацию (руб.)",
+          "Объем погашения ОБР (млн руб.)"
+        ],
+        "numeric": [
+          5,
+          8,
+          10,
+          11,
+          12
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          9
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/obrexecution/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.dv",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.dv",
+    "title": "Требования Банка России к кредитным организациям по обеспеченным кредитам",
+    "url": "https://cbr.ru/hd_base/dv/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Всего"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/dv/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.overnight",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.overnight",
+    "title": "Ставки по кредитам овернайт (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/overnight/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Ставка"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/overnight/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.fixedstav1day",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.fixedstav1day",
+    "title": "Ставки по ломбардным кредитам постоянного действия (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/fixedstav1day/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Ставка"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/fixedstav1day/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.nmk",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.nmk",
+    "title": "Ставки по кредитам постоянного действия, обеспеченным нерыночными активами (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/nmk/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Кредиты основного механизма на сроки от 1 до 30 дней",
+          "Кредиты дополнительного механизма на сроки от 1 до 180 дней"
+        ],
+        "numeric": [
+          1,
+          2
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/nmk/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.minrates_ca",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.minrates_ca",
+    "title": "Минимальные ставки на кредитных аукционах (нерыночные активы, по датам изменений)",
+    "url": "https://cbr.ru/hd_base/minrates_ca/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "По кредитам на сроки / от 1 до 3 недель1",
+          "По кредитам на сроки / 3 месяца",
+          "По кредитам на сроки / 12 месяцев",
+          "По кредитам на сроки / 18 месяцев1"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/minrates_ca/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.rates_ca",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.rates_ca",
+    "title": "Ставки отсечения и средневзвешенные ставки на кредитных аукционах (нерыночные активы)",
+    "url": "https://cbr.ru/hd_base/rates_ca/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата состоявшегося аукциона",
+          "Срок",
+          "Ставка отсечения",
+          "Средневзвешенная ставка*"
+        ],
+        "numeric": [
+          2,
+          3
+        ],
+        "dimensions": [
+          1
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/rates_ca/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.nmcauction",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.nmcauction",
+    "title": "Параметры кредитных аукционов (нерыночные активы)",
+    "url": "https://cbr.ru/hd_base/nmcauction/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Срок предоставляемых кредитов",
+          "Дата предоставления кредитов",
+          "Дата возврата кредитов и уплаты процентов",
+          "Максимальный объем предоставляемых кредитов (млрд руб.)",
+          "Минимальная возможная ставка в заявке (% годовых)",
+          "Минимальная сумма одной заявки (млн руб.)",
+          "Максимальное количество заявок от одного участника (по каждому кредитуемому счету)",
+          "Тип принимаемых заявок",
+          "Максимальная доля неконкурентных заявок (%)",
+          "Способ проведения аукциона",
+          "Время приема заявок (местное время)",
+          "Время проведения аукциона (мск)"
+        ],
+        "numeric": [
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          8,
+          10,
+          11,
+          12
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/nmcauction/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.nonmarketres",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.nonmarketres",
+    "title": "Итоги кредитных аукционов (нерыночные активы)",
+    "url": "https://cbr.ru/hd_base/nonmarketres/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Срок предоставляемых кредитов",
+          "Дата предоставления кредитов",
+          "Средневзвешенная ставка* (% годовых)",
+          "Объем предоставленных кредитов (млрд руб.)"
+        ],
+        "numeric": [
+          3,
+          4
+        ],
+        "dimensions": [
+          1,
+          2
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/nonmarketres/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.specref",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.specref",
+    "title": "Требования Банка России к кредитным организациям по специальным механизмам",
+    "url": "https://cbr.ru/hd_base/specref/",
+    "parent": "cbr.hd_base.securedloans",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Механизмы поддержки несырьевого экспорта (ЭКСАР)1",
+          "Механизмы поддержки инвестиционных проектов / кредиты под права требования2",
+          "Механизмы поддержки инвестиционных проектов / кредиты под залог облигаций3",
+          "Механизмы поддержки инвестиционных проектов / кредиты без обеспечения",
+          "Механизмы поддержки малого и среднего бизнеса / кредиты под поручительства ФК МСП4",
+          "Механизмы поддержки малого и среднего бизнеса / кредиты под залог ОФЗ",
+          "Механизмы поддержки малого и среднего бизнеса / кредиты МСП Банку5",
+          "Механизмы поддержки малого и среднего бизнеса / кредиты без обеспечения6",
+          "Механизмы поддержки экономики на период пандемии COVID-197",
+          "Механизмы поддержки лизинга8",
+          "Механизмы поддержки военной ипотеки9"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/specref/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repo_debt",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repo_debt",
+    "title": "Требования Банка России к кредитным организациям по операциям репо",
+    "url": "https://cbr.ru/hd_base/repo_debt/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Требования1 / всего",
+          "Требования1 / по итогам аукционов / ТН",
+          "Требования1 / по итогам аукционов / ОСН",
+          "Требования1 / по итогам аукционов / 1 мес",
+          "Требования1 / по итогам аукционов / 1 год",
+          "Требования1 / по операциям постоянного действия / ОМ3",
+          "Требования1 / по операциям постоянного действия / ДМ",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / всего",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по итогам аукционов / ТН",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по итогам аукционов / ОСН",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по итогам аукционов / 1 мес",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по итогам аукционов / 1 год",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по операциям постоянного действия / ОМ3",
+          "Справочно: денежные средства, предоставленные Банком России по первым частям сделок репо2 / по операциям постоянного действия / ДМ"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repo_debt/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repo_shedule",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repo_shedule",
+    "title": "Расписание операций репо",
+    "url": "https://cbr.ru/hd_base/repo_shedule/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата заключения сделок",
+          "Вид операции репо",
+          "Временной регламент*",
+          "Временной регламент*",
+          "Дата исполнения первой части сделок",
+          "Дата исполнения второй части сделок**"
+        ],
+        "numeric": [],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repo_shedule/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repo_session",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repo_session",
+    "title": "Операции репо постоянного действия",
+    "url": "https://cbr.ru/hd_base/repo_session/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата первой части сделок репо",
+          "Дата второй части сделок репо",
+          "Срок (в календарных днях)",
+          "Ставка (% годовых)",
+          "Объем заключенных сделок (млн руб.)",
+          "Объем перечисленных денежный средств по первой части сделок (млн руб.)",
+          "Объем денежных средств к перечислению по второй части сделок (млн руб.)",
+          "Операции ОМ или ДМ"
+        ],
+        "numeric": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": [
+          1,
+          7
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repo_session/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repo_proc",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repo_proc",
+    "title": "Минимальные ставки на аукционах репо (по датам изменений)",
+    "url": "https://cbr.ru/hd_base/repo_proc/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "По репо на сроки / 1 день",
+          "По репо на сроки / 7 дней",
+          "По репо на сроки / 1 месяц",
+          "По репо на сроки / 3 месяца",
+          "По репо на сроки / 6 месяцев",
+          "12 месяцев"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repo_proc/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.dirrepoauctionparam",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.dirrepoauctionparam",
+    "title": "Параметры аукционов репо",
+    "url": "https://cbr.ru/hd_base/dirrepoauctionparam/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Тип инструмента",
+          "Срок",
+          "Дата исполнения первой части сделок",
+          "Дата исполнения второй части сделок",
+          "Максимальный объем предоставляемых денежных средств*, млрд руб.",
+          "Минимальная возможная ставка в заявке, % годовых"
+        ],
+        "numeric": [
+          5,
+          6
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/105727/DKP_limit.pdf"
+    ],
+    "methodology": "https://cbr.ru/hd_base/dirrepoauctionparam/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.repo",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.repo",
+    "title": "Итоги аукционов репо",
+    "url": "https://cbr.ru/hd_base/repo/",
+    "parent": "cbr.hd_base.repodb",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/repo/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swapdaytotal",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swapdaytotal",
+    "title": "Требования Банка России к кредитным организациям по операциям «валютный своп» по покупке иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/swapdaytotal/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Требования",
+          "Справочно: рублевые денежные средства, предоставленные Банком России по первым частям сделок **"
+        ],
+        "numeric": [
+          1,
+          2
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swapdaytotal/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.claim-fx-swap",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.claim-fx-swap",
+    "title": "Требования Банка России к кредитным организациям по операциям «валютный своп» по продаже иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/claim-fx-swap/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Требования / млн долл. США",
+          "Требования / млн юаней",
+          "Требования / млн евро",
+          "Справочно: рублевые денежные средства, млн руб. / полученные Банком России по первым частям сделок*",
+          "Справочно: рублевые денежные средства, млн руб. / к перечислению Банком России по вторым частям сделок",
+          "",
+          "",
+          ""
+        ],
+        "numeric": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": [
+          1,
+          2,
+          3
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/claim-fx-swap/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swap_info.swapinfo_sub",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swap_info.swapinfo_sub",
+    "title": "Условия заключения сделок «валютный своп» по покупке иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/swap_info/swapinfo_sub/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата заключения сделок",
+          "Дата покупки долларов США",
+          "Дата покупки рублей",
+          "Ставка RUR (% годовых)",
+          "Ставка USD (% годовых)",
+          "Базовый курс USD/RUR",
+          "Своп-разница (руб.)"
+        ],
+        "numeric": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": [
+          1,
+          2
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swap_info/swapinfo_sub/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swap_info.sell",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swap_info.sell",
+    "title": "Условия заключения сделок «валютный своп» по продаже иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/swap_info/sell/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата заключения сделок",
+          "Дата продажи инвалюты",
+          "Дата продажи рублей",
+          "Ставка по рублям (% годовых)",
+          "Ставка по инвалюте (% годовых)",
+          "Базовый курс (кол-во рублей за единицу инвалюты)",
+          "Своп-разница (руб.)",
+          "Максимальный объем продажи инвалюты (млрд ед. инвалюты)"
+        ],
+        "numeric": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "dimensions": [
+          1,
+          2
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swap_info/sell/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swap_info.swapmonthtotal",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swap_info.swapmonthtotal",
+    "title": "Объемы операций «валютный своп» по покупке иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/swap_info/swapmonthtotal/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата заключения сделок",
+          "Всего (млн руб.)",
+          "По валютной паре USD/RUR (млн долл. США)",
+          "По валютной паре EUR/RUR (млн евро)"
+        ],
+        "numeric": [
+          1,
+          2,
+          3
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swap_info/swapmonthtotal/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.swap_info.swapinfosellvol",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.swap_info.swapinfosellvol",
+    "title": "Объемы операций «валютный своп» по продаже иностранной валюты за рубли",
+    "url": "https://cbr.ru/hd_base/swap_info/swapinfosellvol/",
+    "parent": "cbr.hd_base.swap_info",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата заключения сделок",
+          "млн ед. инвалюты",
+          "млн руб."
+        ],
+        "numeric": [
+          1,
+          2
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/swap_info/swapinfosellvol/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.valintbr.valvol_day",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.valintbr.valvol_day",
+    "title": "Покупка и продажа иностранной валюты на внутреннем рынке (ежедневно)",
+    "url": "https://cbr.ru/hd_base/valintbr/valvol_day/",
+    "parent": "cbr.hd_base.valintbr",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата расчетов*",
+          "Объем (\"+\" - покупка, \"-\" - продажа)**"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/valintbr/valvol_day/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.valintbr.valvol_mnth",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.valintbr.valvol_mnth",
+    "title": "Покупка и продажа иностранной валюты на внутреннем рынке (ежемесячно)",
+    "url": "https://cbr.ru/hd_base/valintbr/valvol_mnth/",
+    "parent": "cbr.hd_base.valintbr",
+    "kind": "dataset",
+    "frequency": "monthly",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Отчетный период",
+          "Объем (\"+\" - покупка, \"-\" - продажа)*"
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/valintbr/valvol_mnth/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mrrf.mrrf_m",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mrrf.mrrf_m",
+    "title": "Ежемесячные значения на начало отчетной даты",
+    "url": "https://cbr.ru/hd_base/mrrf/mrrf_m/",
+    "parent": "cbr.hd_base.mrrf",
+    "kind": "dataset",
+    "frequency": "monthly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Международные резервы",
+          "в том числе: / валютные резервы",
+          "в том числе: / иностранная валюта",
+          "в том числе: / счет в СДР",
+          "в том числе: / резервная позиция в МВФ",
+          "в том числе: / монетарное золото"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mrrf/mrrf_m/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.mrrf.mrrf_7d",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mrrf.mrrf_7d",
+    "title": "Еженедельные значения на конец отчетной даты",
+    "url": "https://cbr.ru/hd_base/mrrf/mrrf_7d/",
+    "parent": "cbr.hd_base.mrrf",
+    "kind": "dataset",
+    "frequency": "weekly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "млн долларов США",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Международные резервы"
+        ],
+        "numeric": [
+          1
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mrrf/mrrf_7d/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false,
+    "period_semantics": "stock"
+  },
+  {
+    "id": "cbr.hd_base.tg.tab_current_t1",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.tg.tab_current_t1",
+    "title": "По странам",
+    "url": "https://cbr.ru/hd_base/tg/?tab.current=t1",
+    "parent": "cbr.hd_base.tg",
+    "kind": "reference",
+    "frequency": "quarterly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/tg/?tab.current=t1",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.tg.tab_current_t2",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.tg.tab_current_t2",
+    "title": "По показателям",
+    "url": "https://cbr.ru/hd_base/tg/?tab.current=t2",
+    "parent": "cbr.hd_base.tg",
+    "kind": "reference",
+    "frequency": "quarterly",
+    "calendar": "periodic",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/tg/?tab.current=t2",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.retro.mkr_retro",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.retro.mkr_retro",
+    "title": "Ретроспективный блок MIACR-IG, MIACR-B (USD)",
+    "url": "https://cbr.ru/hd_base/mkr/retro/mkr_retro/",
+    "parent": "cbr.hd_base.mkr.mkr_base",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 1,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 2,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 3,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/retro/mkr_retro/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.mkr_base.comment_new",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.mkr_base.comment_new",
+    "title": "Порядок расчета ставок межбанковского кредитного рынка MIACR, MIACR-IG, MIACR-B и соответствующих им оборотов операций",
+    "url": "https://cbr.ru/hd_base/mkr/mkr_base/Comment_new/",
+    "parent": "cbr.hd_base.mkr.mkr_base",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [
+      "https://cbr.ru/Content/Document/File/25567/MIACR-IG_110319.xls",
+      "https://cbr.ru/Content/Document/File/25566/MIACR-B_110319.xls"
+    ],
+    "methodology": "https://cbr.ru/hd_base/mkr/mkr_base/Comment_new/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.retro.mkr_retro_mibid",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.retro.mkr_retro_mibid",
+    "title": "Ретроспективный блок MIBID и MIBOR с 01.08.2000 по 30.12.2016",
+    "url": "https://cbr.ru/hd_base/mkr/retro/mkr_retro_mibid/",
+    "parent": "cbr.hd_base.mkr.retro",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 1,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 2,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 3,
+        "headers": [
+          "Дата",
+          "1 день",
+          "от 2 до 7 дн.",
+          "от 8 до 30 дн.",
+          "от 31 до 90 дн.",
+          "от 91 до 180 дн.",
+          "от 181 дн. до 1 года"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/retro/mkr_retro_mibid/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.retro.mkr_base_old",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.retro.mkr_base_old",
+    "title": "Показатели ставок межбанковского рынка MIBID, MIBOR, MIACR c 03.01.1996 по 01.08.2000",
+    "url": "https://cbr.ru/hd_base/mkr/retro/mkr_base_old/",
+    "parent": "cbr.hd_base.mkr.retro",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата",
+          "Срок кредита / 1 дн.",
+          "Срок кредита / 3 дн.",
+          "Срок кредита / 7 дн.",
+          "Срок кредита / 14 дн.",
+          "Срок кредита / 21 дн.",
+          "Срок кредита / 30 дн.",
+          "Срок кредита / 60 дн.",
+          "Срок кредита / 90 дн."
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 1,
+        "headers": [
+          "Дата",
+          "Срок кредита / 1 дн.",
+          "Срок кредита / 3 дн.",
+          "Срок кредита / 7 дн.",
+          "Срок кредита / 14 дн.",
+          "Срок кредита / 21 дн.",
+          "Срок кредита / 30 дн.",
+          "Срок кредита / 60 дн.",
+          "Срок кредита / 90 дн."
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": []
+      },
+      {
+        "table": 2,
+        "headers": [
+          "Дата",
+          "Срок кредита / 1 дн.",
+          "Срок кредита / 3 дн.",
+          "Срок кредита / 7 дн.",
+          "Срок кредита / 14 дн.",
+          "Срок кредита / 21 дн.",
+          "Срок кредита / 30 дн.",
+          "Срок кредита / 60 дн.",
+          "Срок кредита / 90 дн."
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "dimensions": []
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/retro/mkr_base_old/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.procstav.ir_chg_mpo.full",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.procstav.ir_chg_mpo.full",
+    "title": "Процентные ставки денежно-кредитной политики (по датам изменений, полная версия)",
+    "url": "https://cbr.ru/hd_base/ProcStav/IR_CHG_MPO/full/",
+    "parent": "cbr.hd_base.procstav.ir_chg_mpo",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "mean",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата начала действия",
+          "Ключевая ставка",
+          "Изменение ключевой ставки",
+          "Депозиты постоянного действия на стандартных условиях: / овернайт",
+          "Депозиты постоянного действия на стандартных условиях: / том-некст",
+          "Депозиты постоянного действия на стандартных условиях: / спот-некст",
+          "Депозиты постоянного действия на стандартных условиях: / 1 неделя",
+          "Депозиты постоянного действия на стандартных условиях: / спот - 1 неделя",
+          "Депозиты постоянного действия на стандартных условиях: / 2 недели",
+          "Депозиты постоянного действия на стандартных условиях: / спот - 2 недели",
+          "Депозиты постоянного действия на стандартных условиях: / 1 месяц",
+          "Депозиты постоянного действия на стандартных условиях: / том - 1 месяц",
+          "Депозиты постоянного действия на стандартных условиях: / 3 месяца",
+          "Депозиты постоянного действия на стандартных условиях: / до востребования",
+          "Депозитные аукционы на срок: / от 1 до 6 дней \"тонкой настройки\"",
+          "Депозитные аукционы на срок: / 1 неделя",
+          "Депозитные аукционы на срок: / 2 недели",
+          "Депозитные аукционы на срок: / 4 недели 1 месяц",
+          "Депозитные аукционы на срок: / 3 месяца",
+          "Репо постоянного действия на срок: / 1 день",
+          "Репо постоянного действия на срок: / 1 неделя",
+          "Репо постоянного действия на срок: / 1 год",
+          "Репо постоянного действия на срок: / ДМ (от 1 до 180 дней)",
+          "Аукционы репо на срок: / 1 день",
+          "Аукционы репо на срок: / от 1 до 6 дней \"тонкой настройки\"",
+          "Аукционы репо на срок: / 1 неделя",
+          "Аукционы репо на срок: / 1 месяц",
+          "Аукционы репо на срок: / 3 месяца",
+          "Аукционы репо на срок: / 6 месяцев",
+          "Аукционы репо на срок: / 12 месяцев",
+          "Валютные свопы постоянного действия / По рублевой части",
+          "Валютные свопы постоянного действия / По валютной части**",
+          "Кредиты овернайт",
+          "Ломбардные кредиты постоянного действия на срок: / 1 день",
+          "Ломбардные кредиты постоянного действия на срок: / 7 дней",
+          "Ломбардные кредиты постоянного действия на срок: / 30 дней",
+          "Ломбардные кредиты постоянного действия на срок: / от 2 до 30 дней",
+          "Ломбардные кредиты постоянного действия на срок: / от 31 до 90 дней",
+          "Ломбардные кредитные аукционы на срок: / 1 неделя",
+          "Ломбардные кредитные аукционы на срок: / 2 недели",
+          "Ломбардные кредитные аукционы на срок: / 3 месяца",
+          "Ломбардные кредитные аукционы на срок: / 6 месяцев",
+          "Ломбардные кредитные аукционы на срок: / 12 месяцев",
+          "Ломбардные кредитные аукционы на срок: / 36 месяцев",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / 1 день",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / от 2 до 30 дней",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / от 31 до 90 дней",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / от 91 до 180 дней",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / от 181 до 365 дней",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / от 366 до 549 дней",
+          "Кредиты постоянного действия (нерыночные активы), на срок: / ДМ (от 1 до 180 дней)",
+          "Кредитные аукционы (нерыночные активы) на срок: / 1-3 недели",
+          "Кредитные аукционы (нерыночные активы) на срок: / 3 месяца",
+          "Кредитные аукционы (нерыночные активы) на срок: / 12 месяцев",
+          "Кредитные аукционы (нерыночные активы) на срок: / 18 месяцев",
+          "Кредиты, обеспеченные золотом по № 362-П, на срок: / 1 день",
+          "Кредиты, обеспеченные золотом по № 362-П, на срок: / от 2 до 90 дней",
+          "Кредиты, обеспеченные золотом по № 362-П, на срок: / от 91 до 180 дней",
+          "Кредиты, обеспеченные золотом по № 362-П, на срок: / от 181 до 365 дней",
+          "Кредиты, обеспеченные золотом по № 362-П, на срок: / от 366 до 549 дней",
+          "Кредиты, обеспеченные нерыночными активами по № 273-П, на срок: / от 1 до 90 дней",
+          "Кредиты, обеспеченные нерыночными активами по № 273-П, на срок: / от 91 до 180 дней",
+          "Кредиты, обеспеченные нерыночными активами по № 122-П",
+          "Ставка рефинансирования",
+          "Примечания"
+        ],
+        "numeric": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "dimensions": [
+          31
+        ]
+      }
+    ],
+    "downloads": [
+      "https://cbr.ru/vfs/hd_base/procstav/ir_chg_mpo/IR_CHG_MPOFull.xlsx"
+    ],
+    "methodology": "https://cbr.ru/hd_base/ProcStav/IR_CHG_MPO/full/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": true
+  },
+  {
+    "id": "cbr.hd_base.bsliquidityma.full.description",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.bsliquidityma.full.description",
+    "title": "Описание показателей",
+    "url": "https://cbr.ru/hd_base/BSliquidityMA/Full/description/",
+    "parent": "cbr.hd_base.bsliquidityma.full",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/BSliquidityMA/Full/description/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.itogidepauct.full",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.itogidepauct.full",
+    "title": "Итоги депозитных аукционов (расширенная версия)",
+    "url": "https://cbr.ru/hd_base/itogidepauct/Full/",
+    "parent": "cbr.hd_base.itogidepauct",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Тип инструмента",
+          "Срок депозита",
+          "Дата привлечения денежных средств в депозит",
+          "Дата возврата депозита и уплаты процентов",
+          "Максимальный объем привлекаемых денежных средств (млрд руб.)",
+          "Объем в заявках (млрд руб.)",
+          "Количество кредитных организаций, подавших заявки",
+          "Максимальная возможная ставка в заявке (% годовых)",
+          "Минимальная заявленная ставка (% годовых)",
+          "Максимальная заявленная ставка (% годовых)",
+          "Способ проведения аукциона",
+          "Ставка отсечения (% годовых)",
+          "Средневзвешенная ставка (% годовых)",
+          "Объем привлеченных денежных средств (млрд руб.)",
+          "Комментарий"
+        ],
+        "numeric": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          15
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          11
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/itogidepauct/Full/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.obr.odrri.ext",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.obr.odrri.ext",
+    "title": "Итоги аукционов по размещению ОБР (расширенная версия)",
+    "url": "https://cbr.ru/hd_base/obr/odrri/ext/",
+    "parent": "cbr.hd_base.obr.odrpi",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Регистрационный номер выпуска",
+          "Дата расчетов по аукциону",
+          "Дата погашения облигаций",
+          "Объем предложения по номинальной стоимости (млн руб.)",
+          "Объем спроса по номинальной стоимости (млн руб.)",
+          "Объем спроса по ценам заявок (млн руб.)",
+          "Количество кредитных организаций, подавших заявки",
+          "Минимальная возможная цена в заявке (% от номинала)",
+          "Минимальная заявленная цена (% от номинала)",
+          "Максимальная заявленная цена (% от номинала)",
+          "Цена отсечения (% от номинала)",
+          "Средневзвешенная цена (% от номинала)",
+          "Размещенный объем по номиналу (млн руб.)",
+          "Размещенный объем по ценам заявок (млн руб.)"
+        ],
+        "numeric": [
+          12,
+          13,
+          14
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/obr/odrri/ext/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.nonmarketres.extended",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.nonmarketres.extended",
+    "title": "Итоги аукционов по предоставлению кредитов, обеспеченных нерыночными активами (расширенная версия)",
+    "url": "https://cbr.ru/hd_base/nonmarketres/extended/",
+    "parent": "cbr.hd_base.nmcauction",
+    "kind": "dataset",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "source_units",
+    "transform": "difference",
+    "contracts": [
+      {
+        "table": 0,
+        "headers": [
+          "Дата проведения аукциона",
+          "Срок предоставляемых кредитов",
+          "Дата предоставления кредитов",
+          "Дата возврата кредитов и уплаты процентов",
+          "Максимальный объем предоставляемых кредитов (млрд руб.)",
+          "Объем в заявках (млрд руб.)",
+          "Количество кредитных организаций, подавших заявки",
+          "Минимальная возможная ставка в заявке (% годовых)",
+          "Минимальная заявленная ставка (% годовых)",
+          "Максимальная заявленная ставка (% годовых)",
+          "Способ проведения аукциона",
+          "Ставка отсечения (% годовых)",
+          "Средневзвешенная ставка* (% годовых)",
+          "Объем предоставленных кредитов (млрд руб.)",
+          "Количество регионов, кредитные организации из которых подали заявки"
+        ],
+        "numeric": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          11,
+          12,
+          13,
+          14
+        ],
+        "dimensions": [
+          1,
+          2,
+          3,
+          10
+        ]
+      }
+    ],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/nonmarketres/extended/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.hd_base.mkr.mkr_banks",
+    "source": "cbr",
+    "dataset": "cbr.hd_base.mkr.mkr_banks",
+    "title": "Списки банков, включенных в выборки MIBID и MIBOR",
+    "url": "https://cbr.ru/hd_base/mkr/mkr_banks/",
+    "parent": "cbr.hd_base.mkr.retro.mkr_retro_mibid",
+    "kind": "reference",
+    "frequency": "daily",
+    "calendar": "russia_working",
+    "aggregation": "last",
+    "unit": "%",
+    "transform": "difference",
+    "contracts": [],
+    "downloads": [],
+    "methodology": "https://cbr.ru/hd_base/mkr/mkr_banks/",
+    "available_period": "source_available",
+    "definition": "1",
+    "administrative": false
+  },
+  {
+    "id": "cbr.fx.usd",
+    "source": "cbr",
+    "dataset": "cbr.currency_base",
+    "title": "Курс USD",
+    "unit": "руб за 1 USD",
+    "frequency": "daily",
+    "calendar": "calendar",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "currency",
+    "code": "R01235",
+    "url": "https://cbr.ru/currency_base/",
+    "definition": "1"
+  },
+  {
+    "id": "cbr.fx.eur",
+    "source": "cbr",
+    "dataset": "cbr.currency_base",
+    "title": "Курс EUR",
+    "unit": "руб за 1 EUR",
+    "frequency": "daily",
+    "calendar": "calendar",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "currency",
+    "code": "R01239",
+    "url": "https://cbr.ru/currency_base/",
+    "definition": "1"
+  },
+  {
+    "id": "cbr.fx.cny",
+    "source": "cbr",
+    "dataset": "cbr.currency_base",
+    "title": "Курс CNY",
+    "unit": "руб за 1 CNY",
+    "frequency": "daily",
+    "calendar": "calendar",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "currency",
+    "code": "R01375",
+    "url": "https://cbr.ru/currency_base/",
+    "definition": "1"
+  },
+  {
+    "id": "moex.imoex.close",
+    "source": "moex",
+    "dataset": "moex.indices",
+    "title": "IMOEX",
+    "unit": "индекс",
+    "frequency": "daily",
+    "calendar": "moex",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "moex",
+    "field": "CLOSE",
+    "security": "IMOEX",
+    "market": "index",
+    "url": "https://iss.moex.com/iss/history/engines/stock/markets/index/securities/IMOEX.json",
+    "delay": "public ISS; access/history limits apply",
+    "definition": "1"
+  },
+  {
+    "id": "moex.rtsi.close",
+    "source": "moex",
+    "dataset": "moex.indices",
+    "title": "RTSI",
+    "unit": "индекс",
+    "frequency": "daily",
+    "calendar": "moex",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "moex",
+    "field": "CLOSE",
+    "security": "RTSI",
+    "market": "index",
+    "url": "https://iss.moex.com/iss/history/engines/stock/markets/index/securities/RTSI.json",
+    "delay": "public ISS; access/history limits apply",
+    "definition": "1"
+  },
+  {
+    "id": "moex.rgbi.close",
+    "source": "moex",
+    "dataset": "moex.indices",
+    "title": "RGBI",
+    "unit": "индекс",
+    "frequency": "daily",
+    "calendar": "moex",
+    "transform": "returns",
+    "aggregation": "last",
+    "kind": "series",
+    "adapter": "moex",
+    "field": "CLOSE",
+    "security": "RGBI",
+    "market": "index",
+    "url": "https://iss.moex.com/iss/history/engines/stock/markets/index/securities/RGBI.json",
+    "delay": "public ISS; access/history limits apply",
+    "definition": "1"
+  }
+]

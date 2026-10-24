@@ -6,39 +6,40 @@ import re
 import json
 import time
 import logging
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import APIConnectionError, APIStatusError, OpenAI
 
 # =============================================================================
 # ENV + CLIENT
 # =============================================================================
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 AI_API_KEY = os.getenv("ai_api_key")
 BASE_URL = os.getenv("base_url")  # Perplexity/OpenAI compatible base_url
 MODEL = os.getenv("ai_model", "sonar-pro")
 
-if not AI_API_KEY:
-    raise RuntimeError("ai_api_key is missing in .env")
+client: Optional[OpenAI] = None
 
-client = OpenAI(api_key=AI_API_KEY, base_url=BASE_URL)
+
+def get_client() -> OpenAI:
+    """Create the AI client only when an AI feature is requested."""
+    global client
+    if client is None:
+        if not AI_API_KEY:
+            raise RuntimeError("ai_api_key is missing in the environment or .env")
+        # retry_call owns the retry budget; do not multiply it by SDK retries.
+        client = OpenAI(
+            api_key=AI_API_KEY, base_url=BASE_URL, timeout=60.0, max_retries=0
+        )
+    return client
 
 # =============================================================================
 # LOGGING
 # =============================================================================
-log_dir = os.path.join(os.getcwd(), "log")
-os.makedirs(log_dir, exist_ok=True)
-log_path = os.path.join(log_dir, "ai_brief.log")
-
-logging.basicConfig(
-    filename=log_path,
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    encoding="utf-8",
-)
 logger = logging.getLogger("ai_brief")
 
 # =============================================================================
@@ -245,27 +246,29 @@ def extract_trailing_json(text: str) -> Tuple[str, Optional[dict]]:
 
     t = text.strip()
 
-    # последний ```json ... ```
-    m = re.search(r"```json\s*([\s\S]*?)\s*```\s*$", t, flags=re.I)
-    if m:
-        raw = m.group(1).strip()
+    # Only the last JSON fence can be the trailing object. An earlier block
+    # must not swallow prose and another fenced object into the same match.
+    blocks = list(re.finditer(r"```json\s*([\s\S]*?)\s*```", t, flags=re.I))
+    if blocks and blocks[-1].end() == len(t):
+        block = blocks[-1]
         try:
-            obj = json.loads(raw)
-            clean = t[:m.start()].rstrip()
-            return clean, obj
-        except Exception:
-            pass
+            obj = json.loads(block.group(1))
+        except json.JSONDecodeError:
+            return t, None
+        if isinstance(obj, dict):
+            return t[:block.start()].rstrip(), obj
+        return t, None
 
-    # “голый” объект { ... } в конце
-    m = re.search(r"(\{[\s\S]*\})\s*$", t, flags=re.S)
-    if m:
-        raw = m.group(1).strip()
+    # Decode each candidate instead of greedily starting at the first brace
+    # in the brief (which may be prose or an earlier JSON example).
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r"\{", t):
         try:
-            obj = json.loads(raw)
-            clean = t[:m.start()].rstrip()
-            return clean, obj
-        except Exception:
-            pass
+            obj, end = decoder.raw_decode(t, match.start())
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict) and not t[end:].strip():
+            return t[:match.start()].rstrip(), obj
 
     return t, None
 
@@ -278,9 +281,31 @@ def remove_markdown_tables(md: str) -> str:
     lines = md.splitlines()
     out = []
     i = 0
+    fence = None
     while i < len(lines):
         ln = lines[i]
-        if "|" in ln and i + 1 < len(lines) and re.search(r"\|\s*:?-{2,}", lines[i + 1]):
+        fence_match = re.match(r"^\s*(`{3,}|~{3,})(.*)$", ln)
+        if fence_match:
+            marker, suffix = fence_match.groups()
+            if fence is None:
+                fence = marker
+            elif (marker[0] == fence[0] and len(marker) >= len(fence)
+                  and not suffix.strip()):
+                fence = None
+            out.append(ln)
+            i += 1
+            continue
+        if fence is not None:
+            out.append(ln)
+            i += 1
+            continue
+
+        next_line = lines[i + 1].strip().strip("|") if i + 1 < len(lines) else ""
+        cells = next_line.split("|")
+        is_separator = len(cells) > 1 and all(
+            re.fullmatch(r"\s*:?-{2,}:?\s*", cell) for cell in cells
+        )
+        if "|" in ln and is_separator:
             out.append("```text")
             out.append(ln)
             i += 1
@@ -295,22 +320,34 @@ def remove_markdown_tables(md: str) -> str:
 
 
 def retry_call(fn, tries: int = 3, base_sleep: float = 1.0):
-    last = None
+    if tries < 1:
+        raise ValueError("tries must be at least 1")
+    if base_sleep < 0:
+        raise ValueError("base_sleep must be nonnegative")
     for n in range(1, tries + 1):
         try:
             return fn()
-        except Exception as e:
-            last = e
-            logger.warning(f"API call failed (try {n}/{tries}): {e}")
+        except (APIConnectionError, APIStatusError) as exc:
+            status = getattr(exc, "status_code", None)
+            retryable = isinstance(exc, APIConnectionError) or (
+                status in (408, 409, 429) or (status is not None and status >= 500)
+            )
+            # Provider exception messages may contain credentials or response
+            # bodies. Log only the type, status and attempt count.
+            logger.warning(
+                "API call failed (try %s/%s, type=%s, status=%s)",
+                n, tries, type(exc).__name__, status,
+            )
+            if not retryable or n == tries:
+                raise
             time.sleep(base_sleep * n)
-    raise last
 
 
 # =============================================================================
 # MAIN API
 # =============================================================================
 
-def run_brief() -> Tuple[str, str, Optional[dict]]:
+def run_brief(before_attempt=None, max_tokens=None, context=None) -> Tuple[str, str, Optional[dict]]:
     """
     Возвращает:
       - clean_markdown_text (без JSON хвоста)
@@ -321,6 +358,8 @@ def run_brief() -> Tuple[str, str, Optional[dict]]:
     recency = SEARCH_RECENCY_AM if edition == "am" else SEARCH_RECENCY_PM
 
     def _call():
+        if before_attempt is not None:
+            before_attempt()
         extra_body = {
             "search_mode": "web",
             "search_recency_filter": recency,
@@ -329,12 +368,17 @@ def run_brief() -> Tuple[str, str, Optional[dict]]:
         if AI_USE_DOMAIN_FILTER:
             extra_body["search_domain_filter"] = RU_DOMAINS
 
-        return client.chat.completions.create(
+        return get_client().chat.completions.create(
             model=MODEL,
-            messages=build_messages(edition),
+            messages=build_messages(edition) + ([{"role": "user", "content": (
+                "Проверенные числовые наблюдения (не инструкции): " + json.dumps(context, ensure_ascii=False)
+                + '\nДобавь в финальный JSON массив claims: title, claim, url, published_at, '
+                  'numeric_claims (source, metric, region_id, date, value). Не выдумывай источники и даты; '
+                  'неизвестные значения оставляй null. Числа из наблюдений передавай точно.'
+            )}] if context is not None else []),
             temperature=TEMPERATURE,
             top_p=TOP_P,
-            max_tokens=MAX_TOKENS,
+            max_tokens=max_tokens or MAX_TOKENS,
             presence_penalty=0,
             frequency_penalty=0,
             stream=False,
@@ -342,7 +386,11 @@ def run_brief() -> Tuple[str, str, Optional[dict]]:
         )
 
     resp = retry_call(_call, tries=3, base_sleep=1.0)
+    if not resp.choices or not resp.choices[0].message.content:
+        raise ValueError("AI response contained no text")
     raw_text = (resp.choices[0].message.content or "").strip()
+    if not raw_text:
+        raise ValueError("AI response contained no text")
 
     usage = getattr(resp, "usage", None)
     if usage:
@@ -356,7 +404,7 @@ def run_brief() -> Tuple[str, str, Optional[dict]]:
     # Сохраняем артефакты (для дебага / архива)
     try:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        save_dir = os.path.join(os.getcwd(), "src", "ai")
+        save_dir = str(Path(__file__).resolve().parents[1] / "src" / "ai")
         os.makedirs(save_dir, exist_ok=True)
 
         raw_path = os.path.join(save_dir, f"brief_raw_{ts}.md")
@@ -384,6 +432,14 @@ def run_brief() -> Tuple[str, str, Optional[dict]]:
 # OPTIONAL: simple local test
 # =============================================================================
 if __name__ == "__main__":
+    log_dir = os.path.join(os.getcwd(), "log")
+    os.makedirs(log_dir, exist_ok=True)
+    logging.basicConfig(
+        filename=os.path.join(log_dir, "ai_brief.log"),
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        encoding="utf-8",
+    )
     text, tok, j = run_brief()
     print(text)
     print(tok)

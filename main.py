@@ -1,10 +1,15 @@
 # ThesaurusV2
 
 import pandas as pd
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time as datetime_time
+from io import BytesIO
+from pathlib import Path
+import tempfile
 import os
 import requests
 from requests.exceptions import RequestException
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import logging
@@ -18,19 +23,21 @@ import holidays
 from datetime import date
 
 # Настройка логгера
-log_dir = os.path.join(os.getcwd(), "log")
-os.makedirs(log_dir, exist_ok=True)
+PROJECT_ROOT = Path(__file__).resolve().parent
+log_dir = PROJECT_ROOT / "log"
 
 # Полный путь к лог-файлу
 log_file = os.path.join(log_dir, "ruonia_log.txt")
 
 # Настройка логгера
-logging.basicConfig(
-    filename=log_file,
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    encoding="utf-8"
-)
+def configure_runtime():
+    os.makedirs(log_dir, exist_ok=True)
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        encoding="utf-8",
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +70,7 @@ from dotenv import load_dotenv
 import numpy as np
 from sklearn.linear_model import Ridge
 
-load_dotenv()
+load_dotenv(PROJECT_ROOT / ".env")
 
 # из .env:
 #  - WORDSTAT_OAUTH  — OAuth-токен, который ты получил по инструкции ...
@@ -74,22 +81,18 @@ WORDSTAT_CLIENT_ID = os.getenv("WORDSTAT_CLIENT_ID")
 # базовый URL API из официальной доки
 WORDSTAT_API = "https://api.wordstat.yandex.net"
 WORDSTAT_REGION_RUSSIA = 225  # Россия
-WORDSTAT_SAVE_DIR = os.path.join("src", "wordstat")
+WORDSTAT_SAVE_DIR = str(PROJECT_ROOT / "src" / "wordstat")
 WORDSTAT_RAW_DIR = os.path.join(WORDSTAT_SAVE_DIR, "raw")  # сюда будем складывать все ответы API
 WORDSTAT_MAPS_DIR = os.path.join(WORDSTAT_SAVE_DIR, "maps")
-os.makedirs(WORDSTAT_MAPS_DIR, exist_ok=True)
-
-os.makedirs(WORDSTAT_SAVE_DIR, exist_ok=True)
-os.makedirs(WORDSTAT_RAW_DIR, exist_ok=True)
-111
 # клиент Perplexity из твоего ai.py
-from functions.ai import client as ai_client
+from functions.ai import get_client as get_ai_client
 from functions.wordstat_api import _wordstat_post
+from functions.telegram_utils import split_message
 
 import hashlib
 
 def slugify_phrase(s: str, max_len: int = 60) -> str:
-    """
+    r"""
     Делает безопасный slug, сохраняя кириллицу (через \w с UNICODE),
     плюс добавляет короткий хэш для уникальности.
     """
@@ -266,6 +269,7 @@ def build_and_save_charts(df_all: pd.DataFrame, out_dir: str = WORDSTAT_SAVE_DIR
     По каждой фразе рисуем PNG: фактические значения + прогноз на 4 недели.
     Возвращаем (files, reports).
     """
+    os.makedirs(out_dir, exist_ok=True)
     saved = []
     reports = []
 
@@ -424,7 +428,7 @@ def get_crisis_keywords_via_perplexity() -> list[str]:
     "Ответ — ТОЛЬКО JSON-массив из ровно 8 строк, без пояснений."
 )
 
-    resp = ai_client.chat.completions.create(
+    resp = get_ai_client().chat.completions.create(
         model="sonar-pro",
         messages=[
             {"role": "system", "content": sys_prompt},
@@ -438,7 +442,8 @@ def get_crisis_keywords_via_perplexity() -> list[str]:
     raw = resp.choices[0].message.content.strip()
     try:
         arr = json.loads(raw)
-        if not isinstance(arr, list) or len(arr) != 8:
+        if (not isinstance(arr, list) or len(arr) != 8
+                or any(not isinstance(x, str) or not x.strip() for x in arr)):
             raise ValueError("Ожидался массив из 8 элементов")
         return [str(x).strip() for x in arr]
     except Exception as e:
@@ -473,6 +478,7 @@ def fetch_wordstat_dynamics(phrase: str, regions=None, devices=None) -> pd.DataF
 
     # === Сохраняем сырой ответ в JSON ===
     try:
+        os.makedirs(WORDSTAT_RAW_DIR, exist_ok=True)
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         # safe_phrase = re.sub(r"[^a-zA-Z0-9_.-]+", "_", phrase.strip())
         # raw_fname = f"wordstat_dynamics_{safe_phrase}_{ts}.json"
@@ -665,7 +671,7 @@ def send_wordstat_digest(tg_client, recipients):
 
 
 # Проверяет за какой промежутек нужен запрос данных и загружает актуальную информацию на сегодня, 
-def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
+def check_if_need_new_rec(FILENAME=PROJECT_ROOT / "ruonia_data.xlsx"):
     try:
         today = datetime.today().date()
         end_date = today.strftime("%d.%m.%Y")
@@ -689,7 +695,7 @@ def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
 
                 if last_date.strftime('%d.%m.%Y') == today.strftime('%d.%m.%Y') or (
                     last_date.strftime('%d.%m.%Y') == (today - timedelta(days=1)).strftime('%d.%m.%Y') and
-                    datetime.now().time() < time(14, 0)
+                    datetime.now().time() < datetime_time(14, 0)
                 ):
                     logger.info("Данные уже актуальны. Обновление не требуется.")
                     return 0
@@ -711,9 +717,26 @@ def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
             logger.error(f"Ошибка запроса данных: {e}")
             return -1
 
-        with open(FILENAME, "wb") as f:
-            f.write(response.content)
-            logger.info(f"Файл успешно сохранён: {FILENAME}")
+        # Check the response before replacing the last usable workbook. A server
+        # can return an HTML error page with HTTP 200.
+        downloaded = pd.read_excel(BytesIO(response.content))
+        required = {"Дата", "Индекс", "1 месяц", "3 месяца", "6 месяцев"}
+        if downloaded.empty or not required.issubset(downloaded.columns):
+            raise ValueError("Ответ ЦБ не содержит ожидаемую таблицу RUONIA")
+        if pd.to_datetime(downloaded["Дата"], dayfirst=True, errors="coerce").isna().any():
+            raise ValueError("Ответ ЦБ содержит некорректные даты")
+        destination = Path(FILENAME).resolve()
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        temporary_path = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=destination.parent, suffix=".xlsx", delete=False) as f:
+                temporary_path = Path(f.name)
+                f.write(response.content)
+            os.replace(temporary_path, destination)
+        finally:
+            if temporary_path is not None:
+                temporary_path.unlink(missing_ok=True)
+        logger.info(f"Файл успешно сохранён: {FILENAME}")
 
         return 1
 
@@ -726,12 +749,12 @@ def check_if_need_new_rec(FILENAME="ruonia_data.xlsx"):
 
 
 # Построение графиков, похоже на скользящие средние
-def analitics(FILENAME="ruonia_data.xlsx"):
+def analitics(FILENAME=PROJECT_ROOT / "ruonia_data.xlsx"):
     today_str = datetime.today().strftime("%Y-%m-%d")
     base_filename = f"ruonia_trend_{today_str}"
     ext = ".png"
 
-    output_dir = os.path.join(os.getcwd(), "src")
+    output_dir = str(PROJECT_ROOT / "src")
     os.makedirs(output_dir, exist_ok=True)
 
     # Генерация имени для полного графика
@@ -812,7 +835,7 @@ def analitics(FILENAME="ruonia_data.xlsx"):
         return None
     
 #проветси анализ РУОНИИ 
-def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
+def make_analyze_ruonia(filepath=PROJECT_ROOT / "ruonia_data.xlsx"):
     try:
         df = pd.read_excel(filepath)
         df = df.rename(columns={
@@ -878,60 +901,14 @@ def make_analyze_ruonia(filepath="ruonia_data.xlsx"):
 
 
 def send_info_ruonia(client, recipients):
-    folder_path = os.path.join(os.getcwd(), "src")
-    base_name = "ruonia_trend_"
-    short_base_name = "ruonia_trend_"
-    short_suffix = "_last90"
-    extension = ".png"
-
-    # Получаем список подходящих файлов
-    matching_files = [
-        f for f in os.listdir(folder_path)
-        if f.startswith(base_name) and f.endswith(extension) and short_suffix not in f
-    ] if os.path.exists(folder_path) else []
-
-    # Получаем список коротких графиков (last90)
-    matching_short_files = [
-        f for f in os.listdir(folder_path)
-        if f.startswith(short_base_name) and short_suffix in f and f.endswith(extension)
-    ] if os.path.exists(folder_path) else []
-
-    # if matching_files:
-    #     matching_files.sort(reverse=True)
-    #     latest_file = os.path.join(folder_path, matching_files[0])
-    #     logger.info(f"📂 Найден последний график: {latest_file}")
-    # else:
-    #     logger.warning("📂 График не найден. Генерируем с помощью analitics()...")
-    #     latest_file = analitics()
-
-    #Заменил на всегда генерацию
-    logger.warning("📂 Всегда!!!!. Генерируем с помощью analitics()...")
-    # latest_file, latest_short_file = analitics()
-
-    # latest_file = analitics()
     result = analitics()
     if not result:
-        logger.error("❌ Не удалось создать графики.")
+        logger.error("Не удалось создать графики RUONIA.")
+        return
 
     latest_file, latest_short_file = result
-
-    if not os.path.exists(latest_file):
-        logger.error("❌ Файл графика не найден после генерации.")
-
-
-    # Поиск соответствующего short-файла
-    latest_short_file = None
-    if matching_short_files:
-        matching_short_files.sort(reverse=True)
-        latest_short_file = os.path.join(folder_path, matching_short_files[0])
-        logger.info(f"📂 Найден короткий график (90 дней): {latest_short_file}")
-
-
-
-
-
-    if not latest_file or not os.path.exists(latest_file):
-        logger.error("❌ Не удалось найти или создать файл графика RUONIA.")
+    if not latest_file or not os.path.isfile(latest_file):
+        logger.error("Файл графика RUONIA не найден после генерации.")
         return
 
     analysis = make_analyze_ruonia()
@@ -972,198 +949,85 @@ from functions.ai import run_brief
 
 
 def send_ai(client, recipients):
-    import os, json
-    from datetime import datetime
-
-    TELEGRAM_LIMIT = 4000
-
-    def normalize_code_fences(text: str) -> str:
-        if text.count("```") % 2 == 1:
-            text += "\n```"
-        return text
-
-    def split_chunks(text: str, limit: int):
-        parts, cur = [], ""
-        for para in text.split("\n\n"):
-            if len(cur) + len(para) < limit:
-                cur += para + "\n\n"
-            else:
-                parts.append(cur.strip())
-                cur = para + "\n\n"
-        if cur.strip():
-            parts.append(cur.strip())
-        return parts
+    from pyrogram.enums import ParseMode
 
     try:
         text, usage, data = run_brief()
-    except Exception as e:
-        for r in recipients:
-            client.send_message(r, f"❌ Ошибка AI-brief: {e}")
+    except Exception as exc:
+        logger.error("AI-brief failed (%s)", type(exc).__name__)
+        for recipient in recipients:
+            try:
+                client.send_message(recipient, "Не удалось подготовить AI-brief. Проверьте настройки и доступность сервиса.")
+            except Exception as send_exc:
+                logger.error("AI-brief error notification failed (%s)", type(send_exc).__name__)
         return
 
-    text = normalize_code_fences(text)
-    chunks = split_chunks(text, TELEGRAM_LIMIT)
-
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = os.path.join("src", "ai")
-    os.makedirs(out_dir, exist_ok=True)
-
-    md_path = os.path.join(out_dir, f"ai_brief_{ts}.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(text + "\n\n" + usage)
+    # Reserve room for the part number; split long paragraphs as well.
+    chunks = split_message(text, limit=3900)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    out_dir = PROJECT_ROOT / "src" / "ai"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    md_path = out_dir / f"ai_brief_{ts}.md"
+    md_path.write_text(text + "\n\n" + usage, encoding="utf-8")
 
     json_path = None
     if isinstance(data, dict):
-        json_path = os.path.join(out_dir, f"ai_brief_{ts}.json")
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        json_path = out_dir / f"ai_brief_{ts}.json"
+        json_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    for r in recipients:
-        for i, c in enumerate(chunks, 1):
-            prefix = f"Часть {i}/{len(chunks)}\n\n" if len(chunks) > 1 else ""
-            # client.send_message(r, prefix + c, parse_mode="markdown", disable_web_page_preview=True)
-            from pyrogram.enums import ParseMode
-            client.send_message(r, prefix + c, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
-
-            # client.send_message(r, prefix + c, disable_web_page_preview=True)
-
-
-        if usage:
-            client.send_message(r, usage)
-
-        client.send_document(r, md_path, caption="📄 AI-brief (.md)")
-        if json_path:
-            client.send_document(r, json_path, caption="🧾 AI-brief (.json)")
+    for recipient in recipients:
+        try:
+            for i, chunk in enumerate(chunks, 1):
+                prefix = f"Часть {i}/{len(chunks)}\n\n" if len(chunks) > 1 else ""
+                # A chunk may split a Markdown construct; preserve full formatting
+                # in the attached .md and send plain text safely in Telegram.
+                client.send_message(recipient, prefix + chunk, parse_mode=ParseMode.DISABLED,
+                                    disable_web_page_preview=True)
+            for chunk in split_message(usage, limit=3900):
+                client.send_message(recipient, chunk, parse_mode=ParseMode.DISABLED)
+            client.send_document(recipient, str(md_path), caption="AI-brief (.md)")
+            if json_path:
+                client.send_document(recipient, str(json_path), caption="AI-brief (.json)")
+        except Exception as exc:
+            logger.error("AI-brief delivery failed (%s)", type(exc).__name__)
 
 
+def main():
+    from functions.auto_update import check_and_restart_if_updated
+    from pyrogram import Client
 
-###########################################################################################################################AI
+    configure_runtime()
+    load_dotenv(PROJECT_ROOT / ".env")
+    recipients = [r.strip() for r in os.getenv("for_whom_list", "").split(",") if r.strip()]
+    if not recipients:
+        raise ValueError("Нет получателей: задайте for_whom_list в .env")
+    api_id = os.getenv("api_id", "")
+    api_hash = os.getenv("api_hash", "")
+    bot_token = os.getenv("bot_token", "")
+    if not api_id.isdecimal() or int(api_id) <= 0 or not api_hash or not bot_token:
+        raise ValueError("Задайте корректные api_id, api_hash и bot_token в .env")
 
+    # Updating code on startup must be explicitly enabled by the operator.
+    if os.getenv("AUTO_UPDATE", "0").strip().lower() in {"1", "true", "yes"}:
+        check_and_restart_if_updated()
 
-#################################### Вернуть ######
-# check_if_need_new_rec()
-
-# analitics()  # Либо переделать 
-#################################### Вернуть ######
-
-
-###### Проверка обновления ####
-# import subprocess
-# import os
-# import sys
-
-# def check_git_update(commit_file="log/current_commit.txt"):
-#     try:
-#         # Убедимся, что папка log существует
-#         os.makedirs(os.path.dirname(commit_file), exist_ok=True)
-
-#         # Получаем текущий коммит с origin
-#         subprocess.run(["git", "fetch"], check=True)
-#         new_commit = subprocess.check_output(
-#             ["git", "rev-parse", "origin/main"], text=True
-#         ).strip()
-
-#         # Если файла нет — создаём и записываем текущий коммит
-#         if not os.path.exists(commit_file):
-#             with open(commit_file, "w") as f:
-#                 f.write(new_commit)
-#             logger.info(f"📄 Файл {commit_file} создан. Установлен коммит: {new_commit}")
-#             return None  # Первый запуск — обновление не требуется
-
-#         # Считываем сохранённый коммит
-#         with open(commit_file, "r") as f:
-#             last_commit = f.read().strip()
-
-#         if new_commit != last_commit:
-#             logger.info(f"🔄 Обнаружен новый коммит: {new_commit}")
-#             return new_commit
-#         else:
-#             logger.info("✅ Версия актуальна. Обновление не требуется.")
-#             return None
-
-#     except Exception as e:
-#         logger.exception("❌ Ошибка при проверке обновления Git:")
-#         return None
+    client = Client(name="me_client", api_id=int(api_id), api_hash=api_hash,
+                    bot_token=bot_token, workdir=str(PROJECT_ROOT))
+    client.start()
+    try:
+        check_if_need_new_rec()
+        send_info_ruonia(client, recipients)
+        time.sleep(10)
+        send_ai(client, recipients)
+        time.sleep(10)
+        send_wordstat_digest(client, recipients)
+        time.sleep(10)
+        send_incidents_daily_regions_digest(client, recipients,
+                                           phrases=["пожар", "взрыв", "бпла"], top_n_regions=25)
+    finally:
+        client.stop()
 
 
-# def update_and_restart(new_commit, commit_file="log/current_commit.txt"):
-#     try:
-#         subprocess.run(["git", "pull"], check=True)
-
-#         with open(commit_file, "w") as f:
-#             f.write(new_commit)
-
-#         logger.info("♻️ Проект обновлён. Перезапускаем...")
-#         os.execv(sys.executable, ['python'] + sys.argv)
-
-#     except Exception as e:
-#         logger.exception("❌ Ошибка при обновлении и перезапуске:")
-
-
-
-# commit_file = "log/current_commit.txt"
-# new_commit = check_git_update(commit_file)
-# if new_commit:
-#     update_and_restart(new_commit, commit_file)
-
-
-
-################################################################################ВЕРНУТЬ
-from functions.auto_update import check_and_restart_if_updated
-check_and_restart_if_updated()
-#################################################################################ВЕРНУТЬ
-# ######
-
-load_dotenv()  
-
-api_hash = os.getenv('api_hash')
-for_whom = os.getenv('for_whom')
-api_id = os.getenv('api_id')
-bot_token = os.getenv('bot_token')
-
-recipients_raw = os.getenv("for_whom_list", "")
-recipients = [r.strip() for r in recipients_raw.split(",") if r.strip()]
-if not recipients:
-    raise ValueError("❌ Нет получателей. Убедись, что for_whom_list задан в .env")
-
-
-
-
-from pyrogram import Client, idle
-
-#################  вернуть 
-client = Client(name='me_client', api_id=api_id, api_hash=api_hash, bot_token = bot_token )
-# Запуск клиента
-client.start()
-
-        
-
-
-check_if_need_new_rec()
-send_info_ruonia(client, recipients)
-
-time.sleep(10)
-send_ai(client, recipients)
-
-time.sleep(10)
-send_wordstat_digest(client, recipients)
-
-
-
-time.sleep(10)
-send_incidents_daily_regions_digest(client, recipients, phrases=["пожар", "взрыв", "бпла"], top_n_regions=25)
-
-
-# idle()
-
-# Завершение сессии
-client.stop()
-
-#################### вернуть 
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    from thesaurus.cli import entrypoint
+    raise SystemExit(entrypoint())
